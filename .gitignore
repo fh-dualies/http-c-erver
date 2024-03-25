@@ -1,1 +1,14 @@
-cmake-build-debug
+# IDE
+/.idea
+/.vscode
+
+# Build
+*.out
+*.o
+
+# CMake
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+/CMakeFiles
+/cmake-build-debug
