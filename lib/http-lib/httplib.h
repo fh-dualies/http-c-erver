@@ -1,7 +1,3 @@
-//
-// Created by Sebastian Schinzel on 25.03.20.
-//
-
 #ifndef ECHO_SERVER_HTTPLIB_H
 #define ECHO_SERVER_HTTPLIB_H
 #include <stdio.h>

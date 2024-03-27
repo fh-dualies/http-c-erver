@@ -2,7 +2,30 @@
 #include "httplib.h"
 
 string* str_cat(string* dest, const char* src, size_t len) {
-    printf("TODO!");
+    // check if dest is NULL
+    if (dest == NULL) {
+        return NULL;
+    }
+
+    // length after concatenation
+    size_t new_len = dest->pos + len;
+
+    // resize dest if necessary
+    if (new_len >= dest->len) {
+        char* new_string = realloc(dest->str, new_len * 2);
+
+        if (new_string == NULL) {
+            exit(4);
+        }
+
+        dest->len = new_len * 2;
+        dest->str = new_string;
+    }
+
+    // copy src to dest
+    memcpy(dest->str + dest->pos, src, len);
+    dest->pos = new_len;
+
     return dest;
 }
 
