@@ -1,5 +1,5 @@
-<h3 align="center">Projekt Systementwicklung</h3>
-<p align="center">Sommersemester 2024 - FH Münster</p>
+<h3>Projekt Systementwicklung</h3>
+<p>Sommersemester 2024 - FH Münster</p>
 
 ---
 
@@ -13,8 +13,8 @@
 
 - [Dennis Höllmann](https://git.fh-muenster.de/dh687982)
 - [Lars Kemper](https://git.fh-muenster.de/lk297162)
-- [Lukas Erker]()
-- [Manuel Grave]()
+- [Lukas Erker](https://git.fh-muenster.de/le009249)
+- [Manuel Grave](https://git.fh-muenster.de/mg573007)
 
 ## About this repository
 
