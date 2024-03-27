@@ -1,25 +1,18 @@
 #include "../../../lib/unity/src/unity.h"
 
-void setUp()
-{
+void setUp() {}
 
-}
+void tearDown() {}
 
-void tearDown()
-{
+int main(void) {
+  UNITY_BEGIN();
 
-}
+  /*
+   * Add in between
+   * RUN_TEST(func_name);
+   */
 
-int main(void)
-{
-    UNITY_BEGIN();
+  UNITY_END();
 
-    /*
-     * Add in between
-     * RUN_TEST(func_name);
-     */
-
-    UNITY_END();
-
-    return 0;
+  return 0;
 }
