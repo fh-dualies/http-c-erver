@@ -1,16 +1,16 @@
 # IDE
-/.idea
-/.vscode
-/Testing
+**/.idea
+**/.vscode
+**/Testing
 
 # Build
-*.out
-*.o
+**/*.out
+**/*.o
 
 # CMake
-/.cmake
-/CMakeFiles
-/cmake-build-debug
-CMakeCache.txt
-cmake_install.cmake
-Makefile
+**/.cmake
+**/CMakeFiles
+**/cmake-build-debug
+**/CMakeCache.txt
+**/cmake_install.cmake
+**/Makefile

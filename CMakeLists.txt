@@ -3,8 +3,14 @@ project(pse_2024 C)
 
 set(CMAKE_C_STANDARD 11)
 
+option(BUILD_TESTS "Build the unit tests" ON)
+
 add_executable(pse_2024 lib/http-lib/httplib.c main.c)
 add_executable(echo_server lib/http-lib/httplib.c echo_server.c)
+
+if(BUILD_TEST)
+    add_subdirectory(tests)
+endif()
 
 set_target_properties(pse_2024 PROPERTIES SUFFIX ".out")
 set_target_properties(echo_server PROPERTIES SUFFIX ".out")
