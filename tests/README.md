@@ -18,7 +18,6 @@ make
 
 ```c
 #include "unity.h"
-#include "calc.h"
 
 void setUp()
 {
