@@ -7,7 +7,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include "httplib.h"
+#include "./lib/http-lib/httplib.h"
 
 #define PORT 31337
 #define BUFFER_SIZE 1024*1024

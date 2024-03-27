@@ -3,4 +3,6 @@ project(pse_2024 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(pse_2024 main.c)
+add_executable(pse_2024 ./lib/http-lib/httplib.c echo_server.c)
+
+set_target_properties(pse_2024 PROPERTIES SUFFIX ".out")
