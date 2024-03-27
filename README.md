@@ -54,3 +54,17 @@ Compile pse-2024
 ```sh
 $ make
 ```
+
+### Run Project
+
+Run pse-2024
+
+```sh
+$ ./pse_2024
+```
+
+Run echo_server
+
+```sh
+$ ./echo_server
+```
