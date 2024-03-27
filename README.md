@@ -26,6 +26,7 @@ This repository's contents is divided across four primary sections:
 - `/scripts` contains scripts used for general purposes
 - `/lib` contains third-party libraries used in the project
 - `/src` contains the source code for the project
+- `/tests` contains the test code for the project
 
 ## Installation
 
@@ -68,3 +69,7 @@ Run echo_server
 ```sh
 $ ./echo_server
 ```
+
+## How to test
+
+View the [test documentation](tests/README.md) for more information.
