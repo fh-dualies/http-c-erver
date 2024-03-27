@@ -6,6 +6,7 @@
 # Build
 **/*.out
 **/*.o
+**/*.a
 
 # CMake
 **/.cmake
