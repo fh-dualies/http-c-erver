@@ -23,7 +23,8 @@
 This repository's contents is divided across four primary sections:
 
 - `/assets` contains assets used for general purposes
-- `/lib` contains third-party libraries used in the project 
+- `/scripts` contains scripts used for general purposes
+- `/lib` contains third-party libraries used in the project
 - `/src` contains the source code for the project
 
 ## Installation

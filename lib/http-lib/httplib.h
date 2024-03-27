@@ -1,13 +1,13 @@
 #ifndef HTTPLIB_H
 #define HTTPLIB_H
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct string {
-    size_t len;
-    size_t pos;
-    char* str;
+  size_t len;
+  size_t pos;
+  char *str;
 } typedef string;
 
 /// @brief Concatenate a string to another string
@@ -15,34 +15,34 @@ struct string {
 /// @param src The source string
 /// @param len The length of the source string
 /// @return The destination string
-string* str_cat(string* dest, const char* src, size_t len);
+string *str_cat(string *dest, const char *src, size_t len);
 
 /// @brief Create a new string
 /// @param len The length of the string
-string* new_string(size_t );
+string *new_string(size_t);
 
 /// @brief Print a string
 /// @param str The string to print
-void print_string(string* str);
+void print_string(string *str);
 
 /// @brief Copy a string
 /// @param src The source string
 /// @param len The length of the source string
 /// @return The copied string
-string* cpy_str(const char* src, size_t len);
+string *cpy_str(const char *src, size_t len);
 
 /// @brief Free a string
 /// @param str The string to free
-void free_str(string* str);
+void free_str(string *str);
 
 /// @brief Get the length of a string
 /// @param str The string
 /// @return The length of the string
-size_t get_length(string* str);
+size_t get_length(string *str);
 
 /// @brief Get the value of a string
 /// @param str The string
 /// @return The value of the string
-char* get_char_str(string* str);
+char *get_char_str(string *str);
 
 #endif
