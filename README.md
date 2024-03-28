@@ -30,7 +30,6 @@ This repository's contents is divided across four primary sections:
 - `/scripts` contains scripts used for general purposes
 - `/lib` contains third-party libraries used in the project
 - `/src` contains the source code for the project
-- `/tests` contains the test code for the project
 
 ## Installation
 
@@ -74,12 +73,6 @@ Run echo_server
 $ ./build/echo_server.out
 ```
 
-Run tests
-
-```sh
-$ ./build/pse_2024_tests.out
-```
-
 ## Conventions
 
 ### Formatting
@@ -95,7 +88,3 @@ This project uses [clang-format](https://clang.llvm.org/docs/ClangFormat.html) t
 This project uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) to enforce a consistent commit message style.
 
 This might help to write better commit messages: [Commitlint.io](https://commitlint.io/)
-
-## How to test
-
-View the [test documentation](tests/README.md) for more information.
