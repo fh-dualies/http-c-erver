@@ -15,7 +15,7 @@ string *str_cat(string *dest, const char *src, size_t len) {
   // length after concatenation
   size_t new_len = dest->len + len;
 
-  char *new_string = realloc(dest->str, new_len);
+  char *new_string = realloc(dest->str, new_len + 1);
 
   if (new_string == NULL) {
     exit(4);
@@ -24,9 +24,10 @@ string *str_cat(string *dest, const char *src, size_t len) {
   // copy src to dest
   memcpy(dest->str + dest->len, src, len);
 
+  new_string[new_len] = '\0';
+
   dest->len = new_len;
   dest->str = new_string;
-
   return dest;
 }
 
