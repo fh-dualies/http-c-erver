@@ -20,6 +20,7 @@ int main() {
 
   free_str(str1);
   free_str(str2);
+  free_str(str_empty);
 
   return 0;
 }
