@@ -6,7 +6,6 @@
 
 struct string {
   size_t len;
-  size_t pos;
   char *str;
 } typedef string;
 
@@ -18,8 +17,7 @@ struct string {
 string *str_cat(string *dest, const char *src, size_t len);
 
 /// @brief Create a new string
-/// @param len The length of the string
-string *new_string(size_t);
+string *_new_string();
 
 /// @brief Print a string
 /// @param str The string to print
