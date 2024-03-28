@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="pse_2024_tests"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\tests\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/lars/Code/fh/pse-2024/tests"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="unity">
+				<Option output="/home/lars/Code/fh/pse-2024/tests/libunity.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/lars/Code/fh/pse-2024/tests"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/lars/Code/fh/pse-2024/tests/../lib/unity/src"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 unity"/>
+					<CompileFile command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="unity/fast">
+				<Option output="/home/lars/Code/fh/pse-2024/tests/libunity.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/lars/Code/fh/pse-2024/tests"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/lars/Code/fh/pse-2024/tests/../lib/unity/src"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 unity/fast"/>
+					<CompileFile command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pse_2024_tests">
+				<Option output="/home/lars/Code/fh/pse-2024/build/pse_2024_tests.out" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/lars/Code/fh/pse-2024/build"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/lars/Code/fh/pse-2024/tests/../lib/unity/src"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 pse_2024_tests"/>
+					<CompileFile command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="pse_2024_tests/fast">
+				<Option output="/home/lars/Code/fh/pse-2024/build/pse_2024_tests.out" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/lars/Code/fh/pse-2024/build"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/lars/Code/fh/pse-2024/tests/../lib/unity/src"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 pse_2024_tests/fast"/>
+					<CompileFile command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -f &quot;/home/lars/Code/fh/pse-2024/tests/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/lars/Code/fh/pse-2024/lib/unity/src/unity.c">
+			<Option target="unity"/>
+		</Unit>
+		<Unit filename="/home/lars/Code/fh/pse-2024/lib/unity/src/unity.h">
+			<Option target="unity"/>
+		</Unit>
+		<Unit filename="/home/lars/Code/fh/pse-2024/tests/lib/http-lib/test_httplib.c">
+			<Option target="pse_2024_tests"/>
+		</Unit>
+		<Unit filename="/home/lars/Code/fh/pse-2024/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/lars/Code/fh/pse-2024/tests/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\tests\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
