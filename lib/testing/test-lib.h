@@ -11,4 +11,6 @@ void expect_equal(string *str, size_t expected_len, const char *expected_str);
 
 void test_title(const char *title);
 
+int test_summary();
+
 #endif //PSE_2024_TEST_LIB_H
