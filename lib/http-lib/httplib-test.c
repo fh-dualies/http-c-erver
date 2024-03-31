@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 void test_url_decode() {
-  printf("\nTest URL decode\n");
+  test_title("Test URL decode");
 
   string *str = cpy_str("Hello+World%21", 14);
 
@@ -16,7 +16,7 @@ void test_url_decode() {
 }
 
 void test_url_encode() {
-  printf("\nTest URL encode\n");
+  test_title("Test URL encode");
 
   string *str = cpy_str("Hello World!", 12);
 
@@ -29,7 +29,7 @@ void test_url_encode() {
 }
 
 void test_str_cat() {
-  printf("\nTest str_cat\n");
+  test_title("Test str_cat");
 
   string *str1 = cpy_str("Hello, ", 7);
   string *str2 = cpy_str("world!", 6);

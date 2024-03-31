@@ -8,6 +8,10 @@ void success_color() {
   printf("\033[32m");
 }
 
+void title_color() {
+  printf("\033[35m");
+}
+
 void reset_color() {
   printf("\033[0m");
 }
@@ -46,4 +50,14 @@ void expect_equal(string *str, size_t expected_len, const char *expected_str) {
   reset_color();
 
   free_str(expected);
+}
+
+void test_title(const char *title) {
+  title_color();
+  printf("\n");
+  printf("========================================\n");
+  printf("%s\n", title);
+  printf("========================================\n");
+  printf("\n");
+  reset_color();
 }
