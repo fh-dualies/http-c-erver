@@ -5,7 +5,11 @@ set(CMAKE_C_STANDARD 11)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 
-add_executable(http_lib_test lib/http-lib/httplib.c lib/http-lib/httplib-test.c)
+add_executable(http_lib_test
+        lib/http-lib/httplib.c
+        lib/http-lib/httplib-test.c
+        lib/testing/test-lib.c
+        lib/testing/test-lib.h)
 add_executable(echo_server lib/http-lib/httplib.c echo_server.c)
 
 set_target_properties(http_lib_test PROPERTIES SUFFIX ".out")
