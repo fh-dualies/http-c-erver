@@ -54,5 +54,5 @@ int main() {
   test_url_decode();
   test_url_encode();
 
-  return 0;
+  return test_summary();
 }

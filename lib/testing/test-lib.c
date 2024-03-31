@@ -1,5 +1,8 @@
 #include "test-lib.h"
 
+int assertions = 0;
+int failed_assertions = 0;
+
 void error_color() {
   printf("\033[31m");
 }
@@ -16,8 +19,9 @@ void reset_color() {
   printf("\033[0m");
 }
 
-
 void expect_equal(string *str, size_t expected_len, const char *expected_str) {
+  assertions++;
+
   string *expected = cpy_str(expected_str, expected_len);
   if (str->len != expected->len) {
     error_color();
@@ -25,6 +29,7 @@ void expect_equal(string *str, size_t expected_len, const char *expected_str) {
     reset_color();
 
     free_str(expected);
+    failed_assertions++;
     return;
   }
 
@@ -38,6 +43,7 @@ void expect_equal(string *str, size_t expected_len, const char *expected_str) {
       reset_color();
 
       free_str(expected);
+      failed_assertions++;
       return;
     }
   }
@@ -60,4 +66,24 @@ void test_title(const char *title) {
   printf("========================================\n");
   printf("\n");
   reset_color();
+}
+
+int test_summary() {
+  puts("\nTest suite executed successfully!\n");
+
+  if (failed_assertions == 0) {
+    success_color();
+    printf("========================================\n");
+    printf("All %d assertions passed\n", assertions);
+    printf("========================================\n");
+    reset_color();
+    return 0;
+  }
+
+  error_color();
+  printf("========================================\n");
+  printf("%d/%d assertions failed\n", failed_assertions, assertions);
+  printf("========================================\n");
+  reset_color();
+  return 1;
 }
