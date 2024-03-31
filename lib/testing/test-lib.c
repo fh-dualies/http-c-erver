@@ -1,5 +1,6 @@
 #include "test-lib.h"
 
+// Assertion counters
 int assertions = 0;
 int failed_assertions = 0;
 
@@ -23,6 +24,8 @@ void expect_equal(string *str, size_t expected_len, const char *expected_str) {
   assertions++;
 
   string *expected = cpy_str(expected_str, expected_len);
+
+  // Check if the lengths are equal
   if (str->len != expected->len) {
     error_color();
     printf("Expected length %zu, got %zu\n", expected->len, str->len);
@@ -33,6 +36,7 @@ void expect_equal(string *str, size_t expected_len, const char *expected_str) {
     return;
   }
 
+  // Check if the strings are equal
   for (size_t i = 0; i < str->len; i++) {
     if (str->str[i] != expected->str[i]) {
       error_color();
@@ -48,6 +52,7 @@ void expect_equal(string *str, size_t expected_len, const char *expected_str) {
     }
   }
 
+  // Print success message
   success_color();
   print_string(str);
   printf(" == ");
@@ -71,6 +76,7 @@ void test_title(const char *title) {
 int test_summary() {
   puts("\nTest suite executed successfully!\n");
 
+  // Check if all assertions passed
   if (failed_assertions == 0) {
     success_color();
     printf("========================================\n");
@@ -80,6 +86,7 @@ int test_summary() {
     return 0;
   }
 
+  // Print error message
   error_color();
   printf("========================================\n");
   printf("%d/%d assertions failed\n", failed_assertions, assertions);
