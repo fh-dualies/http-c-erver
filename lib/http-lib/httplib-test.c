@@ -1,6 +1,5 @@
 #include "httplib.h"
 #include "../testing/test-lib.h"
-#include <stdio.h>
 
 void test_url_decode() {
   test_title("Test URL decode");
