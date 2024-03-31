@@ -61,17 +61,22 @@ $ make
 
 ## Run Project
 
-Run pse-2024
-
-```sh
-$ ./build/pse_2024.out
-```
-
 Run echo_server
 
 ```sh
 $ ./build/echo_server.out
 ```
+
+## How to test
+
+Run tests
+
+```sh
+$ ./build/http_lib_test.out
+```
+
+Red: Assertion failed  
+Green: Assertion failed
 
 ## Conventions
 
