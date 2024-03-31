@@ -90,3 +90,85 @@ char *get_char_str(string *str) {
   assert(str != NULL);
   return str->str;
 }
+
+string *url_decode(string *str) {
+  assert(str != NULL);
+  assert(str->str != NULL);
+
+  string *decoded = _new_string();
+
+  for (int i = 0; i < str->len; i++) {
+    char current = str->str[i];
+
+    // plus signs should be decoded as spaces
+    if (current == '+') {
+      str_cat(decoded, " ", 1);
+      continue;
+    }
+
+    if (current == '%' && i + 1 < str->len) {
+      char new_char = '\0';
+      char first = str->str[i + 1];
+      char second = str->str[i + 2];
+
+      if (first >= '0' && first <= '9') {
+        new_char = first - '0';
+      } else if (first >= 'a' && first <= 'f') {
+        new_char = first - 'a' + 10;
+      } else if (first >= 'A' && first <= 'F') {
+        new_char = first - 'A' + 10;
+      }
+
+      new_char <<= 4;
+
+      if (second >= '0' && second <= '9') {
+        new_char |= second - '0';
+      } else if (second >= 'a' && second <= 'f') {
+        new_char |= second - 'a' + 10;
+      } else if (second >= 'A' && second <= 'F') {
+        new_char |= second - 'A' + 10;
+      }
+
+      str_cat(decoded, &new_char, 1);
+      i += 2;
+      continue;
+    }
+
+    // other characters should be copied
+    str_cat(decoded, str->str + i, 1);
+  }
+  return decoded;
+}
+
+string *url_encode(string *str) {
+  assert(str != NULL);
+  assert(str->str != NULL);
+
+  string *encoded = _new_string();
+  const char *hex = "0123456789ABCDEF";
+
+  for (int i = 0; i < str->len; i++) {
+    char current = str->str[i];
+
+    // normal characters should be copied
+    if (current >= 'a' && current <= 'z' ||
+        current >= 'A' && current <= 'Z' ||
+        current >= '0' && current <= '9') {
+      str_cat(encoded, str->str + i, 1);
+      continue;
+    }
+
+    // spaces should be encoded as '+'
+    if (current == ' ') {
+      str_cat(encoded, "+", 1);
+      continue;
+    }
+
+    // other characters should be encoded as '%XX'
+    str_cat(encoded, "%", 1);
+    str_cat(encoded, hex + (current >> 4), 1);
+    str_cat(encoded, hex + (current & 0x0f), 1);
+  }
+
+  return encoded;
+}

@@ -43,4 +43,13 @@ size_t get_length(string *str);
 /// @return The value of the string
 char *get_char_str(string *str);
 
+/// @brief URL decode a string
+/// @param str The string to decode
+/// @return The decoded string
+string *url_decode(string *str);
+
+/// @brief URL encode a string
+/// @param str The string to encode
+/// @return The encoded string
+string *url_encode(string *str);
 #endif
