@@ -76,7 +76,7 @@ $ ./build/http_lib_test.out
 ```
 
 Red: Assertion failed  
-Green: Assertion failed
+Green: Assertion passed
 
 ## Conventions
 
