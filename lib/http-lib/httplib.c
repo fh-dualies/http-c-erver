@@ -151,8 +151,7 @@ string *url_encode(string *str) {
     char current = str->str[i];
 
     // normal characters should be copied
-    if (current >= 'a' && current <= 'z' ||
-        current >= 'A' && current <= 'Z' ||
+    if (current >= 'a' && current <= 'z' || current >= 'A' && current <= 'Z' ||
         current >= '0' && current <= '9') {
       str_cat(encoded, str->str + i, 1);
       continue;

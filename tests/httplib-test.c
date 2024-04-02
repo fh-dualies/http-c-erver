@@ -1,5 +1,5 @@
-#include "httplib.h"
-#include "../testing/test-lib.h"
+#include "../lib/http-lib/httplib.h"
+#include "../lib/testing/test-lib.h"
 
 void test_url_decode() {
   test_title("Test URL decode");
@@ -47,7 +47,6 @@ void test_str_cat() {
   free_str(str_empty);
 }
 
-// Praktikum 1 "str_cat"-Task example
 int main() {
   test_str_cat();
   test_url_decode();

@@ -1,7 +1,3 @@
-//
-// Created by dennis on 31/03/24.
-//
-
 #ifndef PSE_2024_TEST_LIB_H
 #define PSE_2024_TEST_LIB_H
 
@@ -19,4 +15,4 @@ void test_title(const char *title);
 /// @brief Print the summary of the tests
 int test_summary();
 
-#endif //PSE_2024_TEST_LIB_H
+#endif // PSE_2024_TEST_LIB_H
