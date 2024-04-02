@@ -4,21 +4,13 @@
 int assertions = 0;
 int failed_assertions = 0;
 
-void error_color() {
-  printf("\033[31m");
-}
+void error_color() { printf("\033[31m"); }
 
-void success_color() {
-  printf("\033[32m");
-}
+void success_color() { printf("\033[32m"); }
 
-void title_color() {
-  printf("\033[35m");
-}
+void title_color() { printf("\033[35m"); }
 
-void reset_color() {
-  printf("\033[0m");
-}
+void reset_color() { printf("\033[0m"); }
 
 void expect_equal(string *str, size_t expected_len, const char *expected_str) {
   assertions++;
