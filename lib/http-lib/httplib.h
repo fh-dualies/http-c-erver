@@ -10,11 +10,6 @@ struct string {
   char *str;
 } typedef string;
 
-struct read_file_result {
-  string *content;
-  int length;
-};
-
 /// @brief Concatenate a string to another string
 /// @param dest The destination string
 /// @param src The source string

@@ -1,4 +1,5 @@
 #include "basic_http_server.h"
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -161,12 +162,17 @@ string *basic_http_server(string *request) {
     return NULL; // TODO: Error - Unable to create response (500)
   }
 
-  // write response body
-  char path[strlen(DOCUMENT_ROOT) + 11];
-  strcpy(path, DOCUMENT_ROOT);
-  strcat(path, "index.html"); // TODO: read from request
+  char relative_path[strlen(DOCUMENT_ROOT) + 12];
+  char absolute_path[PATH_MAX];
 
-  string *file_content = read_file(path);
+  strcpy(relative_path, DOCUMENT_ROOT);
+  strcat(relative_path, "index.html"); // TODO: read from request
+
+  if (realpath(relative_path, absolute_path) == NULL) {
+    return NULL; // TODO: Error - Unable to resolve path (404)
+  }
+
+  string *file_content = read_file(absolute_path);
 
   if (file_content == NULL) {
     return NULL; // TODO: Error - Unable to read file (404)
