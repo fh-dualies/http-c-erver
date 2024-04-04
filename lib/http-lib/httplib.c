@@ -33,6 +33,7 @@ string *str_cat(string *dest, const char *src, size_t len) {
 
 string *_new_string() {
   string *str = calloc(sizeof(string), 1);
+
   if (str == NULL) {
     exit(2);
   }
@@ -56,7 +57,6 @@ void print_string(string *str) {
 }
 
 string *cpy_str(const char *src, size_t len) {
-
   assert(src != NULL);
 
   string *dest = calloc(sizeof(string), 1);
@@ -65,9 +65,11 @@ string *cpy_str(const char *src, size_t len) {
   }
 
   dest->str = calloc(1, len);
+
   if (dest->str == NULL) {
     exit(3);
   }
+
   memcpy(dest->str, src, len);
   dest->len = len;
 
@@ -77,17 +79,20 @@ string *cpy_str(const char *src, size_t len) {
 void free_str(string *str) {
   assert(str != NULL);
   assert(str->str != NULL);
+
   free(str->str);
   free(str);
 }
 
 size_t get_length(string *str) {
   assert(str != NULL);
+
   return str->len;
 }
 
 char *get_char_str(string *str) {
   assert(str != NULL);
+
   return str->str;
 }
 
@@ -131,12 +136,14 @@ string *url_decode(string *str) {
 
       str_cat(decoded, &new_char, 1);
       i += 2;
+
       continue;
     }
 
     // other characters should be copied
     str_cat(decoded, str->str + i, 1);
   }
+
   return decoded;
 }
 

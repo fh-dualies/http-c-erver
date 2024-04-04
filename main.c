@@ -1,4 +1,4 @@
-#include "./lib/http-lib/httplib.h"
+#include "lib/http-lib/httplib.h"
 #include <errno.h>
 #include <netinet/ip.h>
 #include <signal.h>

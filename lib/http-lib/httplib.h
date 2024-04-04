@@ -1,5 +1,6 @@
 #ifndef HTTPLIB_H
 #define HTTPLIB_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,4 +53,5 @@ string *url_decode(string *str);
 /// @param str The string to encode
 /// @return The encoded string
 string *url_encode(string *str);
+
 #endif
