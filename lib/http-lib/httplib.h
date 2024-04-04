@@ -10,6 +10,11 @@ struct string {
   char *str;
 } typedef string;
 
+struct read_file_result {
+  string *content;
+  int length;
+};
+
 /// @brief Concatenate a string to another string
 /// @param dest The destination string
 /// @param src The source string
@@ -53,5 +58,10 @@ string *url_decode(string *str);
 /// @param str The string to encode
 /// @return The encoded string
 string *url_encode(string *str);
+
+/// @brief Read a file
+/// @param path The path to the file
+/// @return The content of the file
+string *read_file(char *path);
 
 #endif

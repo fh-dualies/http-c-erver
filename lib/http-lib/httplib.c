@@ -178,3 +178,31 @@ string *url_encode(string *str) {
 
   return encoded;
 }
+
+string *read_file(char *path) {
+  assert(path != NULL);
+
+  FILE *file = fopen(path, "r");
+
+  if (file == NULL) {
+    return NULL;
+  }
+
+  fseek(file, 0, SEEK_END);
+  long length = ftell(file);
+  fseek(file, 0, SEEK_SET);
+
+  string *content = _new_string();
+  content->str = calloc(length + 1, 1);
+
+  if (content->str == NULL) {
+    return NULL;
+  }
+
+  fread(content->str, 1, length, file);
+  content->len = length;
+
+  fclose(file);
+
+  return content;
+}

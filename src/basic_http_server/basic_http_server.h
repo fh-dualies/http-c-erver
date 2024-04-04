@@ -3,6 +3,12 @@
 
 #include "../../lib/http-lib/httplib.h"
 
+#define DOCUMENT_ROOT                                                          \
+  "/home/lars/Code/fh/pse-2024/src/root/" // TODO: Find a real "working"
+                                          // solution - Issue:
+                                          // https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/4
+#define HTTP_VERSION "HTTP/1.0"
+
 struct basic_request {
   string *method;
   string *ressource;

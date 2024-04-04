@@ -1,4 +1,6 @@
 #include "basic_http_server.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 basic_request *new_request() {
   basic_request *request = malloc(sizeof(basic_request));
@@ -58,13 +60,13 @@ void free_response(basic_response *response) {
 
 basic_request *decode_request_string(string *raw_request) {
   if (raw_request == NULL) {
-    return NULL; // TODO: Error - Raw request is NULL
+    return NULL; // TODO: Error - Raw request is NULL (400)
   }
 
   basic_request *request = new_request();
 
   if (request == NULL) {
-    return NULL; // TODO: Error - Unable to create request
+    return NULL; // TODO: Error - Unable to create request (500)
   }
 
   int segment = 0;
@@ -97,7 +99,7 @@ basic_request *decode_request_string(string *raw_request) {
     }
 
     if (current_segment == NULL) {
-      return NULL; // TODO: Error - Destination is NULL
+      return NULL; // TODO: Error - Destination is NULL (500)
     }
 
     str_cat(current_segment, get_char_str(raw_request) + segment_start,
@@ -150,26 +152,38 @@ string *basic_http_server(string *request) {
   basic_request *decoded_request = decode_request_string(request);
 
   if (decoded_request == NULL) {
-    return NULL; // TODO: Error - Unable to decode request
+    return NULL; // TODO: Error - Unable to decode request (400)
   }
 
   basic_response *response = new_response();
 
   if (response == NULL) {
-    return NULL; // TODO: Error - Unable to create response
+    return NULL; // TODO: Error - Unable to create response (500)
   }
 
-  response->version = cpy_str("HTTP/1.0", 8);
+  // write response body
+  char path[strlen(DOCUMENT_ROOT) + 11];
+  strcpy(path, DOCUMENT_ROOT);
+  strcat(path, "index.html"); // TODO: read from request
+
+  string *file_content = read_file(path);
+
+  if (file_content == NULL) {
+    return NULL; // TODO: Error - Unable to read file (404)
+  }
+
+  response->version = cpy_str(HTTP_VERSION, strlen(HTTP_VERSION));
   response->status_code = cpy_str("200", 3);
   response->status_message = cpy_str("OK", 2);
-  response->content_type = cpy_str("text/plain", 10);
-  response->content_length = cpy_str("5", 1);
-  response->body = cpy_str("Hello", 5);
+  response->content_type = cpy_str("text/html", 9);
+
+  char content_length[file_content->len];
+  sprintf(content_length, "%zu", file_content->len);
+
+  response->content_length = cpy_str(content_length, strlen(content_length));
+  response->body = file_content;
 
   string *encoded_response = encode_response(response);
-
-  printf("%s\n", get_char_str(encoded_response));
-  printf("----\n");
 
   free_request(decoded_request);
   free_response(response);
