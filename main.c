@@ -1,4 +1,5 @@
 #include "lib/http-lib/httplib.h"
+#include "src/basic_http_server/basic_http_server.h"
 #include <errno.h>
 #include <netinet/ip.h>
 #include <signal.h>
@@ -15,6 +16,7 @@
 string *process(string *request);
 
 static bool run = true;
+static bool echo = false;
 
 /**
  * Gibt eine Fehlermeldung *msg* aus und beendet das Programm.
@@ -229,18 +231,26 @@ static void main_loop() {
  * @return Die ausgehende Response.
  */
 string *process(string *request) {
-  /*
-   * Diese Funktion müssen Sie anpassen, so dass der request von Ihrem Code
-   * verarbeitet wird, die response generiert und zurück gibt.
-   *
-   * Für den Echo-Server wird der request einfach als response zurückgegeben,
-   * das Echo eben.
-   */
-  string *response = request;
-  return response;
+  if (echo) {
+    string *response = request;
+    return response;
+  }
+
+  return basic_http_server(request);
 }
 
 int main(int argc, char *argv[]) {
+  /**
+   * REMOVE !!!
+   * Start "just" the echo server by passing the "--echo" argument.
+   */
+  if (argc == 2 && strcmp("--echo", argv[1]) == 0) {
+    echo = true;
+  }
+  /**
+   * REMOVE !!!
+   */
+
   register_signal();
 
   if (argc == 2 && strcmp("stdin", argv[1]) == 0) {
