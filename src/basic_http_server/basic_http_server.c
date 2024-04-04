@@ -1,7 +1,178 @@
-#include "../../lib/http-lib/httplib.h"
+#include "basic_http_server.h"
 
-string* basic_http_server(string* request) {
-    printf("Received request: %s\n", get_char_str(request));
+basic_request *new_request() {
+  basic_request *request = malloc(sizeof(basic_request));
 
-    return request;
+  if (request == NULL) {
+    return NULL;
+  }
+
+  request->method = _new_string();
+  request->ressource = _new_string();
+  request->version = _new_string();
+
+  return request;
+}
+
+basic_response *new_response() {
+  basic_response *response = malloc(sizeof(basic_response));
+
+  if (response == NULL) {
+    return NULL;
+  }
+
+  response->version = _new_string();
+  response->status_code = _new_string();
+  response->status_message = _new_string();
+  response->content_type = _new_string();
+  response->content_length = _new_string();
+  response->body = _new_string();
+
+  return response;
+}
+
+void free_request(basic_request *request) {
+  if (request == NULL) {
+    return;
+  }
+
+  free_str(request->ressource);
+  free_str(request->version);
+  free_str(request->method);
+  free(request);
+}
+
+void free_response(basic_response *response) {
+  if (response == NULL) {
+    return;
+  }
+
+  free_str(response->version);
+  free_str(response->status_code);
+  free_str(response->status_message);
+  free_str(response->content_type);
+  free_str(response->content_length);
+  free_str(response->body);
+  free(response);
+}
+
+basic_request *decode_request_string(string *raw_request) {
+  if (raw_request == NULL) {
+    return NULL; // TODO: Error - Raw request is NULL
+  }
+
+  basic_request *request = new_request();
+
+  if (request == NULL) {
+    return NULL; // TODO: Error - Unable to create request
+  }
+
+  int segment = 0;
+  size_t segment_start = 0;
+  string *current_segment = NULL;
+
+  for (size_t i = 0; i < raw_request->len; i++) {
+    char current = raw_request->str[i];
+
+    if (segment > 2) {
+      break;
+    }
+
+    if (current != ' ' && current != '\n' && current != '\r') {
+      continue;
+    }
+
+    switch (segment) {
+    case 0:
+      current_segment = request->method;
+      break;
+    case 1:
+      current_segment = request->ressource;
+      break;
+    case 2:
+      current_segment = request->version;
+      break;
+    default:
+      break;
+    }
+
+    if (current_segment == NULL) {
+      return NULL; // TODO: Error - Destination is NULL
+    }
+
+    str_cat(current_segment, get_char_str(raw_request) + segment_start,
+            i - segment_start);
+
+    segment++;
+    segment_start = i + 1;
+    current_segment = NULL;
+  }
+
+  return request;
+}
+
+string *encode_response(basic_response *response) {
+  string *encoded_response =
+      cpy_str(get_char_str(response->version), get_length(response->version));
+
+  // status line
+  str_cat(encoded_response, " ", 1);
+  str_cat(encoded_response, get_char_str(response->status_code),
+          get_length(response->status_code));
+
+  str_cat(encoded_response, " ", 1);
+  str_cat(encoded_response, get_char_str(response->status_message),
+          get_length(response->status_message));
+
+  str_cat(encoded_response, "\n", 1);
+
+  // headers
+  str_cat(encoded_response, "Content-Type: ", 14);
+  str_cat(encoded_response, get_char_str(response->content_type),
+          get_length(response->content_type));
+  str_cat(encoded_response, "\n", 1);
+
+  str_cat(encoded_response, "Content-Length: ", 16);
+  str_cat(encoded_response, get_char_str(response->content_length),
+          get_length(response->content_length));
+  str_cat(encoded_response, "\n", 1);
+
+  str_cat(encoded_response, "\n", 1);
+
+  // body
+  str_cat(encoded_response, get_char_str(response->body),
+          get_length(response->body));
+
+  return encoded_response;
+}
+
+string *basic_http_server(string *request) {
+  basic_request *decoded_request = decode_request_string(request);
+
+  if (decoded_request == NULL) {
+    return NULL; // TODO: Error - Unable to decode request
+  }
+
+  basic_response *response = new_response();
+
+  if (response == NULL) {
+    return NULL; // TODO: Error - Unable to create response
+  }
+
+  response->version = cpy_str("HTTP/1.0", 8);
+  response->status_code = cpy_str("200", 3);
+  response->status_message = cpy_str("OK", 2);
+  response->content_type = cpy_str("text/plain", 10);
+  response->content_length = cpy_str("5", 1);
+  response->body = cpy_str("Hello", 5);
+
+  string *encoded_response = encode_response(response);
+
+  printf("%s\n", get_char_str(encoded_response));
+  printf("----\n");
+
+  free_request(decoded_request);
+  free_response(response);
+
+  return encoded_response;
 }
