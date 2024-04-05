@@ -10,7 +10,7 @@
 
 struct basic_request {
   string *method;
-  string *ressource;
+  string *resource;
   string *version;
 } typedef basic_request;
 

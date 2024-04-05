@@ -28,6 +28,7 @@ string *str_cat(string *dest, const char *src, size_t len) {
 
   dest->len = new_len;
   dest->str = new_string;
+
   return dest;
 }
 

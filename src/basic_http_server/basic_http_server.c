@@ -11,7 +11,7 @@ basic_request *new_request() {
   }
 
   request->method = _new_string();
-  request->ressource = _new_string();
+  request->resource = _new_string();
   request->version = _new_string();
 
   return request;
@@ -39,7 +39,7 @@ void free_request(basic_request *request) {
     return;
   }
 
-  free_str(request->ressource);
+  free_str(request->resource);
   free_str(request->version);
   free_str(request->method);
   free(request);
@@ -90,7 +90,7 @@ basic_request *decode_request_string(string *raw_request) {
       current_segment = request->method;
       break;
     case 1:
-      current_segment = request->ressource;
+      current_segment = request->resource;
       break;
     case 2:
       current_segment = request->version;
