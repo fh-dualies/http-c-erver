@@ -1,4 +1,5 @@
 #include "basic_http_server.h"
+#include <assert.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,13 +62,13 @@ void free_response(basic_response *response) {
 
 basic_request *decode_request_string(string *raw_request) {
   if (raw_request == NULL) {
-    return NULL; // TODO: Error - Raw request is NULL (400)
+    return NULL;
   }
 
   basic_request *request = new_request();
 
   if (request == NULL) {
-    return NULL; // TODO: Error - Unable to create request (500)
+    return NULL;
   }
 
   int segment = 0;
@@ -100,7 +101,7 @@ basic_request *decode_request_string(string *raw_request) {
     }
 
     if (current_segment == NULL) {
-      return NULL; // TODO: Error - Destination is NULL (500)
+      return NULL;
     }
 
     str_cat(current_segment, get_char_str(raw_request) + segment_start,
@@ -114,7 +115,7 @@ basic_request *decode_request_string(string *raw_request) {
   return request;
 }
 
-string *encode_response(basic_response *response) {
+string *encode_response(basic_response *response, int error) {
   string *encoded_response =
       cpy_str(get_char_str(response->version), get_length(response->version));
 
@@ -128,6 +129,10 @@ string *encode_response(basic_response *response) {
           get_length(response->status_message));
 
   str_cat(encoded_response, "\n", 1);
+
+  if (error) {
+    return encoded_response;
+  }
 
   // headers
   str_cat(encoded_response, "Content-Type: ", 14);
@@ -149,17 +154,53 @@ string *encode_response(basic_response *response) {
   return encoded_response;
 }
 
+const char *get_http_status_message(int status_code) {
+  switch (status_code) {
+  case 200:
+    return "OK";
+  case 400:
+    return "Bad Request";
+  case 404:
+    return "Not Found";
+  case 500:
+    return "Internal Server Error";
+  default:
+    return "Unknown";
+  }
+}
+
+string *error_response(int status_code) {
+  basic_response *response = new_response();
+  assert(response != NULL);
+
+  const char *status_message = get_http_status_message(status_code);
+
+  response->version = cpy_str(HTTP_VERSION, strlen(HTTP_VERSION));
+
+  char status_code_str[3];
+  sprintf(status_code_str, "%d", status_code);
+
+  response->status_code = cpy_str(status_code_str, strlen(status_code_str));
+  response->status_message = cpy_str(status_message, strlen(status_message));
+
+  string *encoded_response = encode_response(response, 1);
+
+  free_response(response);
+
+  return encoded_response;
+}
+
 string *basic_http_server(string *request) {
   basic_request *decoded_request = decode_request_string(request);
 
   if (decoded_request == NULL) {
-    return NULL; // TODO: Error - Unable to decode request (400)
+    return error_response(400);
   }
 
   basic_response *response = new_response();
 
   if (response == NULL) {
-    return NULL; // TODO: Error - Unable to create response (500)
+    return error_response(500);
   }
 
   char relative_path[strlen(DOCUMENT_ROOT) + 12];
@@ -169,18 +210,18 @@ string *basic_http_server(string *request) {
   strcat(relative_path, "index.html"); // TODO: read from request
 
   if (realpath(relative_path, absolute_path) == NULL) {
-    return NULL; // TODO: Error - Unable to resolve path (404)
+    return error_response(404);
   }
 
   string *file_content = read_file(absolute_path);
 
   if (file_content == NULL) {
-    return NULL; // TODO: Error - Unable to read file (404)
+    return error_response(404);
   }
 
   response->version = cpy_str(HTTP_VERSION, strlen(HTTP_VERSION));
   response->status_code = cpy_str("200", 3);
-  response->status_message = cpy_str("OK", 2);
+  response->status_message = cpy_str(get_http_status_message(200), 2);
   response->content_type = cpy_str("text/html", 9);
 
   char content_length[file_content->len];
@@ -189,7 +230,7 @@ string *basic_http_server(string *request) {
   response->content_length = cpy_str(content_length, strlen(content_length));
   response->body = file_content;
 
-  string *encoded_response = encode_response(response);
+  string *encoded_response = encode_response(response, 0);
 
   free_request(decoded_request);
   free_response(response);

@@ -5,7 +5,7 @@
 
 #define DOCUMENT_ROOT                                                          \
   "../src/root/" // TODO: make this cleaner? Issue:
-              // https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/4
+                 // https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/4
 #define HTTP_VERSION "HTTP/1.0"
 
 struct basic_request {
