@@ -62,11 +62,11 @@ string *read_file(char *path);
 /// @brief Convert an size_t to a string
 /// @param num The size_t
 /// @return The string
-char* size_t_to_string(size_t num);
+char *size_t_to_string(size_t num);
 
 /// @brief Convert an int to a string
 /// @param num The int
 /// @return The string
-char* int_to_string(int num);
+char *int_to_string(int num);
 
 #endif

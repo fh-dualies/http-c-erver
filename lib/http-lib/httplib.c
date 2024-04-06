@@ -189,6 +189,7 @@ string *read_file(char *path) {
     return NULL;
   }
 
+  // get file length
   fseek(file, 0, SEEK_END);
   long length = ftell(file);
   fseek(file, 0, SEEK_SET);
@@ -200,6 +201,7 @@ string *read_file(char *path) {
     return NULL;
   }
 
+  // read file content
   fread(content->str, 1, length, file);
   content->len = length;
 
@@ -208,30 +210,30 @@ string *read_file(char *path) {
   return content;
 }
 
-char* int_to_string(int num) {
-    int max_length = snprintf(NULL, 0, "%d", num);
+char *int_to_string(int num) {
+  int max_length = snprintf(NULL, 0, "%d", num);
 
-    char* str = (char*)malloc((max_length + 1) * sizeof(char));
+  char *str = (char *)malloc((max_length + 1) * sizeof(char));
 
-    if (str == NULL) {
-        exit(EXIT_FAILURE);
-    }
+  if (str == NULL) {
+    exit(EXIT_FAILURE);
+  }
 
-    snprintf(str, max_length + 1, "%d", num);
+  snprintf(str, max_length + 1, "%d", num);
 
-    return str;
+  return str;
 }
 
-char* size_t_to_string(size_t num) {
-    int max_length = snprintf(NULL, 0, "%zu", num);
+char *size_t_to_string(size_t num) {
+  int max_length = snprintf(NULL, 0, "%zu", num);
 
-    char* str = (char*)malloc((max_length + 1) * sizeof(char));
+  char *str = (char *)malloc((max_length + 1) * sizeof(char));
 
-    if (str == NULL) {
-        exit(EXIT_FAILURE);
-    }
+  if (str == NULL) {
+    exit(EXIT_FAILURE);
+  }
 
-    snprintf(str, max_length + 1, "%zu", num);
+  snprintf(str, max_length + 1, "%zu", num);
 
-    return str;
+  return str;
 }
