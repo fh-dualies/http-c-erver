@@ -33,14 +33,6 @@ This repository's contents is divided across four primary sections:
 
 ## Installation
 
-<!-- 
-Clone repo to e.g. "\*\*/lib" folder
-
-```sh
-$ git clone git@github.com:fh-dualies/c_date.git
-```
--->
-
 Switch to "pse-2024" folder
 
 ```sh
@@ -61,10 +53,21 @@ $ make
 
 ## Run Project
 
-Run echo_server
+### Run echo server
+
+The echo server will just echo the request back to the client
 
 ```sh
-$ ./build/echo_server.out
+$ ./build/server.out --echo
+```
+
+### Run basic http server
+
+The basic http server will process the request information and send a response back to the client.
+The Response will contain html (index.html in the `src/root` folder)
+
+```sh
+$ ./build/server.out
 ```
 
 ## How to test
@@ -72,7 +75,7 @@ $ ./build/echo_server.out
 Run tests
 
 ```sh
-$ ./build/http_lib_test.out
+$ ./build/tests.out
 ```
 
 Red: Assertion failed  
