@@ -177,8 +177,7 @@ string *error_response(int status_code) {
 
   response->version = cpy_str(HTTP_VERSION, strlen(HTTP_VERSION));
 
-  char status_code_str[3];
-  sprintf(status_code_str, "%d", status_code);
+  char* status_code_str = int_to_string(status_code);
 
   response->status_code = cpy_str(status_code_str, strlen(status_code_str));
   response->status_message = cpy_str(status_message, strlen(status_message));
@@ -224,8 +223,7 @@ string *basic_http_server(string *request) {
   response->status_message = cpy_str(get_http_status_message(200), 2);
   response->content_type = cpy_str("text/html", 9);
 
-  char content_length[file_content->len];
-  sprintf(content_length, "%zu", file_content->len);
+  char* content_length = size_t_to_string(file_content->len);
 
   response->content_length = cpy_str(content_length, strlen(content_length));
   response->body = file_content;

@@ -207,3 +207,31 @@ string *read_file(char *path) {
 
   return content;
 }
+
+char* int_to_string(int num) {
+    int max_length = snprintf(NULL, 0, "%d", num);
+
+    char* str = (char*)malloc((max_length + 1) * sizeof(char));
+
+    if (str == NULL) {
+        exit(EXIT_FAILURE);
+    }
+
+    snprintf(str, max_length + 1, "%d", num);
+
+    return str;
+}
+
+char* size_t_to_string(size_t num) {
+    int max_length = snprintf(NULL, 0, "%zu", num);
+
+    char* str = (char*)malloc((max_length + 1) * sizeof(char));
+
+    if (str == NULL) {
+        exit(EXIT_FAILURE);
+    }
+
+    snprintf(str, max_length + 1, "%zu", num);
+
+    return str;
+}
