@@ -96,8 +96,7 @@ static int setup_socket() {
    * Verwende den Socket, selbst wenn er aus einer vorigen Ausführung
    * im TIME_WAIT Status ist.
    */
-  if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt,
-                 sizeof(int)) < 0)
+  if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof(int)) < 0)
     error("ERROR on setsockopt");
 
   /*
