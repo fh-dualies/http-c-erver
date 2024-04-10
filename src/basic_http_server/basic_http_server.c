@@ -17,6 +17,11 @@ basic_request *new_request() {
   request->resource = _new_string();
   request->version = _new_string();
 
+  if (request->method == NULL || request->resource == NULL || request->version == NULL) {
+    free(request);
+    return NULL;
+  }
+
   return request;
 }
 
@@ -35,6 +40,13 @@ basic_response *new_response() {
   response->content_type = _new_string();
   response->content_length = _new_string();
   response->body = _new_string();
+
+  if (response->version == NULL || response->status_code == NULL ||
+      response->content_type == NULL || response->content_length == NULL ||
+      response->body == NULL) {
+    free(response);
+    return NULL;
+  }
 
   return response;
 }
@@ -68,6 +80,9 @@ void free_response(basic_response *response) {
   free(response);
 }
 
+/// @brief Clean up memory allocated to exit the http server
+/// @param request basic_request object to be freed
+/// @param response basic_response object to be freed
 void cleanup(basic_request *request, basic_response *response) {
   free_request(request);
   free_response(response);
@@ -187,6 +202,9 @@ string *encode_response(basic_response *response, bool error) {
   return encoded_response;
 }
 
+/// @brief Check if a given path is valid
+/// @param path Path to be checked
+/// @return True if the path is valid, false otherwise
 bool verify_path(char *path) {
   if (path == NULL) {
     return false;
