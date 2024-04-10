@@ -206,6 +206,12 @@ string *encode_response(basic_response *response, bool error) {
 /// @param path Path to be checked
 /// @return True if the path is valid, false otherwise
 bool verify_path(char *path) {
+    // TODO: only accept /debug path: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/8
+
+    // TODO: only accept valid path: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/10
+
+    // TODO: only accept path with read permission: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/12
+
   if (path == NULL) {
     return false;
   }
@@ -217,10 +223,6 @@ bool verify_path(char *path) {
   if (path[0] != '/') {
     return false;
   }
-
-  // TODO: check path starting with "/root/"
-
-  // TODO: check file access rights
 
   return true;
 }
@@ -282,12 +284,15 @@ string *basic_http_server(string *request) {
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
   }
 
+  // TODO: only accept GET method: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/13
+
   // create path to resource
   char relative_path[strlen(DOCUMENT_ROOT) + 12];
   char absolute_path[PATH_MAX];
 
+  // TODO: read any resource from root: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/9
   strcpy(relative_path, DOCUMENT_ROOT);
-  strcat(relative_path, "index.html"); // TODO: read from request
+  strcat(relative_path, "index.html");
 
   // check if resource exists and get absolute path
   if (realpath(relative_path, absolute_path) == NULL) {
@@ -306,6 +311,8 @@ string *basic_http_server(string *request) {
     cleanup(decoded_request, response);
     return error_response(HTTP_NOT_FOUND);
   }
+
+  // TODO: add request information to html: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/7
 
   // fill response object
   response->version = cpy_str(HTTP_VERSION, strlen(HTTP_VERSION));
