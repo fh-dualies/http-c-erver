@@ -68,6 +68,11 @@ void free_response(basic_response *response) {
   free(response);
 }
 
+void cleanup(basic_request *request, basic_response *response) {
+  free_request(request);
+  free_response(response);
+}
+
 /// @brief Decode a raw HTTP request string into a basic_request object
 /// @param raw_request Raw HTTP request string
 /// @return Decoded basic_request object
@@ -182,6 +187,26 @@ string *encode_response(basic_response *response, bool error) {
   return encoded_response;
 }
 
+bool verify_path(char *path) {
+  if (path == NULL) {
+    return false;
+  }
+
+  if (strlen(path) == 0) {
+    return false;
+  }
+
+  if (path[0] != '/') {
+    return false;
+  }
+
+  // TODO: check path starting with "/root/"
+
+  // TODO: check file access rights
+
+  return true;
+}
+
 /// @brief Gets the HTTP status message for a given status code
 /// @param status_code HTTP status code
 /// @return HTTP status message
@@ -235,7 +260,7 @@ string *basic_http_server(string *request) {
   basic_response *response = new_response();
 
   if (response == NULL) {
-    free_request(decoded_request);
+    cleanup(decoded_request, NULL);
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
   }
 
@@ -248,16 +273,19 @@ string *basic_http_server(string *request) {
 
   // check if resource exists and get absolute path
   if (realpath(relative_path, absolute_path) == NULL) {
-    free_request(decoded_request);
-    free_response(response);
+    cleanup(decoded_request, response);
     return error_response(404);
+  }
+
+  if (!verify_path(absolute_path)) {
+    cleanup(decoded_request, response);
+    return error_response(403);
   }
 
   string *file_content = read_file(absolute_path);
 
   if (file_content == NULL) {
-    free_request(decoded_request);
-    free_response(response);
+    cleanup(decoded_request, response);
     return error_response(HTTP_NOT_FOUND);
   }
 
@@ -275,8 +303,7 @@ string *basic_http_server(string *request) {
 
   string *encoded_response = encode_response(response, false);
 
-  free_request(decoded_request);
-  free_response(response);
+  cleanup(decoded_request, response);
   free(content_length);
 
   return encoded_response;
