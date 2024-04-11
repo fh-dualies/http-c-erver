@@ -237,11 +237,7 @@ bool verify_path(char *path) {
 /// @brief Verify if a given request is valid
 /// @param request Request to be verified
 /// @return True if the request is valid, false otherwise
-bool verify_request(basic_request *request) {
-  if (request == NULL) {
-    return false;
-  }
-
+bool verify_decoded_request(basic_request *request) {
   if (request->method == NULL || request->resource == NULL || request->version == NULL) {
     return false;
   }
@@ -276,6 +272,8 @@ const char *get_http_status_message(int status_code) {
     return STATUS_MESSAGE_NOT_FOUND;
   case HTTP_INTERNAL_SERVER_ERROR:
     return STATUS_MESSAGE_INTERNAL_SERVER_ERROR;
+  case HTTP_NOT_IMPLEMENTED:
+    return STATUS_MESSAGE_NOT_IMPLEMENTED;
   default:
     return STATUS_MESSAGE_UNKNOWN;
   }
@@ -308,8 +306,19 @@ string *error_response(int status_code) {
 string *basic_http_server(string *request) {
   basic_request *decoded_request = decode_request_string(request);
 
-  if (!verify_request(decoded_request)) {
+  if (decoded_request == NULL) {
     return error_response(HTTP_BAD_REQUEST);
+  }
+
+  if (!verify_decoded_request(decoded_request)) {
+    free_request(decoded_request);
+    return error_response(HTTP_BAD_REQUEST);
+  }
+
+  // check if method is implemented
+  if (strcmp(get_char_str(decoded_request->method), HTTP_METHOD_GET) != 0) {
+    cleanup(decoded_request, NULL);
+    return error_response(HTTP_NOT_IMPLEMENTED);
   }
 
   basic_response *response = new_response();
@@ -318,8 +327,6 @@ string *basic_http_server(string *request) {
     free_request(decoded_request);
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
   }
-
-  // TODO: only accept GET method: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/13
 
   // create path to resource
   char relative_path[strlen(DOCUMENT_ROOT) + 12];

@@ -13,18 +13,21 @@
 #define HTTP_VERSION_1_1 "HTTP/1.1"
 #define CONTENT_TYPE_HTML "text/html"
 #define HTTP_LINE_BREAK "\r\n"
+#define HTTP_METHOD_GET "GET"
 
 #define HTTP_OK 200
 #define HTTP_BAD_REQUEST 400
 #define HTTP_FORBIDDEN 403
 #define HTTP_NOT_FOUND 404
 #define HTTP_INTERNAL_SERVER_ERROR 500
+#define HTTP_NOT_IMPLEMENTED 501
 
 #define STATUS_MESSAGE_OK "OK"
 #define STATUS_MESSAGE_BAD_REQUEST "Bad Request"
 #define STATUS_MESSAGE_FORBIDDEN "Forbidden"
 #define STATUS_MESSAGE_NOT_FOUND "Not Found"
 #define STATUS_MESSAGE_INTERNAL_SERVER_ERROR "Internal Server Error"
+#define STATUS_MESSAGE_NOT_IMPLEMENTED "Not Implemented"
 #define STATUS_MESSAGE_UNKNOWN "Unknown"
 
 #define CONTENT_LENGTH_HEADER "Content-Length: "
