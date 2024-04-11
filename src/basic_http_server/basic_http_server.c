@@ -176,7 +176,7 @@ string *encode_response(basic_response *response, bool error) {
   str_cat(encoded_response, get_char_str(response->status_message),
           get_length(response->status_message));
 
-  str_cat(encoded_response, "\n", 1);
+  str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   // skip headers and body for error responses
   if (error) {
@@ -187,14 +187,14 @@ string *encode_response(basic_response *response, bool error) {
   str_cat(encoded_response, CONTENT_TYPE_HEADER, strlen(CONTENT_TYPE_HEADER));
   str_cat(encoded_response, get_char_str(response->content_type),
           get_length(response->content_type));
-  str_cat(encoded_response, "\n", 1);
+  str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   str_cat(encoded_response, CONTENT_LENGTH_HEADER, strlen(CONTENT_LENGTH_HEADER));
   str_cat(encoded_response, get_char_str(response->content_length),
           get_length(response->content_length));
-  str_cat(encoded_response, "\n", 1);
+  str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
-  str_cat(encoded_response, "\n", 1);
+  str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   // body
   str_cat(encoded_response, get_char_str(response->body), get_length(response->body));
@@ -206,11 +206,12 @@ string *encode_response(basic_response *response, bool error) {
 /// @param path Path to be checked
 /// @return True if the path is valid, false otherwise
 bool verify_path(char *path) {
-    // TODO: only accept /debug path: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/8
+  // TODO: only accept /debug path: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/8
 
-    // TODO: only accept valid path: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/10
+  // TODO: only accept valid path: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/10
 
-    // TODO: only accept path with read permission: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/12
+  // TODO: only accept path with read permission:
+  // https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/12
 
   if (path == NULL) {
     return false;
@@ -312,7 +313,8 @@ string *basic_http_server(string *request) {
     return error_response(HTTP_NOT_FOUND);
   }
 
-  // TODO: add request information to html: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/7
+  // TODO: add request information to html:
+  // https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/7
 
   // fill response object
   response->version = cpy_str(HTTP_VERSION, strlen(HTTP_VERSION));

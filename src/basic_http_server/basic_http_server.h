@@ -10,6 +10,7 @@
 
 #define HTTP_VERSION "HTTP/1.0"
 #define CONTENT_TYPE_HTML "text/html"
+#define HTTP_LINE_BREAK "\r\n"
 
 #define HTTP_OK 200
 #define HTTP_BAD_REQUEST 400
