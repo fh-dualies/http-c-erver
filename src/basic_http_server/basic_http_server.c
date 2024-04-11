@@ -39,11 +39,12 @@ basic_response *new_response() {
   response->status_message = _new_string();
   response->content_type = _new_string();
   response->content_length = _new_string();
+  response->server = _new_string();
   response->body = _new_string();
 
   if (response->version == NULL || response->status_code == NULL ||
       response->content_type == NULL || response->content_length == NULL ||
-      response->body == NULL) {
+      response->body == NULL || response->server == NULL) {
     free(response);
     return NULL;
   }
@@ -76,6 +77,7 @@ void free_response(basic_response *response) {
   free_str(response->status_message);
   free_str(response->content_type);
   free_str(response->content_length);
+  free_str(response->server);
   free_str(response->body);
   free(response);
 }
@@ -194,6 +196,10 @@ string *encode_response(basic_response *response, bool error) {
           get_length(response->content_length));
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
+  str_cat(encoded_response, SERVER_HEADER, strlen(SERVER_HEADER));
+  str_cat(encoded_response, get_char_str(response->server), get_length(response->server));
+  str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
+
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   // body
@@ -228,6 +234,31 @@ bool verify_path(char *path) {
   return true;
 }
 
+/// @brief Verify if a given request is valid
+/// @param request Request to be verified
+/// @return True if the request is valid, false otherwise
+bool verify_request(basic_request *request) {
+  if (request == NULL) {
+    return false;
+  }
+
+  if (request->method == NULL || request->resource == NULL || request->version == NULL) {
+    return false;
+  }
+
+  if (request->method->len == 0 || request->resource->len == 0 || request->version->len == 0) {
+    return false;
+  }
+
+  // check if http version is 1.0 or 1.1
+  if (strcmp(get_char_str(request->version), HTTP_VERSION_1_0) != 0 &&
+      strcmp(get_char_str(request->version), HTTP_VERSION_1_1) != 0) {
+    return false;
+  }
+
+  return true;
+}
+
 /// @brief Gets the HTTP status message for a given status code
 /// @param status_code HTTP status code
 /// @return HTTP status message
@@ -239,6 +270,8 @@ const char *get_http_status_message(int status_code) {
     return STATUS_MESSAGE_OK;
   case HTTP_BAD_REQUEST:
     return STATUS_MESSAGE_BAD_REQUEST;
+  case HTTP_FORBIDDEN:
+    return STATUS_MESSAGE_FORBIDDEN;
   case HTTP_NOT_FOUND:
     return STATUS_MESSAGE_NOT_FOUND;
   case HTTP_INTERNAL_SERVER_ERROR:
@@ -260,9 +293,10 @@ string *error_response(int status_code) {
 
   const char *status_message = get_http_status_message(status_code);
 
-  response->version = cpy_str(HTTP_VERSION, strlen(HTTP_VERSION));
+  response->version = cpy_str(HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
   response->status_code = cpy_str(int_to_string(status_code), strlen(int_to_string(status_code)));
   response->status_message = cpy_str(status_message, strlen(status_message));
+  response->server = cpy_str(SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
 
   string *encoded_response = encode_response(response, true);
 
@@ -274,14 +308,14 @@ string *error_response(int status_code) {
 string *basic_http_server(string *request) {
   basic_request *decoded_request = decode_request_string(request);
 
-  if (decoded_request == NULL) {
+  if (!verify_request(decoded_request)) {
     return error_response(HTTP_BAD_REQUEST);
   }
 
   basic_response *response = new_response();
 
   if (response == NULL) {
-    cleanup(decoded_request, NULL);
+    free_request(decoded_request);
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
   }
 
@@ -298,12 +332,12 @@ string *basic_http_server(string *request) {
   // check if resource exists and get absolute path
   if (realpath(relative_path, absolute_path) == NULL) {
     cleanup(decoded_request, response);
-    return error_response(404);
+    return error_response(HTTP_NOT_FOUND);
   }
 
   if (!verify_path(absolute_path)) {
     cleanup(decoded_request, response);
-    return error_response(403);
+    return error_response(HTTP_FORBIDDEN);
   }
 
   string *file_content = read_file(absolute_path);
@@ -317,11 +351,12 @@ string *basic_http_server(string *request) {
   // https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/7
 
   // fill response object
-  response->version = cpy_str(HTTP_VERSION, strlen(HTTP_VERSION));
+  response->version = cpy_str(HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
   response->status_code = cpy_str(int_to_string(HTTP_OK), strlen(int_to_string(HTTP_OK)));
   response->status_message =
       cpy_str(get_http_status_message(HTTP_OK), strlen(get_http_status_message(HTTP_OK)));
   response->content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  response->server = cpy_str(SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
 
   char *content_length = size_t_to_string(file_content->len);
 
