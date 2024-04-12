@@ -279,6 +279,32 @@ const char *get_http_status_message(int status_code) {
   }
 }
 
+string *debug_response(basic_request *request) {
+  basic_response *response = new_response();
+
+  if (response == NULL) {
+    return NULL;
+  }
+
+  response->version = cpy_str(HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
+  response->status_code = cpy_str(int_to_string(HTTP_OK), strlen(int_to_string(HTTP_OK)));
+  response->status_message =
+      cpy_str(get_http_status_message(HTTP_OK), strlen(get_http_status_message(HTTP_OK)));
+  response->content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  response->server = cpy_str(SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
+  response->body = cpy_str("<html><head><title>Debug</title></head><body>", 45);
+
+  // TODO: add request information to html:
+  // https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/7
+
+  string *encoded_response = encode_response(response, false);
+
+  free_response(response);
+  free_request(request);
+
+  return encoded_response;
+}
+
 /// @brief Create error response for a given status code
 /// @param status_code HTTP status code
 /// @return Encoded raw HTTP response string
@@ -321,6 +347,11 @@ string *basic_http_server(string *request) {
     return error_response(HTTP_NOT_IMPLEMENTED);
   }
 
+  if (strcmp(get_char_str(decoded_request->resource), "/debug") == 0) {
+    // no cleanup needed, debug_response() will free the request
+    return debug_response(decoded_request);
+  }
+
   basic_response *response = new_response();
 
   if (response == NULL) {
@@ -353,9 +384,6 @@ string *basic_http_server(string *request) {
     cleanup(decoded_request, response);
     return error_response(HTTP_NOT_FOUND);
   }
-
-  // TODO: add request information to html:
-  // https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/7
 
   // fill response object
   response->version = cpy_str(HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
