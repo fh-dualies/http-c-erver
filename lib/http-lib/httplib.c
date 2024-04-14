@@ -238,10 +238,10 @@ char *size_t_to_string(size_t num) {
   return str;
 }
 
-string *absPath(string *path){
-    string *absPath = _new_string();
-    absPath->len = 9;
-    absPath->str = "/src/root";
-    str_cat(absPath, path, path->len);
-    return absPath;
+string *absPath(string *path) {
+  string *absPath = _new_string();
+  absPath->len = 9;
+  absPath->str = "/src/root";
+  str_cat(absPath, path, path->len);
+  return absPath;
 }
