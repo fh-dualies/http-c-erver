@@ -212,8 +212,6 @@ string *encode_response(response_t *response, bool error) {
 /// @param path Path to be checked
 /// @return True if the path is valid, false otherwise
 bool verify_path(char *path) {
-  // TODO: only accept /debug path: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/8
-
   // TODO: only accept valid path: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/10
 
   // TODO: only accept path with read permission:
@@ -229,6 +227,13 @@ bool verify_path(char *path) {
 
   if (path[0] != '/') {
     return false;
+  }
+
+    printf("Path: %s\n", path);
+
+  // check if path contains ".."
+  if (strstr(path, "..") != NULL) {
+      return false;
   }
 
   return true;
@@ -321,8 +326,18 @@ string *error_response(int status_code) {
   response->status_code = cpy_str(int_to_string(status_code), strlen(int_to_string(status_code)));
   response->status_message = cpy_str(status_message, strlen(status_message));
   response->server = cpy_str(SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
+  response->content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
 
-  string *encoded_response = encode_response(response, true);
+  response->body = cpy_str("<html><head><title>Error</title></head><body><h1>", 49);
+  str_cat(response->body, int_to_string(status_code), strlen(int_to_string(status_code)));
+  str_cat(response->body, "</h1><p>", 8);
+  str_cat(response->body, status_message, strlen(status_message));
+  str_cat(response->body, "</p></body></html>", 18);
+
+  response->content_length =
+      cpy_str(size_t_to_string(response->body->len), strlen(size_t_to_string(response->body->len)));
+
+  string *encoded_response = encode_response(response, false);
 
   free_response(response);
 
