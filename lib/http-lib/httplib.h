@@ -69,4 +69,9 @@ char *size_t_to_string(size_t num);
 /// @return The string
 char *int_to_string(int num);
 
+/// @brief converts the relativ path to absolute path (document root)
+/// @param path relativ path
+/// @return abslotue path
+string *absPath(string *path);
+
 #endif
