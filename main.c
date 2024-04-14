@@ -1,5 +1,5 @@
 #include "lib/http-lib/httplib.h"
-#include "src/basic_http_server/basic_http_server.h"
+#include "src/http_server/http_server.h"
 #include <errno.h>
 #include <netinet/ip.h>
 #include <signal.h>
@@ -235,7 +235,7 @@ string *process(string *request) {
     return response;
   }
 
-  return basic_http_server(request);
+  return http_server(request);
 }
 
 int main(int argc, char *argv[]) {

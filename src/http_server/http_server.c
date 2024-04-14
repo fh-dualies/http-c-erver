@@ -1,13 +1,13 @@
-#include "basic_http_server.h"
+#include "http_server.h"
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-/// @brief Create a new basic_request object
-/// @return Created basic_request object
-basic_request *new_request() {
-  basic_request *request = malloc(sizeof(basic_request));
+/// @brief Create a new request object
+/// @return Created request object
+request_t *new_request() {
+  request_t *request = malloc(sizeof(request_t));
 
   if (request == NULL) {
     return NULL;
@@ -25,10 +25,10 @@ basic_request *new_request() {
   return request;
 }
 
-/// @brief Create a new basic_response object
-/// @return Created basic_response object
-basic_response *new_response() {
-  basic_response *response = malloc(sizeof(basic_response));
+/// @brief Create a new response object
+/// @return Created response object
+response_t *new_response() {
+  response_t *response = malloc(sizeof(response_t));
 
   if (response == NULL) {
     return NULL;
@@ -52,9 +52,9 @@ basic_response *new_response() {
   return response;
 }
 
-/// @brief Free the memory allocated for a basic_request object
-/// @param request basic_request object to be freed
-void free_request(basic_request *request) {
+/// @brief Free the memory allocated for a request object
+/// @param request request object to be freed
+void free_request(request_t *request) {
   if (request == NULL) {
     return;
   }
@@ -65,9 +65,9 @@ void free_request(basic_request *request) {
   free(request);
 }
 
-/// @brief Free the memory allocated for a basic_response object
-/// @param response basic_response object to be freed
-void free_response(basic_response *response) {
+/// @brief Free the memory allocated for a response object
+/// @param response response object to be freed
+void free_response(response_t *response) {
   if (response == NULL) {
     return;
   }
@@ -83,22 +83,22 @@ void free_response(basic_response *response) {
 }
 
 /// @brief Clean up memory allocated to exit the http server
-/// @param request basic_request object to be freed
-/// @param response basic_response object to be freed
-void cleanup(basic_request *request, basic_response *response) {
+/// @param request request object to be freed
+/// @param response response object to be freed
+void cleanup(request_t *request, response_t *response) {
   free_request(request);
   free_response(response);
 }
 
-/// @brief Decode a raw HTTP request string into a basic_request object
+/// @brief Decode a raw HTTP request string into a request object
 /// @param raw_request Raw HTTP request string
-/// @return Decoded basic_request object
-basic_request *decode_request_string(string *raw_request) {
+/// @return Decoded request object
+request_t *decode_request_string(string *raw_request) {
   if (raw_request == NULL) {
     return NULL;
   }
 
-  basic_request *request = new_request();
+  request_t *request = new_request();
 
   if (request == NULL) {
     return NULL;
@@ -154,11 +154,11 @@ basic_request *decode_request_string(string *raw_request) {
   return request;
 }
 
-/// @brief Encode a basic_response object into a raw HTTP response string
-/// @param response basic_response object to be encoded
+/// @brief Encode a response object into a raw HTTP response string
+/// @param response response object to be encoded
 /// @param error Flag indicating if the response is an error response
 /// @return Encoded raw HTTP response string
-string *encode_response(basic_response *response, bool error) {
+string *encode_response(response_t *response, bool error) {
   if (response == NULL) {
     return NULL;
   }
@@ -237,7 +237,7 @@ bool verify_path(char *path) {
 /// @brief Verify if a given request is valid
 /// @param request Request to be verified
 /// @return True if the request is valid, false otherwise
-bool verify_decoded_request(basic_request *request) {
+bool verify_decoded_request(request_t *request) {
   if (request->method == NULL || request->resource == NULL || request->version == NULL) {
     return false;
   }
@@ -279,8 +279,8 @@ const char *get_http_status_message(int status_code) {
   }
 }
 
-string *debug_response(basic_request *request) {
-  basic_response *response = new_response();
+string *debug_response(request_t *request) {
+  response_t *response = new_response();
 
   if (response == NULL) {
     return NULL;
@@ -309,7 +309,7 @@ string *debug_response(basic_request *request) {
 /// @param status_code HTTP status code
 /// @return Encoded raw HTTP response string
 string *error_response(int status_code) {
-  basic_response *response = new_response();
+  response_t *response = new_response();
 
   if (response == NULL) {
     return NULL;
@@ -329,8 +329,8 @@ string *error_response(int status_code) {
   return encoded_response;
 }
 
-string *basic_http_server(string *request) {
-  basic_request *decoded_request = decode_request_string(request);
+string *http_server(string *raw_request) {
+  request_t *decoded_request = decode_request_string(raw_request);
 
   if (decoded_request == NULL) {
     return error_response(HTTP_BAD_REQUEST);
@@ -352,7 +352,7 @@ string *basic_http_server(string *request) {
     return debug_response(decoded_request);
   }
 
-  basic_response *response = new_response();
+  response_t *response = new_response();
 
   if (response == NULL) {
     free_request(decoded_request);
