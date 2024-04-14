@@ -8,12 +8,12 @@
     - [ ] HTTP-Methode
     - [ ] Ressource
     - [ ] Protokollversion
-- [x] nicht-standardkonforme Methoden wie `MEIN_GET` wird akzeptiert
-- [ ] überlange Ressourcen werden akzeptiert
+- [x] nicht-standardkonforme Methoden wie `MEIN_GET` wird akzeptiert => only `GET` is allowed
+- [x] überlange Ressourcen werden akzeptiert => absolute path is limited to `4096` bytes
 
 ## Abtestat
 
-- [ ] Vorherig implementierte HTML Antwort nun nur unter `/debug` ereichbar
+- [x] Vorherig implementierte HTML Antwort nun nur unter `/debug` ereichbar
 - [ ] Datei aus document root wird gesendet
 - [ ] Auf Datein auserhalb des document root wird mit `403 Forbidden` geantwortet
 - [x] Auf Datein die nicht existieren wird mit `404 Not Found` geantwortet
