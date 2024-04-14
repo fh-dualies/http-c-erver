@@ -5,7 +5,7 @@
 
 // Server Constants
 #define SERVER_SIGNATURE "LLDM/0.1 Basic HTTP Server"
-#define DOCUMENT_ROOT "src/root/" // TODO: make this cleaner? Issue:
+#define DOCUMENT_ROOT "src/root" // TODO: make this cleaner? Issue:
 // https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/4
 // Set to `../src/root/` when running the program with jetbrains (clion)
 // Set to `src/root/` when running the program manually
