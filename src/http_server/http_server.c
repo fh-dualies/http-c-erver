@@ -158,7 +158,7 @@ request_t *decode_request_string(string *raw_request) {
 /// @param response response object to be encoded
 /// @param error Flag indicating if the response is an error response
 /// @return Encoded raw HTTP response string
-string *encode_response(response_t *response, bool error) {
+string *encode_response(response_t *response) {
   if (response == NULL) {
     return NULL;
   }
@@ -179,11 +179,6 @@ string *encode_response(response_t *response, bool error) {
           get_length(response->status_message));
 
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
-
-  // skip headers and body for error responses
-  if (error) {
-    return encoded_response;
-  }
 
   // headers
   str_cat(encoded_response, CONTENT_TYPE_HEADER, strlen(CONTENT_TYPE_HEADER));
@@ -229,11 +224,9 @@ bool verify_path(char *path) {
     return false;
   }
 
-    printf("Path: %s\n", path);
-
   // check if path contains ".."
   if (strstr(path, "..") != NULL) {
-      return false;
+    return false;
   }
 
   return true;
@@ -302,7 +295,7 @@ string *debug_response(request_t *request) {
   // TODO: add request information to html:
   // https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/7
 
-  string *encoded_response = encode_response(response, false);
+  string *encoded_response = encode_response(response);
 
   free_response(response);
   free_request(request);
@@ -337,7 +330,7 @@ string *error_response(int status_code) {
   response->content_length =
       cpy_str(size_t_to_string(response->body->len), strlen(size_t_to_string(response->body->len)));
 
-  string *encoded_response = encode_response(response, false);
+  string *encoded_response = encode_response(response);
 
   free_response(response);
 
@@ -351,6 +344,7 @@ string *http_server(string *raw_request) {
     return error_response(HTTP_BAD_REQUEST);
   }
 
+  // validate request content
   if (!verify_decoded_request(decoded_request)) {
     free_request(decoded_request);
     return error_response(HTTP_BAD_REQUEST);
@@ -362,6 +356,7 @@ string *http_server(string *raw_request) {
     return error_response(HTTP_NOT_IMPLEMENTED);
   }
 
+  // return debug response if requested
   if (strcmp(get_char_str(decoded_request->resource), "/debug") == 0) {
     // no cleanup needed, debug_response() will free the request
     return debug_response(decoded_request);
@@ -376,7 +371,7 @@ string *http_server(string *raw_request) {
 
   // create path to resource
   char relative_path[strlen(DOCUMENT_ROOT) + 12];
-  char absolute_path[PATH_MAX];
+  char absolute_path[PATH_MAX]; // max 4096 bytes
 
   // TODO: read any resource from root: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/9
   strcpy(relative_path, DOCUMENT_ROOT);
@@ -388,6 +383,7 @@ string *http_server(string *raw_request) {
     return error_response(HTTP_NOT_FOUND);
   }
 
+  // check if path is valid
   if (!verify_path(absolute_path)) {
     cleanup(decoded_request, response);
     return error_response(HTTP_FORBIDDEN);
@@ -413,7 +409,7 @@ string *http_server(string *raw_request) {
   response->content_length = cpy_str(content_length, strlen(content_length));
   response->body = file_content;
 
-  string *encoded_response = encode_response(response, false);
+  string *encoded_response = encode_response(response);
 
   cleanup(decoded_request, response);
   free(content_length);
