@@ -13,7 +13,7 @@ add_executable(tests
 
 add_executable(server
         lib/http-lib/httplib.c
-        src/basic_http_server/basic_http_server.c
+        src/http_server/http_server.c
         main.c)
 
 set_target_properties(tests PROPERTIES SUFFIX ".out")
