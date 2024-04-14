@@ -224,7 +224,12 @@ bool verify_path(char *path) {
     return false;
   }
 
-  // check if path contains ".."
+  // should contain DOCUMENT_ROOT (mainly prevents access to other directories)
+  if (strstr(path, DOCUMENT_ROOT) == NULL) {
+    return false;
+  }
+
+  // check if path contains ".." (just to be sure)
   if (strstr(path, "..") != NULL) {
     return false;
   }
@@ -373,9 +378,8 @@ string *http_server(string *raw_request) {
   char relative_path[strlen(DOCUMENT_ROOT) + 12];
   char absolute_path[PATH_MAX]; // max 4096 bytes
 
-  // TODO: read any resource from root: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/9
   strcpy(relative_path, DOCUMENT_ROOT);
-  strcat(relative_path, "index.html");
+  strcat(relative_path, get_char_str(decoded_request->resource));
 
   // check if resource exists and get absolute path
   if (realpath(relative_path, absolute_path) == NULL) {
