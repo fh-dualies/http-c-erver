@@ -1,5 +1,5 @@
-#ifndef BASIC_HTTP_SERVER_H
-#define BASIC_HTTP_SERVER_H
+#ifndef HTTP_SERVER_H
+#define HTTP_SERVER_H
 
 #include "../../lib/http-lib/httplib.h"
 
@@ -34,13 +34,13 @@
 #define CONTENT_TYPE_HEADER "Content-Type: "
 #define SERVER_HEADER "Server: "
 
-struct basic_request {
+struct request_t {
   string *method;
   string *resource;
   string *version;
-} typedef basic_request;
+} typedef request_t;
 
-struct basic_response {
+struct response_t {
   string *version;
   string *status_code;
   string *status_message;
@@ -48,11 +48,11 @@ struct basic_response {
   string *content_length;
   string *server;
   string *body;
-} typedef basic_response;
+} typedef response_t;
 
 /// @breif Starts a basic HTTP server
 /// @param request Raw HTTP request string
 /// @return Encoded raw HTTP response string
-string *basic_http_server(string *request);
+string *http_server(string *request);
 
 #endif
