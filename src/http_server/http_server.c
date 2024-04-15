@@ -283,27 +283,39 @@ const char *get_http_status_message(int status_code) {
 string *debug_response(request_t *request) {
   response_t *response = new_response();
 
-  if (response == NULL) {
-    return NULL;
-  }
+    if (response == NULL) {
+        return NULL;
+    }
 
-  response->version = cpy_str(HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
-  response->status_code = cpy_str(int_to_string(HTTP_OK), strlen(int_to_string(HTTP_OK)));
-  response->status_message =
-      cpy_str(get_http_status_message(HTTP_OK), strlen(get_http_status_message(HTTP_OK)));
-  response->content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
-  response->server = cpy_str(SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
-  response->body = cpy_str("<html><head><title>Debug</title></head><body>", 45);
+    response->version = cpy_str(HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
+    response->status_code = cpy_str(int_to_string(HTTP_OK), strlen(int_to_string(HTTP_OK)));
+    response->status_message =
+            cpy_str(get_http_status_message(HTTP_OK), strlen(get_http_status_message(HTTP_OK)));
+    response->content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+    response->server = cpy_str(SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
 
-  // TODO: add request information to html:
-  // https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/7
+    // HTML body
+    response->body = cpy_str("<html><head><title>Debug</title></head><body>", 45);
+    response->body = str_cat(response->body, "<p>HTTP-Methode: ", 17);
+    response->body = str_cat(response->body, request->method->str, request->method->len);
 
-  string *encoded_response = encode_response(response);
+    response->body = str_cat(response->body, "<br>Ressource: ", 15);
+    response->body = str_cat(response->body, request->resource->str, request->resource->len);
 
-  free_response(response);
-  free_request(request);
+    response->body = str_cat(response->body, "<br>HTTP-Version: ", 18);
+    response->body = str_cat(response->body, request->version->str, request->version->len);
+    response->body = str_cat(response->body, "</p></body></html>", 18);
 
-  return encoded_response;
+
+
+    // Encode response
+    string *encoded_response = encode_response(response, false);
+
+    // Free memory
+    free_response(response);
+    free_request(request);
+
+    return encoded_response;
 }
 
 /// @brief Create error response for a given status code
