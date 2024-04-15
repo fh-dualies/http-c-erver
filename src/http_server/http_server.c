@@ -1,8 +1,9 @@
 #include "http_server.h"
 #include <limits.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
 
 /// @brief Create a new request object
 /// @return Created request object
@@ -209,9 +210,6 @@ string *encode_response(response_t *response) {
 bool verify_path(char *path) {
   // TODO: only accept valid path: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/10
 
-  // TODO: only accept path with read permission:
-  // https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/12
-
   if (path == NULL) {
     return false;
   }
@@ -396,6 +394,12 @@ string *http_server(string *raw_request) {
   string *file_content = read_file(absolute_path);
 
   if (file_content == NULL) {
+    // Check if file access was denied
+    if(errno == EACCES) {
+      cleanup(decoded_request, response);
+      return error_response(HTTP_FORBIDDEN);
+    }
+
     cleanup(decoded_request, response);
     return error_response(HTTP_NOT_FOUND);
   }
