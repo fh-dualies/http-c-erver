@@ -17,19 +17,17 @@ string *str_cat(string *dest, const char *src, size_t len) {
   // length after concatenation
   size_t new_len = dest->len + len;
 
-  char *new_string = realloc(dest->str, new_len + 1);
+  dest->str = realloc(dest->str, new_len + 1);
 
-  if (new_string == NULL) {
+  if (dest->str == NULL) {
     exit(4);
   }
 
   // copy src to dest
   memcpy(dest->str + dest->len, src, len);
 
-  new_string[new_len] = '\0';
-
+  dest->str[new_len] = '\0';
   dest->len = new_len;
-  dest->str = new_string;
 
   return dest;
 }
@@ -45,27 +43,26 @@ string *str_set(string *dest, const char *src, size_t len) {
     return dest;
   }
 
-  size_t new_len = len;
+  free(dest->str);
 
-  char *new_string = realloc(dest->str, new_len + 1);
+  dest->str = malloc(len + 1);
 
-  if (new_string == NULL) {
+  if (dest->str == NULL) {
     exit(4);
   }
 
   // copy src to dest
-  memcpy(new_string, src, len);
+  memcpy(dest->str, src, len);
 
-  new_string[new_len] = '\0';
+  dest->str[len] = '\0';
 
-  dest->len = new_len;
-  dest->str = new_string;
+  dest->len = len;
 
   return dest;
 }
 
 string *_new_string() {
-  string *str = calloc(sizeof(string), 1);
+  string *str = malloc(sizeof(string));
 
   if (str == NULL) {
     exit(2);
@@ -77,7 +74,6 @@ string *_new_string() {
   }
 
   str->str[0] = '\0';
-
   str->len = 0;
 
   return str;
@@ -92,7 +88,7 @@ void print_string(string *str) {
 string *cpy_str(const char *src, size_t len) {
   assert(src != NULL);
 
-  string *dest = calloc(sizeof(string), 1);
+  string *dest = malloc(sizeof(string));
   if (dest == NULL) {
     exit(2);
   }
@@ -104,6 +100,7 @@ string *cpy_str(const char *src, size_t len) {
   }
 
   memcpy(dest->str, src, len);
+  dest->str[len] = '\0';
   dest->len = len;
 
   return dest;
