@@ -1,10 +1,7 @@
 #include "http_server.h"
-#include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
-
 /// @brief Create a new request object
 /// @return Created request object
 request_t *new_request() {
@@ -204,37 +201,6 @@ string *encode_response(response_t *response) {
   return encoded_response;
 }
 
-/// @brief Check if a given path is valid
-/// @param path Path to be checked
-/// @return True if the path is valid, false otherwise
-bool verify_path(char *path) {
-  // TODO: only accept valid path: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/10
-
-  if (path == NULL) {
-    return false;
-  }
-
-  if (strlen(path) == 0) {
-    return false;
-  }
-
-  if (path[0] != '/') {
-    return false;
-  }
-
-  // should contain DOCUMENT_ROOT (mainly prevents access to other directories)
-  if (strstr(path, DOCUMENT_ROOT) == NULL) {
-    return false;
-  }
-
-  // check if path contains ".." (just to be sure)
-  if (strstr(path, "..") != NULL) {
-    return false;
-  }
-
-  return true;
-}
-
 /// @brief Verify if a given request is valid
 /// @param request Request to be verified
 /// @return True if the request is valid, false otherwise
@@ -355,6 +321,11 @@ string *error_response(int status_code) {
 string *http_server(string *raw_request) {
   request_t *decoded_request = decode_request_string(raw_request);
 
+  print_string(decoded_request->resource);
+  puts("");
+  print_string(url_decode(decoded_request->resource));
+  puts("");
+
   if (decoded_request == NULL) {
     return error_response(HTTP_BAD_REQUEST);
   }
@@ -365,74 +336,5 @@ string *http_server(string *raw_request) {
     return error_response(HTTP_BAD_REQUEST);
   }
 
-  // check if method is implemented
-  if (strcmp(get_char_str(decoded_request->method), HTTP_METHOD_GET) != 0) {
-    cleanup(decoded_request, NULL);
-    return error_response(HTTP_NOT_IMPLEMENTED);
-  }
-
-  // return debug response if requested
-  if (strcmp(get_char_str(decoded_request->resource), "/debug") == 0) {
-    // no cleanup needed, debug_response() will free the request
-    return debug_response(decoded_request);
-  }
-
-  response_t *response = new_response();
-
-  if (response == NULL) {
-    free_request(decoded_request);
-    return error_response(HTTP_INTERNAL_SERVER_ERROR);
-  }
-
-  // create path to resource
-  char relative_path[strlen(DOCUMENT_ROOT) + 12];
-  char absolute_path[PATH_MAX]; // max 4096 bytes
-
-  strcpy(relative_path, DOCUMENT_ROOT);
-  strcat(relative_path, get_char_str(decoded_request->resource));
-
-  // check if resource exists and get absolute path
-  if (realpath(relative_path, absolute_path) == NULL) {
-    cleanup(decoded_request, response);
-    return error_response(HTTP_NOT_FOUND);
-  }
-
-  // check if path is valid
-  if (!verify_path(absolute_path)) {
-    cleanup(decoded_request, response);
-    return error_response(HTTP_FORBIDDEN);
-  }
-
-  string *file_content = read_file(absolute_path);
-
-  if (file_content == NULL) {
-    // Check if file access was denied
-    if(errno == EACCES) {
-      cleanup(decoded_request, response);
-      return error_response(HTTP_FORBIDDEN);
-    }
-
-    cleanup(decoded_request, response);
-    return error_response(HTTP_NOT_FOUND);
-  }
-
-  // fill response object
-  response->version = cpy_str(HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
-  response->status_code = cpy_str(int_to_string(HTTP_OK), strlen(int_to_string(HTTP_OK)));
-  response->status_message =
-      cpy_str(get_http_status_message(HTTP_OK), strlen(get_http_status_message(HTTP_OK)));
-  response->content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
-  response->server = cpy_str(SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
-
-  char *content_length = size_t_to_string(file_content->len);
-
-  response->content_length = cpy_str(content_length, strlen(content_length));
-  response->body = file_content;
-
-  string *encoded_response = encode_response(response);
-
-  cleanup(decoded_request, response);
-  free(content_length);
-
-  return encoded_response;
+  return debug_response(decoded_request);
 }
