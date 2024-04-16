@@ -143,7 +143,7 @@ request_t *decode_request_string(string *raw_request) {
     }
 
     // copy segment to request object
-    str_cat(current_segment, raw_request->str + segment_start, i - segment_start);
+    str_cat(current_segment, get_char_str(raw_request) + segment_start, i - segment_start);
 
     // move to next segment
     segment++;
@@ -170,32 +170,35 @@ string *encode_response(response_t *response) {
   }
 
   // status line (version, status code, status message)
-  str_cat(encoded_response, response->version->str, response->version->len);
+  str_cat(encoded_response, get_char_str(response->version), response->version->len);
   str_cat(encoded_response, " ", 1);
-  str_cat(encoded_response, response->status_code->str, response->status_code->len);
+  str_cat(encoded_response, get_char_str(response->status_code), get_length(response->status_code));
 
   str_cat(encoded_response, " ", 1);
-  str_cat(encoded_response, response->status_message->str, response->status_message->len);
+  str_cat(encoded_response, get_char_str(response->status_message),
+          get_length(response->status_message));
 
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   // headers
   str_cat(encoded_response, CONTENT_TYPE_HEADER, strlen(CONTENT_TYPE_HEADER));
-  str_cat(encoded_response, response->content_type->str, response->content_type->len);
+  str_cat(encoded_response, get_char_str(response->content_type),
+          get_length(response->content_type));
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   str_cat(encoded_response, CONTENT_LENGTH_HEADER, strlen(CONTENT_LENGTH_HEADER));
-  str_cat(encoded_response, response->content_length->str, response->content_length->len);
+  str_cat(encoded_response, get_char_str(response->content_length),
+          get_length(response->content_length));
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   str_cat(encoded_response, SERVER_HEADER, strlen(SERVER_HEADER));
-  str_cat(encoded_response, response->server->str, response->server->len);
+  str_cat(encoded_response, get_char_str(response->server), get_length(response->server));
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   // body
-  str_cat(encoded_response, response->body->str, response->body->len);
+  str_cat(encoded_response, get_char_str(response->body), get_length(response->body));
 
   return encoded_response;
 }
@@ -242,8 +245,8 @@ bool verify_decoded_request(request_t *request) {
   }
 
   // check if http version is 1.0 or 1.1
-  if (strcmp(request->version->str, HTTP_VERSION_1_0) != 0 &&
-      strcmp(request->version->str, HTTP_VERSION_1_1) != 0) {
+  if (strcmp(get_char_str(request->version), HTTP_VERSION_1_0) != 0 &&
+      strcmp(get_char_str(request->version), HTTP_VERSION_1_1) != 0) {
     return false;
   }
 
@@ -284,7 +287,8 @@ string *debug_response(request_t *request) {
   response->version = str_set(response->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
 
   string *status_code = int_to_string(HTTP_OK);
-  response->status_code = str_set(response->status_code, status_code->str, status_code->len);
+  response->status_code =
+      str_set(response->status_code, get_char_str(status_code), get_length(status_code));
   free_str(status_code);
 
   response->status_message = str_set(response->status_message, get_http_status_message(HTTP_OK),
@@ -337,7 +341,7 @@ string *error_response(int status_code) {
   string *status_code_str = int_to_string(status_code);
 
   response->status_code =
-      str_set(response->status_code, status_code_str->str, status_code_str->len);
+      str_set(response->status_code, get_char_str(status_code_str), get_length(status_code_str));
   response->status_message =
       str_set(response->status_message, status_message, strlen(status_message));
   response->server = str_set(response->server, SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
@@ -378,13 +382,13 @@ string *http_server(string *raw_request) {
   }
 
   // check if method is implemented
-  if (strcmp(decoded_request->method->str, HTTP_METHOD_GET) != 0) {
+  if (strcmp(get_char_str(decoded_request->method), HTTP_METHOD_GET) != 0) {
     cleanup(decoded_request, NULL);
     return error_response(HTTP_NOT_IMPLEMENTED);
   }
 
   // return debug response if requested
-  if (strcmp(decoded_request->resource->str, "/debug") == 0) {
+  if (strcmp(get_char_str(decoded_request->resource), "/debug") == 0) {
     // no cleanup needed, debug_response() will free the request
     return debug_response(decoded_request);
   }
@@ -431,7 +435,8 @@ string *http_server(string *raw_request) {
   response->version = str_set(response->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
 
   string *status_code = int_to_string(HTTP_OK);
-  response->status_code = str_set(response->status_code, status_code->str, status_code->len);
+  response->status_code =
+      str_set(response->status_code, get_char_str(status_code), get_length(status_code));
   free_str(status_code);
 
   response->status_message = str_set(response->status_message, get_http_status_message(HTTP_OK),
@@ -452,7 +457,6 @@ string *http_server(string *raw_request) {
   string *encoded_response = encode_response(response);
 
   cleanup(decoded_request, response);
-  free(content_length);
 
   return encoded_response;
 }
