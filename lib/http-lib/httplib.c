@@ -1,5 +1,7 @@
 #include "httplib.h"
+#include "../../src/http_server/http_server.h"
 #include <assert.h>
+#include <limits.h>
 
 string *str_cat(string *dest, const char *src, size_t len) {
   // check if dest is NULL
@@ -274,10 +276,24 @@ string *size_t_to_string(size_t num) {
   return str;
 }
 
-string *absPath(string *path) {
-  string *absPath = _new_string();
-  absPath->len = 9;
-  absPath->str = "/src/root";
-  str_cat(absPath, get_char_str(path), path->len);
-  return absPath;
+char *get_absolute_path(string *resource) {
+  string *relative_path = _new_string();
+  char *absolute_path = malloc(PATH_MAX * sizeof(char));
+
+  if (absolute_path == NULL || resource == NULL) {
+    return NULL;
+  }
+
+  str_cat(relative_path, DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
+  str_cat(relative_path, resource->str, resource->len);
+
+  char *real_path = realpath(relative_path->str, absolute_path);
+
+  if (real_path == NULL) {
+    return NULL;
+  }
+
+  free_str(relative_path);
+
+  return absolute_path;
 }
