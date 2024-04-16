@@ -244,7 +244,7 @@ string *int_to_string(int num) {
   string *str = _new_string();
   int max_length = snprintf(NULL, 0, "%d", num);
 
-  char *temp_str = (char *)malloc((max_length + 1) * sizeof(char));
+  char *temp_str = (char *)calloc(max_length + 1, sizeof(char));
 
   if (temp_str == NULL) {
     exit(EXIT_FAILURE);
@@ -278,6 +278,6 @@ string *absPath(string *path) {
   string *absPath = _new_string();
   absPath->len = 9;
   absPath->str = "/src/root";
-  str_cat(absPath, path, path->len);
+  str_cat(absPath, get_char_str(path), path->len);
   return absPath;
 }
