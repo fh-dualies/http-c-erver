@@ -1,9 +1,9 @@
 #include "http_server.h"
+#include <errno.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
 
 /// @brief Create a new request object
 /// @return Created request object
@@ -283,39 +283,37 @@ const char *get_http_status_message(int status_code) {
 string *debug_response(request_t *request) {
   response_t *response = new_response();
 
-    if (response == NULL) {
-        return NULL;
-    }
+  if (response == NULL) {
+    return NULL;
+  }
 
-    response->version = cpy_str(HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
-    response->status_code = cpy_str(int_to_string(HTTP_OK), strlen(int_to_string(HTTP_OK)));
-    response->status_message =
-            cpy_str(get_http_status_message(HTTP_OK), strlen(get_http_status_message(HTTP_OK)));
-    response->content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
-    response->server = cpy_str(SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
+  response->version = cpy_str(HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
+  response->status_code = cpy_str(int_to_string(HTTP_OK), strlen(int_to_string(HTTP_OK)));
+  response->status_message =
+      cpy_str(get_http_status_message(HTTP_OK), strlen(get_http_status_message(HTTP_OK)));
+  response->content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  response->server = cpy_str(SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
 
-    // HTML body
-    response->body = cpy_str("<html><head><title>Debug</title></head><body>", 45);
-    response->body = str_cat(response->body, "<p>HTTP-Methode: ", 17);
-    response->body = str_cat(response->body, request->method->str, request->method->len);
+  // HTML body
+  response->body = cpy_str("<html><head><title>Debug</title></head><body>", 45);
+  response->body = str_cat(response->body, "<p>HTTP-Methode: ", 17);
+  response->body = str_cat(response->body, request->method->str, request->method->len);
 
-    response->body = str_cat(response->body, "<br>Ressource: ", 15);
-    response->body = str_cat(response->body, request->resource->str, request->resource->len);
+  response->body = str_cat(response->body, "<br>Ressource: ", 15);
+  response->body = str_cat(response->body, request->resource->str, request->resource->len);
 
-    response->body = str_cat(response->body, "<br>HTTP-Version: ", 18);
-    response->body = str_cat(response->body, request->version->str, request->version->len);
-    response->body = str_cat(response->body, "</p></body></html>", 18);
+  response->body = str_cat(response->body, "<br>HTTP-Version: ", 18);
+  response->body = str_cat(response->body, request->version->str, request->version->len);
+  response->body = str_cat(response->body, "</p></body></html>", 18);
 
+  // Encode response
+  string *encoded_response = encode_response(response);
 
+  // Free memory
+  free_response(response);
+  free_request(request);
 
-    // Encode response
-    string *encoded_response = encode_response(response);
-
-    // Free memory
-    free_response(response);
-    free_request(request);
-
-    return encoded_response;
+  return encoded_response;
 }
 
 /// @brief Create error response for a given status code
@@ -407,7 +405,7 @@ string *http_server(string *raw_request) {
 
   if (file_content == NULL) {
     // Check if file access was denied
-    if(errno == EACCES) {
+    if (errno == EACCES) {
       cleanup(decoded_request, response);
       return error_response(HTTP_FORBIDDEN);
     }
