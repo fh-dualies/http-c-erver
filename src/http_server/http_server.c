@@ -306,10 +306,8 @@ string *debug_response(request_t *request) {
   response->body = str_cat(response->body, request->version->str, request->version->len);
   response->body = str_cat(response->body, "</p></body></html>", 18);
 
-  // Encode response
   string *encoded_response = encode_response(response);
 
-  // Free memory
   free_response(response);
   free_request(request);
 
@@ -404,14 +402,15 @@ string *http_server(string *raw_request) {
   string *file_content = read_file(absolute_path);
 
   if (file_content == NULL) {
-    // Check if file access was denied
+    int error = HTTP_NOT_FOUND;
+
+    // check if file access was denied
     if (errno == EACCES) {
-      cleanup(decoded_request, response);
-      return error_response(HTTP_FORBIDDEN);
+      error = HTTP_FORBIDDEN;
     }
 
     cleanup(decoded_request, response);
-    return error_response(HTTP_NOT_FOUND);
+    return error_response(error);
   }
 
   // fill response object
