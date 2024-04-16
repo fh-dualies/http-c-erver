@@ -32,6 +32,36 @@ string *str_cat(string *dest, const char *src, size_t len) {
   return dest;
 }
 
+string *str_set(string *dest, const char *src, size_t len) {
+  // check if dest is NULL
+  if (dest == NULL) {
+    return NULL;
+  }
+
+  // check if src is NULL or len is 0
+  if (src == NULL || len <= 0) {
+    return dest;
+  }
+
+  size_t new_len = len;
+
+  char *new_string = realloc(dest->str, new_len + 1);
+
+  if (new_string == NULL) {
+    exit(4);
+  }
+
+  // copy src to dest
+  memcpy(new_string, src, len);
+
+  new_string[new_len] = '\0';
+
+  dest->len = new_len;
+  dest->str = new_string;
+
+  return dest;
+}
+
 string *_new_string() {
   string *str = calloc(sizeof(string), 1);
 
@@ -210,31 +240,37 @@ string *read_file(char *path) {
   return content;
 }
 
-char *int_to_string(int num) {
+string *int_to_string(int num) {
+  string *str = _new_string();
   int max_length = snprintf(NULL, 0, "%d", num);
 
-  char *str = (char *)malloc((max_length + 1) * sizeof(char));
+  char *temp_str = (char *)malloc((max_length + 1) * sizeof(char));
 
-  if (str == NULL) {
+  if (temp_str == NULL) {
     exit(EXIT_FAILURE);
   }
 
-  snprintf(str, max_length + 1, "%d", num);
+  snprintf(temp_str, max_length + 1, "%d", num);
 
+  str = str_set(str, temp_str, max_length);
+  free(temp_str);
   return str;
 }
 
-char *size_t_to_string(size_t num) {
+string *size_t_to_string(size_t num) {
+  string *str = _new_string();
   int max_length = snprintf(NULL, 0, "%zu", num);
 
-  char *str = (char *)malloc((max_length + 1) * sizeof(char));
+  char *temp_str = (char *)calloc(max_length + 1, sizeof(char));
 
-  if (str == NULL) {
+  if (temp_str == NULL) {
     exit(EXIT_FAILURE);
   }
 
-  snprintf(str, max_length + 1, "%zu", num);
+  snprintf(temp_str, max_length + 1, "%zu", num);
 
+  str = str_set(str, temp_str, max_length);
+  free(temp_str);
   return str;
 }
 
