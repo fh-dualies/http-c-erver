@@ -1,6 +1,5 @@
 #include "http_server.h"
 #include <errno.h>
-#include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -144,7 +143,7 @@ request_t *decode_request_string(string *raw_request) {
     }
 
     // copy segment to request object
-    str_cat(current_segment, get_char_str(raw_request) + segment_start, i - segment_start);
+    str_cat(current_segment, raw_request->str + segment_start, i - segment_start);
 
     // move to next segment
     segment++;
@@ -171,35 +170,32 @@ string *encode_response(response_t *response) {
   }
 
   // status line (version, status code, status message)
-  str_cat(encoded_response, get_char_str(response->version), response->version->len);
+  str_cat(encoded_response, response->version->str, response->version->len);
   str_cat(encoded_response, " ", 1);
-  str_cat(encoded_response, get_char_str(response->status_code), get_length(response->status_code));
+  str_cat(encoded_response, response->status_code->str, response->status_code->len);
 
   str_cat(encoded_response, " ", 1);
-  str_cat(encoded_response, get_char_str(response->status_message),
-          get_length(response->status_message));
+  str_cat(encoded_response, response->status_message->str, response->status_message->len);
 
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   // headers
   str_cat(encoded_response, CONTENT_TYPE_HEADER, strlen(CONTENT_TYPE_HEADER));
-  str_cat(encoded_response, get_char_str(response->content_type),
-          get_length(response->content_type));
+  str_cat(encoded_response, response->content_type->str, response->content_type->len);
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   str_cat(encoded_response, CONTENT_LENGTH_HEADER, strlen(CONTENT_LENGTH_HEADER));
-  str_cat(encoded_response, get_char_str(response->content_length),
-          get_length(response->content_length));
+  str_cat(encoded_response, response->content_length->str, response->content_length->len);
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   str_cat(encoded_response, SERVER_HEADER, strlen(SERVER_HEADER));
-  str_cat(encoded_response, get_char_str(response->server), get_length(response->server));
+  str_cat(encoded_response, response->server->str, response->server->len);
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   // body
-  str_cat(encoded_response, get_char_str(response->body), get_length(response->body));
+  str_cat(encoded_response, response->body->str, response->body->len);
 
   return encoded_response;
 }
@@ -208,8 +204,6 @@ string *encode_response(response_t *response) {
 /// @param path Path to be checked
 /// @return True if the path is valid, false otherwise
 bool verify_path(char *path) {
-  // TODO: only accept valid path: https://git.fh-muenster.de/pse2024/PG5_1/pse-2024/-/issues/10
-
   if (path == NULL) {
     return false;
   }
@@ -248,8 +242,8 @@ bool verify_decoded_request(request_t *request) {
   }
 
   // check if http version is 1.0 or 1.1
-  if (strcmp(get_char_str(request->version), HTTP_VERSION_1_0) != 0 &&
-      strcmp(get_char_str(request->version), HTTP_VERSION_1_1) != 0) {
+  if (strcmp(request->version->str, HTTP_VERSION_1_0) != 0 &&
+      strcmp(request->version->str, HTTP_VERSION_1_1) != 0) {
     return false;
   }
 
@@ -290,8 +284,7 @@ string *debug_response(request_t *request) {
   response->version = str_set(response->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
 
   string *status_code = int_to_string(HTTP_OK);
-  response->status_code =
-      str_set(response->status_code, get_char_str(status_code), get_length(status_code));
+  response->status_code = str_set(response->status_code, status_code->str, status_code->len);
   free_str(status_code);
 
   response->status_message = str_set(response->status_message, get_http_status_message(HTTP_OK),
@@ -303,19 +296,19 @@ string *debug_response(request_t *request) {
   // HTML body
   response->body = str_set(response->body, "<html><head><title>Debug</title></head><body>", 45);
   response->body = str_cat(response->body, "<p>HTTP-Methode: ", 17);
-  response->body = str_cat(response->body, get_char_str(request->method), request->method->len);
+  response->body = str_cat(response->body, request->method->str, request->method->len);
 
   response->body = str_cat(response->body, "<br>Ressource: ", 15);
-  response->body = str_cat(response->body, get_char_str(request->resource), request->resource->len);
+  response->body = str_cat(response->body, request->resource->str, request->resource->len);
 
   response->body = str_cat(response->body, "<br>HTTP-Version: ", 18);
-  response->body = str_cat(response->body, get_char_str(request->version), request->version->len);
+  response->body = str_cat(response->body, request->version->str, request->version->len);
   response->body = str_cat(response->body, "</p></body></html>", 18);
 
   // Content length
   string *content_length = size_t_to_string(response->body->len);
   response->content_length =
-      str_set(response->content_length, get_char_str(content_length), content_length->len);
+      str_set(response->content_length, content_length->str, content_length->len);
   free_str(content_length);
 
   // Encode response
@@ -342,8 +335,9 @@ string *error_response(int status_code) {
   response->version = str_set(response->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
   // is getting freed later because it is used again later
   string *status_code_str = int_to_string(status_code);
+
   response->status_code =
-      str_set(response->status_code, get_char_str(status_code_str), get_length(status_code_str));
+      str_set(response->status_code, status_code_str->str, status_code_str->len);
   response->status_message =
       str_set(response->status_message, status_message, strlen(status_message));
   response->server = str_set(response->server, SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
@@ -351,15 +345,16 @@ string *error_response(int status_code) {
       str_set(response->content_type, CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
 
   response->body = str_set(response->body, "<html><head><title>Error</title></head><body><h1>", 49);
-  str_cat(response->body, get_char_str(status_code_str), status_code_str->len);
+  str_cat(response->body, status_code_str->str, status_code_str->len);
   free_str(status_code_str);
+
   str_cat(response->body, "</h1><p>", 8);
   str_cat(response->body, status_message, strlen(status_message));
   str_cat(response->body, "</p></body></html>", 18);
 
   string *content_length = size_t_to_string(response->body->len);
   response->content_length =
-      str_set(response->content_length, get_char_str(content_length), content_length->len);
+      str_set(response->content_length, content_length->str, content_length->len);
   free_str(content_length);
 
   string *encoded_response = encode_response(response);
@@ -383,13 +378,13 @@ string *http_server(string *raw_request) {
   }
 
   // check if method is implemented
-  if (strcmp(get_char_str(decoded_request->method), HTTP_METHOD_GET) != 0) {
+  if (strcmp(decoded_request->method->str, HTTP_METHOD_GET) != 0) {
     cleanup(decoded_request, NULL);
     return error_response(HTTP_NOT_IMPLEMENTED);
   }
 
   // return debug response if requested
-  if (strcmp(get_char_str(decoded_request->resource), "/debug") == 0) {
+  if (strcmp(decoded_request->resource->str, "/debug") == 0) {
     // no cleanup needed, debug_response() will free the request
     return debug_response(decoded_request);
   }
@@ -402,17 +397,15 @@ string *http_server(string *raw_request) {
   }
 
   // create path to resource
-  char relative_path[strlen(DOCUMENT_ROOT) + 12];
-  char absolute_path[PATH_MAX]; // max 4096 bytes
-
-  strcpy(relative_path, DOCUMENT_ROOT);
-  strcat(relative_path, get_char_str(decoded_request->resource));
+  char *absolute_path = get_absolute_path(decoded_request->resource);
 
   // check if resource exists and get absolute path
-  if (realpath(relative_path, absolute_path) == NULL) {
+  if (absolute_path == NULL) {
     cleanup(decoded_request, response);
     return error_response(HTTP_NOT_FOUND);
   }
+
+  printf("path: %s\n", absolute_path);
 
   // check if path is valid
   if (!verify_path(absolute_path)) {
@@ -436,10 +429,11 @@ string *http_server(string *raw_request) {
 
   // fill response object
   response->version = str_set(response->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
+
   string *status_code = int_to_string(HTTP_OK);
-  response->status_code =
-      str_set(response->status_code, get_char_str(status_code), get_length(status_code));
+  response->status_code = str_set(response->status_code, status_code->str, status_code->len);
   free_str(status_code);
+
   response->status_message = str_set(response->status_message, get_http_status_message(HTTP_OK),
                                      strlen(get_http_status_message(HTTP_OK)));
   response->content_type =
@@ -448,7 +442,7 @@ string *http_server(string *raw_request) {
 
   string *content_length = size_t_to_string(file_content->len);
   response->content_length =
-      str_set(response->content_length, get_char_str(content_length), content_length->len);
+      str_set(response->content_length, content_length->str, content_length->len);
   free_str(content_length);
 
   // needs to br freed so we can update reference
