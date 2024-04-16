@@ -309,7 +309,7 @@ string *debug_response(request_t *request) {
 
 
     // Encode response
-    string *encoded_response = encode_response(response, false);
+    string *encoded_response = encode_response(response);
 
     // Free memory
     free_response(response);
