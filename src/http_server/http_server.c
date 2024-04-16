@@ -8,7 +8,7 @@
 /// @brief Create a new request object
 /// @return Created request object
 request_t *new_request() {
-  request_t *request = malloc(sizeof(request_t));
+  request_t *request = malloc(sizeof(struct request_t));
 
   if (request == NULL) {
     return NULL;
@@ -29,7 +29,7 @@ request_t *new_request() {
 /// @brief Create a new response object
 /// @return Created response object
 response_t *new_response() {
-  response_t *response = malloc(sizeof(response_t));
+  response_t *response = malloc(sizeof(struct response_t));
 
   if (response == NULL) {
     return NULL;
@@ -288,10 +288,12 @@ string *debug_response(request_t *request) {
   }
 
   response->version = str_set(response->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
+
   string *status_code = int_to_string(HTTP_OK);
   response->status_code =
       str_set(response->status_code, get_char_str(status_code), get_length(status_code));
   free_str(status_code);
+
   response->status_message = str_set(response->status_message, get_http_status_message(HTTP_OK),
                                      strlen(get_http_status_message(HTTP_OK)));
   response->content_type =
@@ -301,19 +303,19 @@ string *debug_response(request_t *request) {
   // HTML body
   response->body = str_set(response->body, "<html><head><title>Debug</title></head><body>", 45);
   response->body = str_cat(response->body, "<p>HTTP-Methode: ", 17);
-  response->body = str_cat(response->body, request->method->str, request->method->len);
+  response->body = str_cat(response->body, get_char_str(request->method), request->method->len);
 
   response->body = str_cat(response->body, "<br>Ressource: ", 15);
-  response->body = str_cat(response->body, request->resource->str, request->resource->len);
+  response->body = str_cat(response->body, get_char_str(request->resource), request->resource->len);
 
   response->body = str_cat(response->body, "<br>HTTP-Version: ", 18);
-  response->body = str_cat(response->body, request->version->str, request->version->len);
+  response->body = str_cat(response->body, get_char_str(request->version), request->version->len);
   response->body = str_cat(response->body, "</p></body></html>", 18);
 
   // Content length
   string *content_length = size_t_to_string(response->body->len);
   response->content_length =
-      str_set(response->content_length, content_length->str, content_length->len);
+      str_set(response->content_length, get_char_str(content_length), content_length->len);
   free_str(content_length);
 
   // Encode response
@@ -349,7 +351,7 @@ string *error_response(int status_code) {
       str_set(response->content_type, CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
 
   response->body = str_set(response->body, "<html><head><title>Error</title></head><body><h1>", 49);
-  str_cat(response->body, status_code_str->str, status_code_str->len);
+  str_cat(response->body, get_char_str(status_code_str), status_code_str->len);
   free_str(status_code_str);
   str_cat(response->body, "</h1><p>", 8);
   str_cat(response->body, status_message, strlen(status_message));
@@ -357,7 +359,7 @@ string *error_response(int status_code) {
 
   string *content_length = size_t_to_string(response->body->len);
   response->content_length =
-      str_set(response->content_length, content_length->str, content_length->len);
+      str_set(response->content_length, get_char_str(content_length), content_length->len);
   free_str(content_length);
 
   string *encoded_response = encode_response(response);
@@ -446,7 +448,7 @@ string *http_server(string *raw_request) {
 
   string *content_length = size_t_to_string(file_content->len);
   response->content_length =
-      str_set(response->content_length, content_length->str, content_length->len);
+      str_set(response->content_length, get_char_str(content_length), content_length->len);
   free_str(content_length);
 
   // needs to br freed so we can update reference
