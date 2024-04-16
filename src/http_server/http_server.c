@@ -287,15 +287,19 @@ string *debug_response(request_t *request) {
     return NULL;
   }
 
-  response->version = cpy_str(HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
-  response->status_code = cpy_str(int_to_string(HTTP_OK), strlen(int_to_string(HTTP_OK)));
-  response->status_message =
-      cpy_str(get_http_status_message(HTTP_OK), strlen(get_http_status_message(HTTP_OK)));
-  response->content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
-  response->server = cpy_str(SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
+  response->version = str_set(response->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
+  string *status_code = int_to_string(HTTP_OK);
+  response->status_code =
+      str_set(response->status_code, get_char_str(status_code), get_length(status_code));
+  free_str(status_code);
+  response->status_message = str_set(response->status_message, get_http_status_message(HTTP_OK),
+                                     strlen(get_http_status_message(HTTP_OK)));
+  response->content_type =
+      str_set(response->content_type, CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  response->server = str_set(response->server, SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
 
   // HTML body
-  response->body = cpy_str("<html><head><title>Debug</title></head><body>", 45);
+  response->body = str_set(response->body, "<html><head><title>Debug</title></head><body>", 45);
   response->body = str_cat(response->body, "<p>HTTP-Methode: ", 17);
   response->body = str_cat(response->body, request->method->str, request->method->len);
 
@@ -306,6 +310,13 @@ string *debug_response(request_t *request) {
   response->body = str_cat(response->body, request->version->str, request->version->len);
   response->body = str_cat(response->body, "</p></body></html>", 18);
 
+  // Content length
+  string *content_length = size_t_to_string(response->body->len);
+  response->content_length =
+      str_set(response->content_length, content_length->str, content_length->len);
+  free_str(content_length);
+
+  // Encode response
   string *encoded_response = encode_response(response);
 
   free_response(response);
@@ -326,20 +337,28 @@ string *error_response(int status_code) {
 
   const char *status_message = get_http_status_message(status_code);
 
-  response->version = cpy_str(HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
-  response->status_code = cpy_str(int_to_string(status_code), strlen(int_to_string(status_code)));
-  response->status_message = cpy_str(status_message, strlen(status_message));
-  response->server = cpy_str(SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
-  response->content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  response->version = str_set(response->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
+  // is getting freed later because it is used again later
+  string *status_code_str = int_to_string(status_code);
+  response->status_code =
+      str_set(response->status_code, get_char_str(status_code_str), get_length(status_code_str));
+  response->status_message =
+      str_set(response->status_message, status_message, strlen(status_message));
+  response->server = str_set(response->server, SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
+  response->content_type =
+      str_set(response->content_type, CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
 
-  response->body = cpy_str("<html><head><title>Error</title></head><body><h1>", 49);
-  str_cat(response->body, int_to_string(status_code), strlen(int_to_string(status_code)));
+  response->body = str_set(response->body, "<html><head><title>Error</title></head><body><h1>", 49);
+  str_cat(response->body, status_code_str->str, status_code_str->len);
+  free_str(status_code_str);
   str_cat(response->body, "</h1><p>", 8);
   str_cat(response->body, status_message, strlen(status_message));
   str_cat(response->body, "</p></body></html>", 18);
 
+  string *content_length = size_t_to_string(response->body->len);
   response->content_length =
-      cpy_str(size_t_to_string(response->body->len), strlen(size_t_to_string(response->body->len)));
+      str_set(response->content_length, content_length->str, content_length->len);
+  free_str(content_length);
 
   string *encoded_response = encode_response(response);
 
@@ -414,16 +433,24 @@ string *http_server(string *raw_request) {
   }
 
   // fill response object
-  response->version = cpy_str(HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
-  response->status_code = cpy_str(int_to_string(HTTP_OK), strlen(int_to_string(HTTP_OK)));
-  response->status_message =
-      cpy_str(get_http_status_message(HTTP_OK), strlen(get_http_status_message(HTTP_OK)));
-  response->content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
-  response->server = cpy_str(SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
+  response->version = str_set(response->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
+  string *status_code = int_to_string(HTTP_OK);
+  response->status_code =
+      str_set(response->status_code, get_char_str(status_code), get_length(status_code));
+  free_str(status_code);
+  response->status_message = str_set(response->status_message, get_http_status_message(HTTP_OK),
+                                     strlen(get_http_status_message(HTTP_OK)));
+  response->content_type =
+      str_set(response->content_type, CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  response->server = str_set(response->server, SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
 
-  char *content_length = size_t_to_string(file_content->len);
+  string *content_length = size_t_to_string(file_content->len);
+  response->content_length =
+      str_set(response->content_length, content_length->str, content_length->len);
+  free_str(content_length);
 
-  response->content_length = cpy_str(content_length, strlen(content_length));
+  // needs to br freed so we can update reference
+  free_str(response->body);
   response->body = file_content;
 
   string *encoded_response = encode_response(response);
