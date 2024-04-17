@@ -224,8 +224,7 @@ string *read_file(char *path) {
   fseek(file, 0, SEEK_SET);
 
   string *content = _new_string();
-  free(content->str);
-  content->str = malloc(length + 1);
+  content->str = calloc(length + 1, 1);
 
   if (content->str == NULL) {
     return NULL;
@@ -280,7 +279,7 @@ char *get_absolute_path(string *resource) {
   }
 
   string *relative_path = _new_string();
-  char *absolute_path = malloc(PATH_MAX * sizeof(char));
+  char *absolute_path = malloc(PATH_MAX);
 
   if (absolute_path == NULL) {
     free_str(relative_path);
@@ -294,6 +293,7 @@ char *get_absolute_path(string *resource) {
 
   if (real_path == NULL) {
     free_str(relative_path);
+    free(absolute_path);
     return NULL;
   }
 
