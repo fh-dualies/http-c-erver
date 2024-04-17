@@ -461,8 +461,8 @@ string *http_server(string *raw_request) {
   build_response_status(response, HTTP_OK, CONTENT_TYPE_HTML);
 
   // needs to br freed so we can update reference
-  free_str(response->body);
-  response->body = file_content;
+  response->body = str_set(response->body, file_content->str, file_content->len);
+  free_str(file_content);
 
   update_content_length(response);
 
