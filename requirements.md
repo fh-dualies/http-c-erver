@@ -20,4 +20,4 @@
 - [x] Auf Datein die nicht gelesen werden können wird mit `403 Forbidden` geantwortet
 - [x] Ist die HTTP Methode nicht `GET` wird mit `501 Not Implemented` geantwortet
 - [x] Valgrind zeigt keine Speicherlecks
-- [ ] Google Address Sanitizer zeigt keine Speicherlecks
+- [x] Google Address Sanitizer zeigt keine Speicherlecks
