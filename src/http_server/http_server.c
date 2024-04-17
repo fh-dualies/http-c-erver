@@ -364,37 +364,37 @@ string *error_response(int status_code) {
 /// @brief Create debug response for a given request
 /// @param request Request object to be debugged
 string *debug_response(request_t *request) {
-    response_t *response = new_response();
+  response_t *response = new_response();
 
-    if (response == NULL) {
-        free_request(request);
-        return error_response(HTTP_INTERNAL_SERVER_ERROR);
-    }
-
-    build_response_status(response, HTTP_OK, CONTENT_TYPE_HTML);
-
-    // HTML body
-    response->body = str_set(response->body, "<html><head><title>Debug</title></head><body>", 45);
-    response->body = str_cat(response->body, "<p>HTTP-Methode: ", 17);
-    response->body = str_cat(response->body, request->method->str, request->method->len);
-
-    response->body = str_cat(response->body, "<br>Ressource: ", 15);
-    response->body = str_cat(response->body, request->resource->str, request->resource->len);
-
-    response->body = str_cat(response->body, "<br>HTTP-Version: ", 18);
-    response->body = str_cat(response->body, request->version->str, request->version->len);
-    response->body = str_cat(response->body, "</p></body></html>", 18);
-
-    // content length
-    update_content_length(response);
-
-    // encode response
-    string *encoded_response = encode_response(response);
-
-    free_response(response);
+  if (response == NULL) {
     free_request(request);
+    return error_response(HTTP_INTERNAL_SERVER_ERROR);
+  }
 
-    return encoded_response;
+  build_response_status(response, HTTP_OK, CONTENT_TYPE_HTML);
+
+  // HTML body
+  response->body = str_set(response->body, "<html><head><title>Debug</title></head><body>", 45);
+  response->body = str_cat(response->body, "<p>HTTP-Methode: ", 17);
+  response->body = str_cat(response->body, request->method->str, request->method->len);
+
+  response->body = str_cat(response->body, "<br>Ressource: ", 15);
+  response->body = str_cat(response->body, request->resource->str, request->resource->len);
+
+  response->body = str_cat(response->body, "<br>HTTP-Version: ", 18);
+  response->body = str_cat(response->body, request->version->str, request->version->len);
+  response->body = str_cat(response->body, "</p></body></html>", 18);
+
+  // content length
+  update_content_length(response);
+
+  // encode response
+  string *encoded_response = encode_response(response);
+
+  free_response(response);
+  free_request(request);
+
+  return encoded_response;
 }
 
 string *http_server(string *raw_request) {

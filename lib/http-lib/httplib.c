@@ -280,7 +280,7 @@ char *get_absolute_path(string *resource) {
   }
 
   string *relative_path = _new_string();
-  char *absolute_path = calloc( PATH_MAX, 1);
+  char *absolute_path = calloc(PATH_MAX, 1);
 
   if (absolute_path == NULL) {
     free_str(relative_path);

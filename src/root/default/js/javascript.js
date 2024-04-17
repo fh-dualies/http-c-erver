@@ -1,3 +1,3 @@
 function test() {
-        alert("Die JavaScript-Datei wurde geladen!");
+  alert("Die JavaScript-Datei wurde geladen!");
 }
