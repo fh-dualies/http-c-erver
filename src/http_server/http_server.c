@@ -460,7 +460,6 @@ string *http_server(string *raw_request) {
   // fill response object
   build_response_status(response, HTTP_OK, CONTENT_TYPE_HTML);
 
-  // needs to br freed so we can update reference
   response->body = str_set(response->body, file_content->str, file_content->len);
   free_str(file_content);
 
