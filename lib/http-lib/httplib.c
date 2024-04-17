@@ -1,5 +1,7 @@
 #include "httplib.h"
+#include "../../src/http_server/http_server.h"
 #include <assert.h>
+#include <limits.h>
 
 string *str_cat(string *dest, const char *src, size_t len) {
   // check if dest is NULL
@@ -15,25 +17,52 @@ string *str_cat(string *dest, const char *src, size_t len) {
   // length after concatenation
   size_t new_len = dest->len + len;
 
-  char *new_string = realloc(dest->str, new_len + 1);
+  dest->str = realloc(dest->str, new_len + 1);
 
-  if (new_string == NULL) {
+  if (dest->str == NULL) {
     exit(4);
   }
 
   // copy src to dest
   memcpy(dest->str + dest->len, src, len);
 
-  new_string[new_len] = '\0';
-
+  dest->str[new_len] = '\0';
   dest->len = new_len;
-  dest->str = new_string;
+
+  return dest;
+}
+
+string *str_set(string *dest, const char *src, size_t len) {
+  // check if dest is NULL
+  if (dest == NULL) {
+    return NULL;
+  }
+
+  // check if src is NULL or len is 0
+  if (src == NULL || len <= 0) {
+    return dest;
+  }
+
+  free(dest->str);
+
+  dest->str = calloc(len + 1, 1);
+
+  if (dest->str == NULL) {
+    exit(4);
+  }
+
+  // copy src to dest
+  memcpy(dest->str, src, len);
+
+  dest->str[len] = '\0';
+
+  dest->len = len;
 
   return dest;
 }
 
 string *_new_string() {
-  string *str = calloc(sizeof(string), 1);
+  string *str = calloc(1, sizeof(string));
 
   if (str == NULL) {
     exit(2);
@@ -45,7 +74,6 @@ string *_new_string() {
   }
 
   str->str[0] = '\0';
-
   str->len = 0;
 
   return str;
@@ -60,18 +88,19 @@ void print_string(string *str) {
 string *cpy_str(const char *src, size_t len) {
   assert(src != NULL);
 
-  string *dest = calloc(sizeof(string), 1);
+  string *dest = calloc(1, sizeof(string));
   if (dest == NULL) {
     exit(2);
   }
 
-  dest->str = calloc(1, len);
+  dest->str = calloc(1, len + 1);
 
   if (dest->str == NULL) {
     exit(3);
   }
 
   memcpy(dest->str, src, len);
+  dest->str[len] = '\0';
   dest->len = len;
 
   return dest;
@@ -195,6 +224,7 @@ string *read_file(char *path) {
   fseek(file, 0, SEEK_SET);
 
   string *content = _new_string();
+  free(content->str);
   content->str = calloc(length + 1, 1);
 
   if (content->str == NULL) {
@@ -210,38 +240,65 @@ string *read_file(char *path) {
   return content;
 }
 
-char *int_to_string(int num) {
+string *int_to_string(int num) {
+  string *str = _new_string();
   int max_length = snprintf(NULL, 0, "%d", num);
 
-  char *str = (char *)malloc((max_length + 1) * sizeof(char));
+  char *temp_str = (char *)calloc(max_length + 1, sizeof(char));
 
-  if (str == NULL) {
+  if (temp_str == NULL) {
     exit(EXIT_FAILURE);
   }
 
-  snprintf(str, max_length + 1, "%d", num);
+  snprintf(temp_str, max_length + 1, "%d", num);
 
+  str = str_set(str, temp_str, max_length);
+  free(temp_str);
   return str;
 }
 
-char *size_t_to_string(size_t num) {
+string *size_t_to_string(size_t num) {
+  string *str = _new_string();
   int max_length = snprintf(NULL, 0, "%zu", num);
 
-  char *str = (char *)malloc((max_length + 1) * sizeof(char));
+  char *temp_str = (char *)calloc(max_length + 1, sizeof(char));
 
-  if (str == NULL) {
+  if (temp_str == NULL) {
     exit(EXIT_FAILURE);
   }
 
-  snprintf(str, max_length + 1, "%zu", num);
+  snprintf(temp_str, max_length + 1, "%zu", num);
 
+  str = str_set(str, temp_str, max_length);
+  free(temp_str);
   return str;
 }
 
-string *absPath(string *path) {
-  string *absPath = _new_string();
-  absPath->len = 9;
-  absPath->str = "/src/root";
-  str_cat(absPath, path, path->len);
-  return absPath;
+char *get_absolute_path(string *resource) {
+  if (resource == NULL) {
+    return NULL;
+  }
+
+  string *relative_path = _new_string();
+  char *absolute_path = calloc(PATH_MAX, 1);
+
+  if (absolute_path == NULL) {
+    free_str(relative_path);
+    return NULL;
+  }
+
+  str_cat(relative_path, DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
+  str_cat(relative_path, resource->str, resource->len);
+
+  char *real_path = realpath(relative_path->str, absolute_path);
+
+  if (real_path == NULL) {
+    free_str(relative_path);
+    free(absolute_path);
+    return NULL;
+  }
+
+  free_str(relative_path);
+
+  return absolute_path;
 }

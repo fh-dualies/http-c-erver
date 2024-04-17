@@ -17,6 +17,13 @@ struct string {
 /// @return The destination string
 string *str_cat(string *dest, const char *src, size_t len);
 
+/// @brief Set a string
+/// @param dest The destination string
+/// @param src The source string
+/// @param len The length of the source string
+/// @return The destination string
+string *str_set(string *dest, const char *src, size_t len);
+
 /// @brief Create a new string
 string *_new_string();
 
@@ -62,16 +69,16 @@ string *read_file(char *path);
 /// @brief Convert an size_t to a string
 /// @param num The size_t
 /// @return The string
-char *size_t_to_string(size_t num);
+string *size_t_to_string(size_t num);
 
 /// @brief Convert an int to a string
 /// @param num The int
 /// @return The string
-char *int_to_string(int num);
+string *int_to_string(int num);
 
 /// @brief converts the relativ path to absolute path (document root)
 /// @param path relativ path
 /// @return abslotue path
-string *absPath(string *path);
+char *get_absolute_path(string *resource);
 
 #endif
