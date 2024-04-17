@@ -93,7 +93,7 @@ string *cpy_str(const char *src, size_t len) {
     exit(2);
   }
 
-  dest->str = calloc(1, len);
+  dest->str = calloc(1, len + 1);
 
   if (dest->str == NULL) {
     exit(3);
