@@ -85,9 +85,10 @@ void free_response(response_t *response) {
 /// @brief Clean up memory allocated to exit the http server
 /// @param request request object to be freed
 /// @param response response object to be freed
-void cleanup(request_t *request, response_t *response) {
+void cleanup(request_t *request, response_t *response, char *path) {
   free_request(request);
   free_response(response);
+  free(path);
 }
 
 /// @brief Decode a raw HTTP request string into a request object
@@ -410,7 +411,7 @@ string *http_server(string *raw_request) {
 
   // check if method is implemented
   if (strcmp(decoded_request->method->str, HTTP_METHOD_GET) != 0) {
-    cleanup(decoded_request, NULL);
+    cleanup(decoded_request, NULL, NULL);
     return error_response(HTTP_NOT_IMPLEMENTED);
   }
 
@@ -432,13 +433,13 @@ string *http_server(string *raw_request) {
 
   // check if resource exists and get absolute path
   if (absolute_path == NULL) {
-    cleanup(decoded_request, response);
+    cleanup(decoded_request, response, absolute_path);
     return error_response(HTTP_NOT_FOUND);
   }
 
   // check if path is valid
   if (!verify_path(absolute_path)) {
-    cleanup(decoded_request, response);
+    cleanup(decoded_request, response, absolute_path);
     return error_response(HTTP_FORBIDDEN);
   }
 
@@ -452,7 +453,7 @@ string *http_server(string *raw_request) {
       error = HTTP_FORBIDDEN;
     }
 
-    cleanup(decoded_request, response);
+    cleanup(decoded_request, response, absolute_path);
     return error_response(error);
   }
 
@@ -467,7 +468,7 @@ string *http_server(string *raw_request) {
 
   string *encoded_response = encode_response(response);
 
-  cleanup(decoded_request, response);
+  cleanup(decoded_request, response, absolute_path);
 
   return encoded_response;
 }
