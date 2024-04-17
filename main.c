@@ -235,7 +235,10 @@ string *process(string *request) {
     return response;
   }
 
-  return http_server(request);
+  string* response = http_server(request);
+  free_str(request);
+
+  return response;
 }
 
 int main(int argc, char *argv[]) {

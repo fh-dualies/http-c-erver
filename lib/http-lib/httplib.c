@@ -278,6 +278,7 @@ char *get_absolute_path(string *resource) {
   char *absolute_path = malloc(PATH_MAX * sizeof(char));
 
   if (absolute_path == NULL || resource == NULL) {
+    free_str(relative_path);
     return NULL;
   }
 
@@ -287,6 +288,7 @@ char *get_absolute_path(string *resource) {
   char *real_path = realpath(relative_path->str, absolute_path);
 
   if (real_path == NULL) {
+    free_str(relative_path);
     return NULL;
   }
 
