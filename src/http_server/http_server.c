@@ -7,7 +7,7 @@
 /// @brief Create a new request object
 /// @return Created request object
 request_t *new_request() {
-  request_t *request = malloc(sizeof(struct request_t));
+  request_t *request = calloc(1, sizeof(struct request_t));
 
   if (request == NULL) {
     return NULL;
@@ -28,7 +28,7 @@ request_t *new_request() {
 /// @brief Create a new response object
 /// @return Created response object
 response_t *new_response() {
-  response_t *response = malloc(sizeof(struct response_t));
+  response_t *response = calloc(1, sizeof(struct response_t));
 
   if (response == NULL) {
     return NULL;
@@ -402,6 +402,11 @@ string *http_server(string *raw_request) {
   if (decoded_request == NULL) {
     return error_response(HTTP_BAD_REQUEST);
   }
+
+  // urldecode
+  string *decoded = url_decode(decoded_request->resource);
+  str_set(decoded_request->resource, decoded->str, decoded->len);
+  free_str(decoded);
 
   // validate request content
   if (!verify_decoded_request(decoded_request)) {
