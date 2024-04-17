@@ -235,7 +235,7 @@ string *process(string *request) {
     return response;
   }
 
-  string* response = http_server(request);
+  string *response = http_server(request);
   free_str(request);
 
   return response;
