@@ -45,7 +45,7 @@ string *str_set(string *dest, const char *src, size_t len) {
 
   free(dest->str);
 
-  dest->str = malloc(len + 1);
+  dest->str = calloc(len + 1, 1);
 
   if (dest->str == NULL) {
     exit(4);
@@ -62,7 +62,7 @@ string *str_set(string *dest, const char *src, size_t len) {
 }
 
 string *_new_string() {
-  string *str = malloc(sizeof(string));
+  string *str = calloc(1, sizeof(string));
 
   if (str == NULL) {
     exit(2);
@@ -88,7 +88,7 @@ void print_string(string *str) {
 string *cpy_str(const char *src, size_t len) {
   assert(src != NULL);
 
-  string *dest = malloc(sizeof(string));
+  string *dest = calloc(1, sizeof(string));
   if (dest == NULL) {
     exit(2);
   }
@@ -225,7 +225,7 @@ string *read_file(char *path) {
 
   string *content = _new_string();
   free(content->str);
-  content->str = malloc(length + 1);
+  content->str = calloc(length + 1, 1);
 
   if (content->str == NULL) {
     return NULL;
@@ -280,7 +280,7 @@ char *get_absolute_path(string *resource) {
   }
 
   string *relative_path = _new_string();
-  char *absolute_path = malloc(PATH_MAX);
+  char *absolute_path = calloc( PATH_MAX, 1);
 
   if (absolute_path == NULL) {
     free_str(relative_path);
