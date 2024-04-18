@@ -1,7 +1,9 @@
 #include "httplib.h"
 #include "../../src/http_server/http_server.h"
 #include <assert.h>
+#include <errno.h>
 #include <limits.h>
+#include <sys/stat.h>
 
 string *str_cat(string *dest, const char *src, size_t len) {
   // check if dest is NULL
@@ -211,6 +213,15 @@ string *url_encode(string *str) {
 
 string *read_file(char *path) {
   assert(path != NULL);
+
+  struct stat s;
+  if (stat(path, &s) != 0) {
+    return NULL;
+  }
+
+  if (s.st_mode & S_IFDIR) {
+    return NULL;
+  }
 
   FILE *file = fopen(path, "r");
 
