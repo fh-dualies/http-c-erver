@@ -5,10 +5,6 @@ set(CMAKE_C_STANDARD 11)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 
-# Enable Address Sanitizer for Debug builds
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -fsanitize=address -fno-omit-frame-pointer")
-set(CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fsanitize=address")
-
 add_executable(tests
         lib/http-lib/httplib.c
         lib/testing/test-lib.c
@@ -20,5 +16,15 @@ add_executable(server
         src/http_server/http_server.c
         main.c)
 
+add_executable(server_asan
+        lib/http-lib/httplib.c
+        src/http_server/http_server.c
+        main.c)
+
 set_target_properties(tests PROPERTIES SUFFIX ".out")
 set_target_properties(server PROPERTIES SUFFIX ".out")
+set_target_properties(server_asan PROPERTIES SUFFIX ".out")
+
+# AddressSanitizer
+set_target_properties(server_asan PROPERTIES COMPILE_FLAGS "-fsanitize=address -fno-omit-frame-pointer")
+set_target_properties(server_asan PROPERTIES LINK_FLAGS "-fsanitize=address")
