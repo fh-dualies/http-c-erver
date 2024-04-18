@@ -13,9 +13,17 @@
 // HTTP Constants
 #define HTTP_VERSION_1_0 "HTTP/1.0"
 #define HTTP_VERSION_1_1 "HTTP/1.1"
-#define CONTENT_TYPE_HTML "text/html"
 #define HTTP_LINE_BREAK "\r\n"
 #define HTTP_METHOD_GET "GET"
+
+// HTTP Content Types
+#define CONTENT_TYPE_HTML "text/html"
+#define CONTENT_TYPE_CSS "text/css"
+#define CONTENT_TYPE_JS "application/javascript"
+#define CONTENT_TYPE_JPEG "image/jpeg"
+#define CONTENT_TYPE_PNG "image/png"
+#define CONTENT_TYPE_ICO "image/x-icon"
+#define CONTENT_TYPE_TEXT "text/plain"
 
 // HTTP Status Codes
 #define HTTP_OK 200
