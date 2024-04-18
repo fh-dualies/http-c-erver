@@ -221,6 +221,13 @@ string *read_file(char *path) {
 
   if (s.st_mode & S_IFDIR) {
     return NULL;
+
+    // We could add index.html to the path here to serve a default file
+    /*string *new_path = cpy_str(path, strlen(path));
+    str_cat(new_path, "/index.html", 11);
+    string* file_content = read_file(new_path->str);
+    free_str(new_path);
+    return file_content;*/
   }
 
   FILE *file = fopen(path, "r");
