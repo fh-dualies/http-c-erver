@@ -1,7 +1,6 @@
 #include "httplib.h"
 #include "../../src/http_server/http_server.h"
 #include <assert.h>
-#include <errno.h>
 #include <limits.h>
 #include <sys/stat.h>
 
@@ -319,4 +318,42 @@ char *get_absolute_path(string *resource) {
   free_str(relative_path);
 
   return absolute_path;
+}
+
+const char *get_mime_type(char *path) {
+  if (path == NULL) {
+    return NULL;
+  }
+
+  const char *extension = strrchr(path, '.');
+
+  if (extension == NULL) {
+    return CONTENT_TYPE_TEXT;
+  }
+
+  if (strcmp(extension, ".html") == 0) {
+    return CONTENT_TYPE_HTML;
+  }
+
+  if (strcmp(extension, ".css") == 0) {
+    return CONTENT_TYPE_CSS;
+  }
+
+  if (strcmp(extension, ".js") == 0) {
+    return CONTENT_TYPE_JS;
+  }
+
+  if (strcmp(extension, ".jpg") == 0 || strcmp(extension, ".jpeg") == 0) {
+    return CONTENT_TYPE_JPEG;
+  }
+
+  if (strcmp(extension, ".png") == 0) {
+    return CONTENT_TYPE_PNG;
+  }
+
+  if (strcmp(extension, ".ico") == 0) {
+    return CONTENT_TYPE_ICO;
+  }
+
+  return CONTENT_TYPE_TEXT;
 }

@@ -76,9 +76,14 @@ string *size_t_to_string(size_t num);
 /// @return The string
 string *int_to_string(int num);
 
-/// @brief converts the relativ path to absolute path (document root)
-/// @param path relativ path
-/// @return abslotue path
+/// @brief converts the relative path to absolute path (document root)
+/// @param path relative path
+/// @return absolute path
 char *get_absolute_path(string *resource);
+
+/// @brief Get the mime type of a file
+/// @param path The path to the file
+/// @return The mime type of the file
+const char *get_mime_type(char *path);
 
 #endif
