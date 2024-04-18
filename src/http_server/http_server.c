@@ -464,8 +464,11 @@ string *http_server(string *raw_request) {
     return error_response(error);
   }
 
+  // get mime type of file
+  const char *mime_type = get_mime_type(absolute_path);
+
   // fill response object
-  build_response_status(response, HTTP_OK, CONTENT_TYPE_HTML);
+  build_response_status(response, HTTP_OK, mime_type);
 
   response->body = str_set(response->body, file_content->str, file_content->len);
   free_str(file_content);
