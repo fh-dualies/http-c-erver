@@ -7,9 +7,11 @@
 
 /**
  * @brief Parse a raw HTTP request string into a request object
+ * @warning The request object must be freed with free_request() after use
  *
  * Returns NULL if the raw_request is NULL, if memory allocation fails or if the request line is
- * invalid.
+ * invalid. The raw_request is seen as invalid if it does not follow the HTTP/1.1 (or 1.0) request
+ * format: `METHOD RESOURCE VERSION\r\n`.
  *
  * @param raw_request Raw HTTP request string
  * @return request_t* Decoded request object
@@ -18,8 +20,11 @@ request_t *parse_request_string(string *raw_request);
 
 /**
  * @brief Encode a response object into a raw HTTP response string
+ * @warning The returned string must be freed with free_string() after use
  *
  * Returns NULL if the response is NULL or if memory allocation fails.
+ * The response is encoded in the following format: `VERSION STATUS_CODE STATUS_MESSAGE\r\nHEADER1:
+ * VALUE1\r\nHEADER2: VALUE2\r\n...\r\n\r\nBODY`.
  *
  * @param response Response object to be encoded
  * @return string* Encoded raw HTTP response string

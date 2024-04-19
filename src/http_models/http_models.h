@@ -39,7 +39,7 @@ response_t *new_response();
 
 /**
  * @brief Free the memory allocated for a request object
- * @warning This function does not check if the given pointer is NULL
+ * @warning This function will check if the given pointer is NULL
  *
  * Returns if the request object is NULL
  *
@@ -49,7 +49,7 @@ void free_request(request_t **request);
 
 /**
  * @brief Free the memory allocated for a response object
- * @warning This function does not check if the given pointer is NULL
+ * @warning This function will check if the given pointer is NULL
  *
  * Returns if the response object is NULL
  *
@@ -60,6 +60,7 @@ void free_response(response_t **response);
 /**
  * @brief Update the content length of a response object
  *
+ * The length is calculated based on the current body length of the response.
  * Returns if the response object is NULL
  *
  * @param response Response object to be updated
@@ -68,8 +69,11 @@ void update_response_content_length(response_t *response);
 
 /**
  * @brief Add a header to a raw HTTP response string
+ * @warning This function will not add the semicolon at between the header and value
+ * @warning This function will add \r\n at the end of the header
+ * @example Server: C-Webserver
  *
- * Returns if the raw string is NULL
+ * Returns if one of the raw strings is NULL
  *
  * @param raw_string Raw HTTP response string
  * @param header Header to be added
@@ -79,6 +83,8 @@ void add_response_string_header(string *raw_string, const char *header, string *
 
 /**
  * @brief Generate the status line of a response object
+ * @warning This function will only fill the version, status code and status message fields to the
+ * response object. Use generate_response_status_line to generate the full raw status line.
  *
  * Returns if the response object is NULL
  *
@@ -90,6 +96,8 @@ void generate_response_status(response_t *response, int status_code, const char 
 
 /**
  * @brief Generate the status line of a raw HTTP response string
+ * @warning This function will add \r\n at the end of the status line
+ * @example HTTP/1.1 200 OK
  *
  * Returns if the raw string is NULL
  *
