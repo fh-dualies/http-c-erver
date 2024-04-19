@@ -51,16 +51,6 @@ size_t get_length(string *str);
 /// @return The value of the string
 char *get_char_str(string *str);
 
-/// @brief URL decode a string
-/// @param str The string to decode
-/// @return The decoded string
-string *url_decode(string *str);
-
-/// @brief URL encode a string
-/// @param str The string to encode
-/// @return The encoded string
-string *url_encode(string *str);
-
 /// @brief Read a file
 /// @param path The path to the file
 /// @return The content of the file
@@ -75,15 +65,5 @@ string *size_t_to_string(size_t num);
 /// @param num The int
 /// @return The string
 string *int_to_string(int num);
-
-/// @brief converts the relative path to absolute path (document root)
-/// @param path relative path
-/// @return absolute path
-char *get_absolute_path(string *resource);
-
-/// @brief Get the mime type of a file
-/// @param path The path to the file
-/// @return The mime type of the file
-const char *get_mime_type(char *path);
 
 #endif
