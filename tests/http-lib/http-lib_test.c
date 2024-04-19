@@ -64,6 +64,7 @@ void test_get_length() {
   expect_equal(len, 2, "13");
 
   free_str(str);
+  free_str(len);
 }
 
 void test_get_char_str() {
@@ -99,12 +100,12 @@ void test_size_t_to_string() {
 }
 
 void run_httplib_test() {
-    test_str_cat();
-    test_str_set();
-    test_new_string();
-    test_cpy_str();
-    test_get_length();
-    test_get_char_str();
-    test_int_to_string();
-    test_size_t_to_string();
+  test_str_cat();
+  test_str_set();
+  test_new_string();
+  test_cpy_str();
+  test_get_length();
+  test_get_char_str();
+  test_int_to_string();
+  test_size_t_to_string();
 }
