@@ -16,11 +16,13 @@ string *str_cat(string *dest, const char *src, size_t len) {
   // length after concatenation
   size_t new_len = dest->len + len;
 
-  dest->str = realloc(dest->str, new_len + 1);
+  void *temp = realloc(dest->str, new_len + 1);
 
-  if (dest->str == NULL) {
+  if (temp == NULL) {
     exit(4);
   }
+
+  dest->str = temp;
 
   // copy src to dest
   memcpy(dest->str + dest->len, src, len);
