@@ -22,6 +22,4 @@ void test_str_cat() {
   free_str(str_empty);
 }
 
-void run_httplib_test() {
-  test_str_cat();
-}
+void run_httplib_test() { test_str_cat(); }

@@ -7,6 +7,9 @@
 #define SERVER_SIGNATURE "LLDM/0.1 Basic HTTP Server"
 #define DOCUMENT_ROOT "src/htdocs" // TODO: make this cleaner?
 
+// Server Routes
+#define ROUTE_DEBUG "/debug"
+
 // HTTP Constants
 #define HTTP_VERSION_1_0 "HTTP/1.0"
 #define HTTP_VERSION_1_1 "HTTP/1.1"
@@ -43,6 +46,15 @@
 #define CONTENT_LENGTH_HEADER "Content-Length: "
 #define CONTENT_TYPE_HEADER "Content-Type: "
 #define SERVER_HEADER "Server: "
+
+// File extensions
+#define EXTENSION_HTML ".html"
+#define EXTENSION_CSS ".css"
+#define EXTENSION_JS ".js"
+#define EXTENSION_JPG ".jpg"
+#define EXTENSION_JPEG ".jpeg"
+#define EXTENSION_PNG ".png"
+#define EXTENSION_ICO ".ico"
 
 /// @brief Gets the HTTP status message for a given status code
 /// @param status_code HTTP status code
