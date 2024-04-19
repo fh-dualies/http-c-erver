@@ -9,6 +9,8 @@ void test_new_request() {
   request_t *request = new_request();
 
   expect_not_null(request);
+
+  free_request(&request);
 }
 
 void test_new_response() {
@@ -17,6 +19,8 @@ void test_new_response() {
   response_t *response = new_response();
 
   expect_not_null(response);
+
+  free_response(&response);
 }
 
 void test_free_request() {
