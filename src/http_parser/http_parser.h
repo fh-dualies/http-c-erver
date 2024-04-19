@@ -34,7 +34,7 @@ string *serialize_response(response_t *response);
  * @param str The string to decode
  * @return string* The decoded string
  */
-string *url_decode(string *str);
+string *decode_url(string *str);
 
 /**
  * @brief URL encode a string
@@ -44,6 +44,6 @@ string *url_decode(string *str);
  * @param str The string to encode
  * @return string* The encoded string
  */
-string *url_encode(string *str);
+string *encode_url(string *str);
 
 #endif

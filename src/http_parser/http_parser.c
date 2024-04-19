@@ -90,7 +90,7 @@ string *serialize_response(response_t *response) {
   return encoded_response;
 }
 
-string *url_decode(string *str) {
+string *decode_url(string *str) {
   if (str == NULL) {
     return NULL;
   }
@@ -146,7 +146,7 @@ string *url_decode(string *str) {
   return decoded;
 }
 
-string *url_encode(string *str) {
+string *encode_url(string *str) {
   if (str == NULL) {
     return NULL;
   }

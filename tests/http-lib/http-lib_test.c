@@ -3,7 +3,7 @@
 #include "../../lib/testing/test-lib.h"
 
 void test_str_cat() {
-  test_title("Test str_cat");
+  test_title("Test str_cat()");
 
   string *str1 = cpy_str("Hello, ", 7);
   string *str2 = cpy_str("world!", 6);
