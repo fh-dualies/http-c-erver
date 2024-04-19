@@ -27,6 +27,20 @@ void expect_not_null(void *ptr);
 void expect_null(void *ptr);
 
 /**
+ * @brief Expect a value to be true
+ *
+ * @param value The value to test
+ */
+void expect_true(int value);
+
+/**
+ * @brief Expect a value to be false
+ *
+ * @param value The value to test
+ */
+void expect_false(int value);
+
+/**
  * @brief Print the title of a test
  *
  * @param title The title of the test

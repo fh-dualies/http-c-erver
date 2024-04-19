@@ -91,6 +91,40 @@ void expect_null(void *ptr) {
   reset_color();
 }
 
+void expect_true(int value) {
+  assertions++;
+
+  if (!value) {
+    error_color();
+    printf("Expected true, got false\n");
+    reset_color();
+    failed_assertions++;
+
+    return;
+  }
+
+  success_color();
+  printf("true\n");
+  reset_color();
+}
+
+void expect_false(int value) {
+  assertions++;
+
+  if (value) {
+    error_color();
+    printf("Expected false, got true\n");
+    reset_color();
+    failed_assertions++;
+
+    return;
+  }
+
+  success_color();
+  printf("false\n");
+  reset_color();
+}
+
 void test_title(const char *title) {
   title_color();
   printf("\n");
