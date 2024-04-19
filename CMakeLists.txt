@@ -14,6 +14,7 @@ add_executable(tests
         tests/http-lib/http-lib_test.c
         tests/http_models/http_models_test.c
         tests/http_parser/http_parser_test.c
+        tests/http_server/http_server_test.c
         tests/tests.c)
 
 add_executable(server

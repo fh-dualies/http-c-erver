@@ -51,7 +51,7 @@ void test_update_response_content_length() {
 }
 
 void test_generate_response_status() {
-  test_title("Test generate_response_status");
+  test_title("Test generate_response_status()");
 
   response_t *response = new_response();
   generate_response_status(response, HTTP_OK, CONTENT_TYPE_HTML);
