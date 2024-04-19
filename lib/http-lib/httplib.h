@@ -20,6 +20,8 @@ void *exit_err(const char *function_name, const char *reason);
 
 /**
  * @brief Concatenate a string to another string
+ * @warning The destination will be reallocated
+ * @warning This function will add a null terminator to the end of the string
  *
  * Returns NULL if the destination string is NULL.
  * Returns the destination string if the source string is NULL or len is 0.
@@ -35,6 +37,8 @@ string *str_cat(string *dest, const char *src, size_t len);
 /**
  * @brief Set a string to another string by freeing the destination string and allocating memory for
  * the source string
+ * @warning The destination will be reallocated
+ * @warning This function will add a null terminator to the end of the string
  *
  * Returns NULL if the destination string is NULL.
  * Returns the destination string if the source string is NULL or len is 0.
@@ -49,6 +53,7 @@ string *str_set(string *dest, const char *src, size_t len);
 
 /**
  * @brief Create a new string
+ * @warning This function will add a null terminator to the end of the string
  *
  * Exits with code 1 if the memory allocation of the string struct fails or if the memory allocation
  * of the string fails.
@@ -66,6 +71,8 @@ void print_string(string *str);
 
 /**
  * @brief Copy a string
+ * @warning The destination will be reallocated
+ * @warning This function will add a null terminator to the end of the string
  *
  * Exits with code 1 if the memory allocation of the string struct fails or if the memory allocation
  * of the string fails.
@@ -103,6 +110,7 @@ char *get_char_str(string *str);
 
 /**
  * @brief Read a file
+ * @waring The return value must be freed after use
  *
  * Returns NULL if the path is NULL, if the file does not exist or if the memory allocation fails.
  *
@@ -113,6 +121,7 @@ string *read_file(char *path);
 
 /**
  * @brief Convert a size_t to a string
+ * @waring The return value must be freed after use
  *
  * Exits with code 1 if the memory allocation fails.
  *
@@ -123,6 +132,7 @@ string *size_t_to_string(size_t num);
 
 /**
  * @brief Convert an int to a string
+ * @waring The return value must be freed after use
  *
  * Exits with code 1 if the memory allocation fails.
  *
