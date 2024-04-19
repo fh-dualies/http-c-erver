@@ -56,14 +56,32 @@
 #define EXTENSION_PNG ".png"
 #define EXTENSION_ICO ".ico"
 
-/// @brief Gets the HTTP status message for a given status code
-/// @param status_code HTTP status code
-/// @return HTTP status message
+/**
+ * @brief Get HTTP status message for a given status code
+ *
+ * The content of the file is read and stored in a string.
+ * Implemented status codes: 200, 400, 403, 404, 500, 501
+ * If the given status code is not implemented, the function will return "Unknown".
+ *
+ *
+ * @param status_code HTTP status code
+ * @return HTTP status message
+ */
 const char *get_http_status_message(int status_code);
 
-/// @breif Starts a basic HTTP server
-/// @param request Raw HTTP request string
-/// @return Encoded raw HTTP response string
+/**
+ * @brief Start a basic HTTP server
+ *
+ * The function processes a raw HTTP request and returns a raw HTTP response.
+ * The function will return an error response if the request is invalid or the method is not
+ * implemented. If the requested resource is "/debug", the function will return a debug response. If
+ * the requested resource is not found, the function will return a 404 response. If the requested
+ * resource is forbidden, the function will return a 403 response. If the requested resource cannot
+ * be accessed, the function will return a 500 response.
+ *
+ * @param raw_request Raw HTTP request string
+ * @return Encoded raw HTTP response string
+ */
 string *http_server(string *request);
 
 #endif

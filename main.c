@@ -16,7 +16,6 @@
 string *process(string *request);
 
 static bool run = true;
-static bool echo = false;
 
 /**
  * Gibt eine Fehlermeldung *msg* aus und beendet das Programm.
@@ -230,11 +229,6 @@ static void main_loop() {
  * @return Die ausgehende Response.
  */
 string *process(string *request) {
-  if (echo) {
-    string *response = request;
-    return response;
-  }
-
   string *response = http_server(request);
   free_str(request);
 
@@ -242,17 +236,6 @@ string *process(string *request) {
 }
 
 int main(int argc, char *argv[]) {
-  /**
-   * REMOVE !!!
-   * Start "just" the echo server by passing the "--echo" argument.
-   */
-  if (argc == 2 && strcmp("--echo", argv[1]) == 0) {
-    echo = true;
-  }
-  /**
-   * REMOVE !!!
-   */
-
   register_signal();
 
   if (argc == 2 && strcmp("stdin", argv[1]) == 0) {

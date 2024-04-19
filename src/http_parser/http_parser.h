@@ -5,25 +5,45 @@
 
 #define HEX_CHARSET "0123456789ABCDEF"
 
-/// @brief Decode a raw HTTP request string into a request object
-/// @param raw_request Raw HTTP request string
-/// @return Decoded request object
+/**
+ * @brief Parse a raw HTTP request string into a request object
+ *
+ * Returns NULL if the raw_request is NULL, if memory allocation fails or if the request line is
+ * invalid.
+ *
+ * @param raw_request Raw HTTP request string
+ * @return request_t* Decoded request object
+ */
 request_t *parse_request_string(string *raw_request);
 
-/// @brief Encode a response object into a raw HTTP response string
-/// @param response response object to be encoded
-/// @param error Flag indicating if the response is an error response
-/// @return Encoded raw HTTP response string
+/**
+ * @brief Encode a response object into a raw HTTP response string
+ *
+ * Returns NULL if the response is NULL or if memory allocation fails.
+ *
+ * @param response Response object to be encoded
+ * @return string* Encoded raw HTTP response string
+ */
 string *serialize_response(response_t *response);
 
-/// @brief URL decode a string
-/// @param str The string to decode
-/// @return The decoded string
+/**
+ * @brief URL decode a string
+ *
+ * Returns NULL if the str is NULL or if memory allocation fails.
+ *
+ * @param str The string to decode
+ * @return string* The decoded string
+ */
 string *url_decode(string *str);
 
-/// @brief URL encode a string
-/// @param str The string to encode
-/// @return The encoded string
+/**
+ * @brief URL encode a string
+ *
+ * Returns NULL if the str is NULL or if memory allocation fails.
+ *
+ * @param str The string to encode
+ * @return string* The encoded string
+ */
 string *url_encode(string *str);
 
 #endif
