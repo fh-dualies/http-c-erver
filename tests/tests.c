@@ -3,8 +3,8 @@
 #include "http_parser/http_parser_test.h"
 
 int main() {
-    run_http_parser_test();
-    run_httplib_test();
+  run_http_parser_test();
+  run_httplib_test();
 
-    return test_summary();
+  return test_summary();
 }

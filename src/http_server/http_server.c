@@ -1,10 +1,10 @@
 #include "http_server.h"
 #include "../http_parser/http_parser.h"
 #include <errno.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <limits.h>
 
 /// @brief Clean up memory allocated to exit the http server
 /// @param request request object to be freed
@@ -18,7 +18,7 @@ void cleanup(request_t *request, response_t *response, char *path) {
 /// @brief Check if a given path is valid
 /// @param path Path to be checked
 /// @return True if the path is valid, false otherwise
-bool verify_path(char *path) {
+bool is_valid_path(char *path) {
   if (path == NULL) {
     return false;
   }
@@ -47,7 +47,7 @@ bool verify_path(char *path) {
 /// @brief Verify if a given request is valid
 /// @param request Request to be verified
 /// @return True if the request is valid, false otherwise
-bool verify_decoded_request(request_t *request) {
+bool is_valid_request(request_t *request) {
   if (request->method == NULL || request->resource == NULL || request->version == NULL) {
     return false;
   }
@@ -69,94 +69,94 @@ bool verify_decoded_request(request_t *request) {
 /// @param path The path to the file
 /// @return The mime type of the file
 const char *get_mime_type(char *path) {
-    if (path == NULL) {
-        return NULL;
-    }
+  if (path == NULL) {
+    return NULL;
+  }
 
-    const char *extension = strrchr(path, '.');
+  const char *extension = strrchr(path, '.');
 
-    if (extension == NULL) {
-        return CONTENT_TYPE_TEXT;
-    }
-
-    if (strcmp(extension, ".html") == 0) {
-        return CONTENT_TYPE_HTML;
-    }
-
-    if (strcmp(extension, ".css") == 0) {
-        return CONTENT_TYPE_CSS;
-    }
-
-    if (strcmp(extension, ".js") == 0) {
-        return CONTENT_TYPE_JS;
-    }
-
-    if (strcmp(extension, ".jpg") == 0 || strcmp(extension, ".jpeg") == 0) {
-        return CONTENT_TYPE_JPEG;
-    }
-
-    if (strcmp(extension, ".png") == 0) {
-        return CONTENT_TYPE_PNG;
-    }
-
-    if (strcmp(extension, ".ico") == 0) {
-        return CONTENT_TYPE_ICO;
-    }
-
+  if (extension == NULL) {
     return CONTENT_TYPE_TEXT;
+  }
+
+  if (strcmp(extension, EXTENSION_HTML) == 0) {
+    return CONTENT_TYPE_HTML;
+  }
+
+  if (strcmp(extension, EXTENSION_CSS) == 0) {
+    return CONTENT_TYPE_CSS;
+  }
+
+  if (strcmp(extension, EXTENSION_JS) == 0) {
+    return CONTENT_TYPE_JS;
+  }
+
+  if (strcmp(extension, EXTENSION_JPG) == 0 || strcmp(extension, EXTENSION_JPEG) == 0) {
+    return CONTENT_TYPE_JPEG;
+  }
+
+  if (strcmp(extension, EXTENSION_PNG) == 0) {
+    return CONTENT_TYPE_PNG;
+  }
+
+  if (strcmp(extension, EXTENSION_ICO) == 0) {
+    return CONTENT_TYPE_ICO;
+  }
+
+  return CONTENT_TYPE_TEXT;
 }
 
 /// @brief converts the relative path to absolute path (document root)
 /// @param path relative path
 /// @return absolute path
-char *get_absolute_path(string *resource) {
-    if (resource == NULL) {
-        return NULL;
-    }
+char *convert_to_absolute_path(string *resource) {
+  if (resource == NULL) {
+    return NULL;
+  }
 
-    string *relative_path = _new_string();
-    char *absolute_path = calloc(PATH_MAX, 1);
+  string *relative_path = _new_string();
+  char *absolute_path = calloc(PATH_MAX, 1);
 
-    if (absolute_path == NULL) {
-        free_str(relative_path);
-        return NULL;
-    }
-
-    str_cat(relative_path, DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
-    str_cat(relative_path, resource->str, resource->len);
-
-    char *real_path = realpath(relative_path->str, absolute_path);
-
-    if (real_path == NULL) {
-        free_str(relative_path);
-        free(absolute_path);
-        return NULL;
-    }
-
+  if (absolute_path == NULL) {
     free_str(relative_path);
+    return NULL;
+  }
 
-    return absolute_path;
+  str_cat(relative_path, DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
+  str_cat(relative_path, resource->str, resource->len);
+
+  char *real_path = realpath(relative_path->str, absolute_path);
+
+  if (real_path == NULL) {
+    free_str(relative_path);
+    free(absolute_path);
+    return NULL;
+  }
+
+  free_str(relative_path);
+
+  return absolute_path;
 }
 
 const char *get_http_status_message(int status_code) {
-    // List of HTTP status codes:
-    // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-    switch (status_code) {
-        case HTTP_OK:
-            return STATUS_MESSAGE_OK;
-        case HTTP_BAD_REQUEST:
-            return STATUS_MESSAGE_BAD_REQUEST;
-        case HTTP_FORBIDDEN:
-            return STATUS_MESSAGE_FORBIDDEN;
-        case HTTP_NOT_FOUND:
-            return STATUS_MESSAGE_NOT_FOUND;
-        case HTTP_INTERNAL_SERVER_ERROR:
-            return STATUS_MESSAGE_INTERNAL_SERVER_ERROR;
-        case HTTP_NOT_IMPLEMENTED:
-            return STATUS_MESSAGE_NOT_IMPLEMENTED;
-        default:
-            return STATUS_MESSAGE_UNKNOWN;
-    }
+  // List of HTTP status codes:
+  // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+  switch (status_code) {
+  case HTTP_OK:
+    return STATUS_MESSAGE_OK;
+  case HTTP_BAD_REQUEST:
+    return STATUS_MESSAGE_BAD_REQUEST;
+  case HTTP_FORBIDDEN:
+    return STATUS_MESSAGE_FORBIDDEN;
+  case HTTP_NOT_FOUND:
+    return STATUS_MESSAGE_NOT_FOUND;
+  case HTTP_INTERNAL_SERVER_ERROR:
+    return STATUS_MESSAGE_INTERNAL_SERVER_ERROR;
+  case HTTP_NOT_IMPLEMENTED:
+    return STATUS_MESSAGE_NOT_IMPLEMENTED;
+  default:
+    return STATUS_MESSAGE_UNKNOWN;
+  }
 }
 
 /// @brief Create error response for a given status code
@@ -169,7 +169,7 @@ string *error_response(int status_code) {
     return NULL;
   }
 
-  build_response_status(response, status_code, CONTENT_TYPE_HTML);
+  generate_response_status(response, status_code, CONTENT_TYPE_HTML);
 
   string *status_code_str = int_to_string(status_code);
   const char *status_message = get_http_status_message(status_code);
@@ -183,9 +183,9 @@ string *error_response(int status_code) {
   str_cat(response->body, status_message, strlen(status_message));
   str_cat(response->body, "</p></body></html>", 18);
 
-  update_content_length(response);
+  update_response_content_length(response);
 
-  string *encoded_response = encode_response(response);
+  string *encoded_response = serialize_response(response);
 
   free_response(response);
 
@@ -202,7 +202,7 @@ string *debug_response(request_t *request) {
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
   }
 
-  build_response_status(response, HTTP_OK, CONTENT_TYPE_HTML);
+  generate_response_status(response, HTTP_OK, CONTENT_TYPE_HTML);
 
   // HTML body
   response->body = str_set(response->body, "<html><head><title>Debug</title></head><body>", 45);
@@ -217,10 +217,10 @@ string *debug_response(request_t *request) {
   response->body = str_cat(response->body, "</p></body></html>", 18);
 
   // content length
-  update_content_length(response);
+  update_response_content_length(response);
 
   // encode response
-  string *encoded_response = encode_response(response);
+  string *encoded_response = serialize_response(response);
 
   free_response(response);
   free_request(request);
@@ -229,7 +229,7 @@ string *debug_response(request_t *request) {
 }
 
 string *http_server(string *raw_request) {
-  request_t *decoded_request = decode_request_string(raw_request);
+  request_t *decoded_request = parse_request_string(raw_request);
 
   if (decoded_request == NULL) {
     return error_response(HTTP_BAD_REQUEST);
@@ -237,11 +237,17 @@ string *http_server(string *raw_request) {
 
   // decode url-encoded resource
   string *decoded = url_decode(decoded_request->resource);
+
+  if (decoded == NULL) {
+    free_request(decoded_request);
+    return error_response(HTTP_BAD_REQUEST);
+  }
+
   str_set(decoded_request->resource, decoded->str, decoded->len);
   free_str(decoded);
 
   // validate request content
-  if (!verify_decoded_request(decoded_request)) {
+  if (!is_valid_request(decoded_request)) {
     free_request(decoded_request);
     return error_response(HTTP_BAD_REQUEST);
   }
@@ -253,7 +259,7 @@ string *http_server(string *raw_request) {
   }
 
   // return debug response if requested
-  if (strcmp(decoded_request->resource->str, "/debug") == 0) {
+  if (strcmp(decoded_request->resource->str, ROUTE_DEBUG) == 0) {
     // no cleanup needed, debug_response() will free the request
     return debug_response(decoded_request);
   }
@@ -266,7 +272,7 @@ string *http_server(string *raw_request) {
   }
 
   // create path to resource
-  char *absolute_path = get_absolute_path(decoded_request->resource);
+  char *absolute_path = convert_to_absolute_path(decoded_request->resource);
 
   // check if resource exists and get absolute path
   if (absolute_path == NULL) {
@@ -276,7 +282,7 @@ string *http_server(string *raw_request) {
   }
 
   // check if path is valid
-  if (!verify_path(absolute_path)) {
+  if (!is_valid_path(absolute_path)) {
     cleanup(decoded_request, response, absolute_path);
     return error_response(HTTP_FORBIDDEN);
   }
@@ -299,14 +305,14 @@ string *http_server(string *raw_request) {
   const char *mime_type = get_mime_type(absolute_path);
 
   // fill response object
-  build_response_status(response, HTTP_OK, mime_type);
+  generate_response_status(response, HTTP_OK, mime_type);
 
   response->body = str_set(response->body, file_content->str, file_content->len);
   free_str(file_content);
 
-  update_content_length(response);
+  update_response_content_length(response);
 
-  string *encoded_response = encode_response(response);
+  string *encoded_response = serialize_response(response);
 
   cleanup(decoded_request, response, absolute_path);
 
