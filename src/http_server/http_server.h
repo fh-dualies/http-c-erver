@@ -143,7 +143,6 @@ string *debug_response(request_t *request);
 /**
  * @brief Get HTTP status message for a given status code
  *
- * The content of the file is read and stored in a string.
  * Implemented status codes: 200, 400, 403, 404, 500, 501
  * If the given status code is not implemented, the function will return "Unknown".
  *
