@@ -5,7 +5,7 @@
 
 // Server Constants
 #define SERVER_SIGNATURE "LLDM/0.1 Basic HTTP Server"
-#define DOCUMENT_ROOT "src/root" // TODO: make this cleaner?
+#define DOCUMENT_ROOT "src/htdocs" // TODO: make this cleaner?
 
 // HTTP Constants
 #define HTTP_VERSION_1_0 "HTTP/1.0"
@@ -44,21 +44,10 @@
 #define CONTENT_TYPE_HEADER "Content-Type: "
 #define SERVER_HEADER "Server: "
 
-struct request_t {
-  string *method;
-  string *resource;
-  string *version;
-} typedef request_t;
-
-struct response_t {
-  string *version;
-  string *status_code;
-  string *status_message;
-  string *content_type;
-  string *content_length;
-  string *server;
-  string *body;
-} typedef response_t;
+/// @brief Gets the HTTP status message for a given status code
+/// @param status_code HTTP status code
+/// @return HTTP status message
+const char *get_http_status_message(int status_code);
 
 /// @breif Starts a basic HTTP server
 /// @param request Raw HTTP request string
