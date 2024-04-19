@@ -15,8 +15,8 @@
  * @param path path to be freed
  */
 void cleanup(request_t *request, response_t *response, char *path) {
-  free_request(request);
-  free_response(response);
+  free_request(&request);
+  free_response(&response);
   free(path);
 }
 
@@ -209,7 +209,7 @@ string *error_response(int status_code) {
 
   string *encoded_response = serialize_response(response);
 
-  free_response(response);
+  free_response(&response);
 
   return encoded_response;
 }
@@ -227,7 +227,7 @@ string *debug_response(request_t *request) {
   response_t *response = new_response();
 
   if (response == NULL) {
-    free_request(request);
+    free_request(&request);
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
   }
 
@@ -251,8 +251,8 @@ string *debug_response(request_t *request) {
   // encode response
   string *encoded_response = serialize_response(response);
 
-  free_response(response);
-  free_request(request);
+  free_response(&response);
+  free_request(&request);
 
   return encoded_response;
 }
@@ -289,7 +289,7 @@ string *http_server(string *raw_request) {
   string *decoded = url_decode(decoded_request->resource);
 
   if (decoded == NULL) {
-    free_request(decoded_request);
+    free_request(&decoded_request);
     return error_response(HTTP_BAD_REQUEST);
   }
 
@@ -299,13 +299,13 @@ string *http_server(string *raw_request) {
 
   // validate request content
   if (!is_valid_request(decoded_request)) {
-    free_request(decoded_request);
+    free_request(&decoded_request);
     return error_response(HTTP_BAD_REQUEST);
   }
 
   // check if method is implemented
   if (strcmp(decoded_request->method->str, HTTP_METHOD_GET) != 0) {
-    free_request(decoded_request);
+    free_request(&decoded_request);
     return error_response(HTTP_NOT_IMPLEMENTED);
   }
 
@@ -318,7 +318,7 @@ string *http_server(string *raw_request) {
   response_t *response = new_response();
 
   if (response == NULL) {
-    free_request(decoded_request);
+    free_request(&decoded_request);
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
   }
 
@@ -327,8 +327,8 @@ string *http_server(string *raw_request) {
 
   // check if resource exists and get absolute path
   if (absolute_path == NULL) {
-    free_request(decoded_request);
-    free_response(response);
+    free_request(&decoded_request);
+    free_response(&response);
     return error_response(HTTP_NOT_FOUND);
   }
 
