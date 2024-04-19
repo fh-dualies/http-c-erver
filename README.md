@@ -66,14 +66,6 @@ $ make
 
 ## Run Project
 
-### Run echo server
-
-The echo server will just echo the request back to the client
-
-```sh
-$ ./build/server.out --echo
-```
-
 ### Run basic http server
 
 The basic http server will process the request information and send a response back to the client.

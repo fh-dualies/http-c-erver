@@ -6,18 +6,33 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-/// @brief Clean up memory allocated to exit the http server
-/// @param request request object to be freed
-/// @param response response object to be freed
+/**
+ * @brief Clean up memory allocated to exit the http server
+ * @warning This function does not check if the given pointers are NULL
+ *
+ * @param request request object to be freed
+ * @param response response object to be freed
+ * @param path path to be freed
+ */
 void cleanup(request_t *request, response_t *response, char *path) {
   free_request(request);
   free_response(response);
   free(path);
 }
 
-/// @brief Check if a given path is valid
-/// @param path Path to be checked
-/// @return True if the path is valid, false otherwise
+/**
+ * @brief Check if a given path is valid
+ *
+ * A path is considered valid if:
+ * - it is not NULL
+ * - it is not empty
+ * - it starts with a '/'
+ * - it contains the DOCUMENT_ROOT (to prevent access to other directories)
+ * - it does not contain ".."
+ *
+ * @param path Path to be checked
+ * @return True if the path is valid, false otherwise
+ */
 bool is_valid_path(char *path) {
   if (path == NULL) {
     return false;
@@ -44,9 +59,17 @@ bool is_valid_path(char *path) {
   return true;
 }
 
-/// @brief Verify if a given request is valid
-/// @param request Request to be verified
-/// @return True if the request is valid, false otherwise
+/**
+ * @brief Verify if a given request is valid
+ *
+ * A request is considered valid if:
+ * - method, resource and version are not NULL
+ * - method, resource and version are not empty
+ * - version is either HTTP/1.0 or HTTP/1.1
+ *
+ * @param request Request to be verified
+ * @return True if the request is valid, false otherwise
+ */
 bool is_valid_request(request_t *request) {
   if (request->method == NULL || request->resource == NULL || request->version == NULL) {
     return false;
@@ -65,9 +88,15 @@ bool is_valid_request(request_t *request) {
   return true;
 }
 
-/// @brief Get the mime type of a file
-/// @param path The path to the file
-/// @return The mime type of the file
+/**
+ * @brief Get the mime type of a file
+ *
+ * The mime type is determined by the file extension.
+ * If the file extension is not known, the default mime type is text/plain.
+ *
+ * @param path Path to the file
+ * @return Mime type of the file
+ */
 const char *get_mime_type(char *path) {
   if (path == NULL) {
     return NULL;
@@ -106,9 +135,14 @@ const char *get_mime_type(char *path) {
   return CONTENT_TYPE_TEXT;
 }
 
-/// @brief converts the relative path to absolute path (document root)
-/// @param path relative path
-/// @return absolute path
+/**
+ * @brief Convert a relative path to an absolute path
+ *
+ * The absolute path is created by concatenating the DOCUMENT_ROOT and the relative path.
+ *
+ * @param resource Relative path to the resource
+ * @return Absolute path to the resource
+ */
 char *convert_to_absolute_path(string *resource) {
   if (resource == NULL) {
     return NULL;
@@ -122,9 +156,12 @@ char *convert_to_absolute_path(string *resource) {
     return NULL;
   }
 
+  // add document root to relative path
   str_cat(relative_path, DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
+  // add resource to relative path
   str_cat(relative_path, resource->str, resource->len);
 
+  // get real path of the resource
   char *real_path = realpath(relative_path->str, absolute_path);
 
   if (real_path == NULL) {
@@ -138,30 +175,15 @@ char *convert_to_absolute_path(string *resource) {
   return absolute_path;
 }
 
-const char *get_http_status_message(int status_code) {
-  // List of HTTP status codes:
-  // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-  switch (status_code) {
-  case HTTP_OK:
-    return STATUS_MESSAGE_OK;
-  case HTTP_BAD_REQUEST:
-    return STATUS_MESSAGE_BAD_REQUEST;
-  case HTTP_FORBIDDEN:
-    return STATUS_MESSAGE_FORBIDDEN;
-  case HTTP_NOT_FOUND:
-    return STATUS_MESSAGE_NOT_FOUND;
-  case HTTP_INTERNAL_SERVER_ERROR:
-    return STATUS_MESSAGE_INTERNAL_SERVER_ERROR;
-  case HTTP_NOT_IMPLEMENTED:
-    return STATUS_MESSAGE_NOT_IMPLEMENTED;
-  default:
-    return STATUS_MESSAGE_UNKNOWN;
-  }
-}
-
-/// @brief Create error response for a given status code
-/// @param status_code HTTP status code
-/// @return Encoded raw HTTP response string
+/**
+ * @brief Create an error response for a given status code
+ *
+ * The error response is created by generating a response object with the given status code.
+ * The body of the response contains a simple HTML error message.
+ *
+ * @param status_code HTTP status code
+ * @return Encoded raw HTTP response string
+ */
 string *error_response(int status_code) {
   response_t *response = new_response();
 
@@ -192,8 +214,15 @@ string *error_response(int status_code) {
   return encoded_response;
 }
 
-/// @brief Create debug response for a given request
-/// @param request Request object to be debugged
+/**
+ * @brief Create a debug response for a given request
+ *
+ * The debug response is created by generating a response object with the status code 200.
+ * The body of the response contains the HTTP method, resource and version of the request.
+ *
+ * @param request Request object to be debugged
+ * @return Encoded raw HTTP response string
+ */
 string *debug_response(request_t *request) {
   response_t *response = new_response();
 
@@ -228,6 +257,27 @@ string *debug_response(request_t *request) {
   return encoded_response;
 }
 
+const char *get_http_status_message(int status_code) {
+  // List of HTTP status codes:
+  // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+  switch (status_code) {
+  case HTTP_OK:
+    return STATUS_MESSAGE_OK;
+  case HTTP_BAD_REQUEST:
+    return STATUS_MESSAGE_BAD_REQUEST;
+  case HTTP_FORBIDDEN:
+    return STATUS_MESSAGE_FORBIDDEN;
+  case HTTP_NOT_FOUND:
+    return STATUS_MESSAGE_NOT_FOUND;
+  case HTTP_INTERNAL_SERVER_ERROR:
+    return STATUS_MESSAGE_INTERNAL_SERVER_ERROR;
+  case HTTP_NOT_IMPLEMENTED:
+    return STATUS_MESSAGE_NOT_IMPLEMENTED;
+  default:
+    return STATUS_MESSAGE_UNKNOWN;
+  }
+}
+
 string *http_server(string *raw_request) {
   request_t *decoded_request = parse_request_string(raw_request);
 
@@ -243,6 +293,7 @@ string *http_server(string *raw_request) {
     return error_response(HTTP_BAD_REQUEST);
   }
 
+  // free old resource and set new decoded resource
   str_set(decoded_request->resource, decoded->str, decoded->len);
   free_str(decoded);
 

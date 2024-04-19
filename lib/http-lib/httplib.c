@@ -2,6 +2,11 @@
 #include <assert.h>
 #include <sys/stat.h>
 
+void *exit_err(const char *function_name, const char *reason) {
+  fprintf(stderr, "Error - %s(): %s\n", function_name, reason);
+  exit(EXIT_FAILURE);
+}
+
 string *str_cat(string *dest, const char *src, size_t len) {
   // check if dest is NULL
   if (dest == NULL) {
@@ -19,7 +24,7 @@ string *str_cat(string *dest, const char *src, size_t len) {
   void *temp = realloc(dest->str, new_len + 1);
 
   if (temp == NULL) {
-    exit(4);
+    return exit_err("str_cat", "Memory allocation if temp failed.");
   }
 
   dest->str = temp;
@@ -49,7 +54,7 @@ string *str_set(string *dest, const char *src, size_t len) {
   dest->str = calloc(len + 1, 1);
 
   if (dest->str == NULL) {
-    exit(4);
+    return exit_err("str_set", "Memory allocation of dest->str failed.");
   }
 
   // copy src to dest
@@ -66,12 +71,13 @@ string *_new_string() {
   string *str = calloc(1, sizeof(string));
 
   if (str == NULL) {
-    exit(2);
+    return exit_err("_new_string", "Memory allocation of str failed.");
   }
 
   str->str = calloc(1, 1);
+
   if (str->str == NULL) {
-    exit(3);
+    return exit_err("_new_string", "Memory allocation of str->str failed.");
   }
 
   str->str[0] = '\0';
@@ -90,14 +96,15 @@ string *cpy_str(const char *src, size_t len) {
   assert(src != NULL);
 
   string *dest = calloc(1, sizeof(string));
+
   if (dest == NULL) {
-    exit(2);
+    return exit_err("cpy_str", "Memory allocation of dest failed.");
   }
 
   dest->str = calloc(1, len + 1);
 
   if (dest->str == NULL) {
-    exit(3);
+    return exit_err("cpy_str", "Memory allocation of dest->str failed.");
   }
 
   memcpy(dest->str, src, len);
@@ -108,8 +115,9 @@ string *cpy_str(const char *src, size_t len) {
 }
 
 void free_str(string *str) {
-  assert(str != NULL);
-  assert(str->str != NULL);
+  if (str == NULL || str->str == NULL) {
+    return;
+  }
 
   free(str->str);
   free(str);
@@ -128,7 +136,9 @@ char *get_char_str(string *str) {
 }
 
 string *read_file(char *path) {
-  assert(path != NULL);
+  if (path == NULL) {
+    return NULL;
+  }
 
   struct stat s;
   if (stat(path, &s) != 0) {
@@ -181,7 +191,7 @@ string *int_to_string(int num) {
   char *temp_str = (char *)calloc(max_length + 1, sizeof(char));
 
   if (temp_str == NULL) {
-    exit(EXIT_FAILURE);
+    return exit_err("int_to_string", "Memory allocation of temp_str failed.");
   }
 
   snprintf(temp_str, max_length + 1, "%d", num);
@@ -198,7 +208,7 @@ string *size_t_to_string(size_t num) {
   char *temp_str = (char *)calloc(max_length + 1, sizeof(char));
 
   if (temp_str == NULL) {
-    exit(EXIT_FAILURE);
+    return exit_err("size_t_to_string", "Memory allocation of temp_str failed.");
   }
 
   snprintf(temp_str, max_length + 1, "%zu", num);
