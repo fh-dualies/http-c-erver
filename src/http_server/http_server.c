@@ -1,86 +1,10 @@
 #include "http_server.h"
+#include "../http_parser/http_parser.h"
 #include <errno.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-/// @brief Create a new request object
-/// @return Created request object
-request_t *new_request() {
-  request_t *request = calloc(1, sizeof(struct request_t));
-
-  if (request == NULL) {
-    return NULL;
-  }
-
-  request->method = _new_string();
-  request->resource = _new_string();
-  request->version = _new_string();
-
-  if (request->method == NULL || request->resource == NULL || request->version == NULL) {
-    free(request);
-    return NULL;
-  }
-
-  return request;
-}
-
-/// @brief Create a new response object
-/// @return Created response object
-response_t *new_response() {
-  response_t *response = calloc(1, sizeof(struct response_t));
-
-  if (response == NULL) {
-    return NULL;
-  }
-
-  response->version = _new_string();
-  response->status_code = _new_string();
-  response->status_message = _new_string();
-  response->content_type = _new_string();
-  response->content_length = _new_string();
-  response->server = _new_string();
-  response->body = _new_string();
-
-  if (response->version == NULL || response->status_code == NULL ||
-      response->content_type == NULL || response->content_length == NULL ||
-      response->body == NULL || response->server == NULL) {
-    free(response);
-    return NULL;
-  }
-
-  return response;
-}
-
-/// @brief Free the memory allocated for a request object
-/// @param request request object to be freed
-void free_request(request_t *request) {
-  if (request == NULL) {
-    return;
-  }
-
-  free_str(request->resource);
-  free_str(request->version);
-  free_str(request->method);
-  free(request);
-}
-
-/// @brief Free the memory allocated for a response object
-/// @param response response object to be freed
-void free_response(response_t *response) {
-  if (response == NULL) {
-    return;
-  }
-
-  free_str(response->version);
-  free_str(response->status_code);
-  free_str(response->status_message);
-  free_str(response->content_type);
-  free_str(response->content_length);
-  free_str(response->server);
-  free_str(response->body);
-  free(response);
-}
+#include <limits.h>
 
 /// @brief Clean up memory allocated to exit the http server
 /// @param request request object to be freed
@@ -89,133 +13,6 @@ void cleanup(request_t *request, response_t *response, char *path) {
   free_request(request);
   free_response(response);
   free(path);
-}
-
-/// @brief Decode a raw HTTP request string into a request object
-/// @param raw_request Raw HTTP request string
-/// @return Decoded request object
-request_t *decode_request_string(string *raw_request) {
-  if (raw_request == NULL) {
-    return NULL;
-  }
-
-  request_t *request = new_request();
-
-  if (request == NULL) {
-    return NULL;
-  }
-
-  // parse request line
-  int segment = 0;                // 0: method, 1: resource, 2: version
-  size_t segment_start = 0;       // start index of current segment
-  string *current_segment = NULL; // current segment string
-
-  for (size_t i = 0; i < raw_request->len; i++) {
-    char current = raw_request->str[i];
-
-    // check if we have reached the end of the request line
-    if (segment > 2) {
-      break;
-    }
-
-    // skip in-segment characters
-    if (current != ' ' && current != '\n' && current != '\r') {
-      continue;
-    }
-
-    // determine current segment pointer
-    switch (segment) {
-    case 0:
-      current_segment = request->method;
-      break;
-    case 1:
-      current_segment = request->resource;
-      break;
-    case 2:
-      current_segment = request->version;
-      break;
-    default:
-      break;
-    }
-
-    if (current_segment == NULL) {
-      free_request(request);
-      return NULL;
-    }
-
-    // copy segment to request object
-    str_cat(current_segment, raw_request->str + segment_start, i - segment_start);
-
-    // move to next segment
-    segment++;
-    segment_start = i + 1;
-    current_segment = NULL;
-  }
-
-  return request;
-}
-
-/// @brief Add a header to a raw HTTP response string
-/// @param raw_string Raw HTTP response string
-/// @param header Header to be added
-/// @param value Value of the header
-void add_string_header(string *raw_string, const char *header, string *value) {
-  if (raw_string == NULL || header == NULL || value == NULL) {
-    return;
-  }
-
-  str_cat(raw_string, header, strlen(header));
-  str_cat(raw_string, value->str, value->len);
-  str_cat(raw_string, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
-}
-
-/// @brief Build the status line of a raw HTTP string
-/// @param raw_string Raw HTTP string to be updated
-/// @param version HTTP version
-/// @param status_code HTTP status code
-/// @param status_message HTTP status message
-void build_response_status_line(string *raw_string, string *version, string *status_code,
-                                string *status_message) {
-  str_cat(raw_string, version->str, version->len);
-  str_cat(raw_string, " ", 1);
-  str_cat(raw_string, status_code->str, status_code->len);
-
-  str_cat(raw_string, " ", 1);
-  str_cat(raw_string, status_message->str, status_message->len);
-
-  str_cat(raw_string, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
-}
-
-/// @brief Encode a response object into a raw HTTP response string
-/// @param response response object to be encoded
-/// @param error Flag indicating if the response is an error response
-/// @return Encoded raw HTTP response string
-string *encode_response(response_t *response) {
-  if (response == NULL) {
-    return NULL;
-  }
-
-  string *encoded_response = _new_string();
-
-  if (encoded_response == NULL) {
-    return NULL;
-  }
-
-  // status line (version, status code, status message)
-  build_response_status_line(encoded_response, response->version, response->status_code,
-                             response->status_message);
-
-  // headers
-  add_string_header(encoded_response, CONTENT_TYPE_HEADER, response->content_type);
-  add_string_header(encoded_response, CONTENT_LENGTH_HEADER, response->content_length);
-  add_string_header(encoded_response, SERVER_HEADER, response->server);
-
-  str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
-
-  // body
-  str_cat(encoded_response, response->body->str, response->body->len);
-
-  return encoded_response;
 }
 
 /// @brief Check if a given path is valid
@@ -268,64 +65,98 @@ bool verify_decoded_request(request_t *request) {
   return true;
 }
 
-/// @brief Gets the HTTP status message for a given status code
-/// @param status_code HTTP status code
-/// @return HTTP status message
+/// @brief Get the mime type of a file
+/// @param path The path to the file
+/// @return The mime type of the file
+const char *get_mime_type(char *path) {
+    if (path == NULL) {
+        return NULL;
+    }
+
+    const char *extension = strrchr(path, '.');
+
+    if (extension == NULL) {
+        return CONTENT_TYPE_TEXT;
+    }
+
+    if (strcmp(extension, ".html") == 0) {
+        return CONTENT_TYPE_HTML;
+    }
+
+    if (strcmp(extension, ".css") == 0) {
+        return CONTENT_TYPE_CSS;
+    }
+
+    if (strcmp(extension, ".js") == 0) {
+        return CONTENT_TYPE_JS;
+    }
+
+    if (strcmp(extension, ".jpg") == 0 || strcmp(extension, ".jpeg") == 0) {
+        return CONTENT_TYPE_JPEG;
+    }
+
+    if (strcmp(extension, ".png") == 0) {
+        return CONTENT_TYPE_PNG;
+    }
+
+    if (strcmp(extension, ".ico") == 0) {
+        return CONTENT_TYPE_ICO;
+    }
+
+    return CONTENT_TYPE_TEXT;
+}
+
+/// @brief converts the relative path to absolute path (document root)
+/// @param path relative path
+/// @return absolute path
+char *get_absolute_path(string *resource) {
+    if (resource == NULL) {
+        return NULL;
+    }
+
+    string *relative_path = _new_string();
+    char *absolute_path = calloc(PATH_MAX, 1);
+
+    if (absolute_path == NULL) {
+        free_str(relative_path);
+        return NULL;
+    }
+
+    str_cat(relative_path, DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
+    str_cat(relative_path, resource->str, resource->len);
+
+    char *real_path = realpath(relative_path->str, absolute_path);
+
+    if (real_path == NULL) {
+        free_str(relative_path);
+        free(absolute_path);
+        return NULL;
+    }
+
+    free_str(relative_path);
+
+    return absolute_path;
+}
+
 const char *get_http_status_message(int status_code) {
-  // List of HTTP status codes:
-  // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-  switch (status_code) {
-  case HTTP_OK:
-    return STATUS_MESSAGE_OK;
-  case HTTP_BAD_REQUEST:
-    return STATUS_MESSAGE_BAD_REQUEST;
-  case HTTP_FORBIDDEN:
-    return STATUS_MESSAGE_FORBIDDEN;
-  case HTTP_NOT_FOUND:
-    return STATUS_MESSAGE_NOT_FOUND;
-  case HTTP_INTERNAL_SERVER_ERROR:
-    return STATUS_MESSAGE_INTERNAL_SERVER_ERROR;
-  case HTTP_NOT_IMPLEMENTED:
-    return STATUS_MESSAGE_NOT_IMPLEMENTED;
-  default:
-    return STATUS_MESSAGE_UNKNOWN;
-  }
-}
-
-/// @brief Build the status line of a response object
-/// @param response Response object to be updated
-/// @param status_code HTTP status code
-/// @param content_type Content type of the response
-void build_response_status(response_t *response, int status_code, const char *content_type) {
-  if (response == NULL) {
-    return;
-  }
-
-  string *status_code_str = int_to_string(status_code);
-  const char *status_message = get_http_status_message(status_code);
-
-  response->version = str_set(response->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
-  response->status_code =
-      str_set(response->status_code, status_code_str->str, status_code_str->len);
-  response->status_message =
-      str_set(response->status_message, status_message, strlen(status_message));
-  response->content_type = str_set(response->content_type, content_type, strlen(content_type));
-  response->server = str_set(response->server, SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
-
-  free_str(status_code_str);
-}
-
-/// @brief Update the content length of a response object
-/// @param response Response object to be updated
-void update_content_length(response_t *response) {
-  if (response == NULL) {
-    return;
-  }
-
-  string *content_length = size_t_to_string(response->body->len);
-  response->content_length =
-      str_set(response->content_length, content_length->str, content_length->len);
-  free_str(content_length);
+    // List of HTTP status codes:
+    // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+    switch (status_code) {
+        case HTTP_OK:
+            return STATUS_MESSAGE_OK;
+        case HTTP_BAD_REQUEST:
+            return STATUS_MESSAGE_BAD_REQUEST;
+        case HTTP_FORBIDDEN:
+            return STATUS_MESSAGE_FORBIDDEN;
+        case HTTP_NOT_FOUND:
+            return STATUS_MESSAGE_NOT_FOUND;
+        case HTTP_INTERNAL_SERVER_ERROR:
+            return STATUS_MESSAGE_INTERNAL_SERVER_ERROR;
+        case HTTP_NOT_IMPLEMENTED:
+            return STATUS_MESSAGE_NOT_IMPLEMENTED;
+        default:
+            return STATUS_MESSAGE_UNKNOWN;
+    }
 }
 
 /// @brief Create error response for a given status code
