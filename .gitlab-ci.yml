@@ -1,0 +1,49 @@
+image: gcc
+
+stages:
+  - build
+  - test
+
+build-job:
+  stage: build
+  before_script:
+    - apt-get update
+    - apt-get install --yes cmake
+  script:
+    - echo "Compiling the code..."
+    - cmake . && make
+    - echo "Compile complete."
+
+unit-test:
+  stage: test
+  before_script:
+    - apt-get update
+    - apt-get install -y cmake
+  script:
+    - echo "Compiling the code..."
+    - cmake . && make
+    - echo "Running tests..."
+    - ./build/tests.out
+
+unit-test-job-valgrind:
+  stage: test
+  before_script:
+    - apt-get update
+    - apt-get install --yes cmake valgrind
+  script:
+    - echo "Compiling the code..."
+    - cmake . && make
+    - echo "Running tests..."
+    - valgrind --tool=memcheck --gen-suppressions=all --leak-check=full --leak-resolution=med --track-origins=yes --vgdb=no --trace-children=yes --error-exitcode=1 ./build/tests.out --output-on-failure
+
+unit-test-job-asan:
+  stage: test
+  before_script:
+    - apt-get update
+    - apt-get install --yes cmake
+    - echo "set(CMAKE_C_FLAGS \"\${CMAKE_C_FLAGS} -fsanitize=address -g -fno-omit-frame-pointer -O1\")" >> CMakeLists.txt
+  script:
+    - echo "Compiling the code..."
+    - cmake . && make
+    - echo "Running tests..."
+    - ./build/tests.out --output-on-failure

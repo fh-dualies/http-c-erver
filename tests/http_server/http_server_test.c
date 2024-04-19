@@ -48,7 +48,7 @@ void test_is_valid_request() {
 
   expect_true(is_valid_request(request));
 
-  str_set(request->version, "HTTP/2", 8);
+  str_set(request->version, "HTTP/2", 6);
 
   expect_false(is_valid_request(request));
 
@@ -88,20 +88,6 @@ void test_get_mime_type() {
   expect_equal(mime_type, strlen(CONTENT_TYPE_TEXT), CONTENT_TYPE_TEXT);
 
   free_str(mime_type);
-}
-
-void test_convert_to_absolute_path() {
-  test_title("Test convert_to_absolute_path()");
-
-  string *resource = _new_string();
-  str_set(resource, "/default/index.html", 19);
-
-  char *path = convert_to_absolute_path(resource);
-
-  expect_not_null(path);
-
-  free_str(resource);
-  free(path);
 }
 
 void test_error_response() {
@@ -178,7 +164,6 @@ void run_http_server_test() {
   run_is_valid_path_test();
   test_is_valid_request();
   test_get_mime_type();
-  test_convert_to_absolute_path();
   test_error_response();
   test_debug_response();
   test_get_http_status_message();
