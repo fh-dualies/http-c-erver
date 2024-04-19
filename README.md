@@ -30,7 +30,19 @@ This repository's contents is divided across four primary sections:
 - `/lib` contains third-party libraries used in the project
 - `/scripts` contains scripts used for general purposes
 - `/src` contains the source code for the project
+- `/src/htdocs` represents the root directory of the server
 - `/tests` contains the test code for the project
+
+### Libs
+
+- `http-lib` is a library that provides string manipulation functions for HTTP requests and responses
+- `testing` is a library that provides functions for testing
+
+### Modules
+
+- `http_server` is a module that provides a basic HTTP server
+- `http_parser` is a module that provides a parser for HTTP requests and urls
+- `http_models` is a module that provides models for HTTP requests and responses
 
 ## Installation
 
