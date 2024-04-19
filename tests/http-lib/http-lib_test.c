@@ -22,4 +22,89 @@ void test_str_cat() {
   free_str(str_empty);
 }
 
-void run_httplib_test() { test_str_cat(); }
+void test_str_set() {
+  test_title("Test str_set()");
+
+  string *string = _new_string();
+
+  str_set(string, "Hello, world!", 13);
+  expect_equal(string, 13, "Hello, world!");
+
+  str_set(string, "world!", 6);
+  expect_equal(string, 6, "world!");
+
+  free_str(string);
+}
+
+void test_new_string() {
+  test_title("Test new_string()");
+
+  string *string = _new_string();
+  expect_equal(string, 0, "");
+  expect_not_null(&string->len);
+
+  free_str(string);
+}
+
+void test_cpy_str() {
+  test_title("Test cpy_str()");
+
+  string *string = cpy_str("Hello, world!", 13);
+  expect_equal(string, 13, "Hello, world!");
+
+  free_str(string);
+}
+
+void test_get_length() {
+  test_title("Test get_length()");
+
+  string *str = cpy_str("Hello, world!", 13);
+  string *len = size_t_to_string(get_length(str));
+
+  expect_equal(len, 2, "13");
+
+  free_str(str);
+}
+
+void test_get_char_str() {
+  test_title("Test get_char_str()");
+
+  string *str = cpy_str("Hello, world!", 13);
+  string *str2 = _new_string();
+
+  str_set(str2, get_char_str(str), get_length(str));
+
+  expect_equal(str2, 13, "Hello, world!");
+
+  free_str(str);
+  free_str(str2);
+}
+
+void test_int_to_string() {
+  test_title("Test int_to_string()");
+
+  string *str = int_to_string(123);
+  expect_equal(str, 3, "123");
+
+  free_str(str);
+}
+
+void test_size_t_to_string() {
+  test_title("Test size_t_to_string()");
+
+  string *str = size_t_to_string(123);
+  expect_equal(str, 3, "123");
+
+  free_str(str);
+}
+
+void run_httplib_test() {
+    test_str_cat();
+    test_str_set();
+    test_new_string();
+    test_cpy_str();
+    test_get_length();
+    test_get_char_str();
+    test_int_to_string();
+    test_size_t_to_string();
+}
