@@ -25,6 +25,7 @@ void expect_equal(string *str, size_t expected_len, const char *expected_str) {
 
     free_str(expected);
     failed_assertions++;
+
     return;
   }
 
@@ -40,6 +41,7 @@ void expect_equal(string *str, size_t expected_len, const char *expected_str) {
 
       free_str(expected);
       failed_assertions++;
+
       return;
     }
   }
@@ -53,6 +55,40 @@ void expect_equal(string *str, size_t expected_len, const char *expected_str) {
   reset_color();
 
   free_str(expected);
+}
+
+void expect_not_null(void *ptr) {
+  assertions++;
+
+  if (ptr == NULL) {
+    error_color();
+    printf("Expected not NULL, got NULL\n");
+    reset_color();
+    failed_assertions++;
+
+    return;
+  }
+
+  success_color();
+  printf("Not NULL\n");
+  reset_color();
+}
+
+void expect_null(void *ptr) {
+  assertions++;
+
+  if (ptr != NULL) {
+    error_color();
+    printf("Expected not NULL, got NULL\n");
+    reset_color();
+    failed_assertions++;
+
+    return;
+  }
+
+  success_color();
+  printf("Not NULL\n");
+  reset_color();
 }
 
 void test_title(const char *title) {
@@ -75,6 +111,7 @@ int test_summary() {
     printf("All %d assertions passed\n", assertions);
     printf("========================================\n");
     reset_color();
+
     return 0;
   }
 
@@ -84,5 +121,6 @@ int test_summary() {
   printf("%d/%d assertions failed\n", failed_assertions, assertions);
   printf("========================================\n");
   reset_color();
+
   return 1;
 }

@@ -45,30 +45,32 @@ response_t *new_response() {
   return response;
 }
 
-void free_request(request_t *request) {
-  if (request == NULL) {
+void free_request(request_t **request) {
+  if (*request == NULL) {
     return;
   }
 
-  free_str(request->resource);
-  free_str(request->version);
-  free_str(request->method);
-  free(request);
+  free_str((*request)->resource);
+  free_str((*request)->version);
+  free_str((*request)->method);
+  free(*request);
+  *request = NULL;
 }
 
-void free_response(response_t *response) {
-  if (response == NULL) {
+void free_response(response_t **response) {
+  if (*response == NULL) {
     return;
   }
 
-  free_str(response->version);
-  free_str(response->status_code);
-  free_str(response->status_message);
-  free_str(response->content_type);
-  free_str(response->content_length);
-  free_str(response->server);
-  free_str(response->body);
-  free(response);
+  free_str((*response)->version);
+  free_str((*response)->status_code);
+  free_str((*response)->status_message);
+  free_str((*response)->content_type);
+  free_str((*response)->content_length);
+  free_str((*response)->server);
+  free_str((*response)->body);
+  free(*response);
+  *response = NULL;
 }
 
 void update_response_content_length(response_t *response) {
