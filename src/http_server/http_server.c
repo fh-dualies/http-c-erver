@@ -286,7 +286,7 @@ string *http_server(string *raw_request) {
   }
 
   // decode url-encoded resource
-  string *decoded = url_decode(decoded_request->resource);
+  string *decoded = decode_url(decoded_request->resource);
 
   if (decoded == NULL) {
     free_request(&decoded_request);

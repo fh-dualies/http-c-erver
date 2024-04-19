@@ -3,51 +3,41 @@
 #include "../../src/http_models/http_models.h"
 #include "../../src/http_server/http_server.h"
 
-int test_new_request() {
+void test_new_request() {
   test_title("Test new_request()");
 
   request_t *request = new_request();
 
   expect_not_null(request);
-
-  return 0;
 }
 
-int test_new_response() {
+void test_new_response() {
   test_title("Test new_response()");
 
   response_t *response = new_response();
 
   expect_not_null(response);
-
-  return 0;
 }
 
-int test_free_request() {
+void test_free_request() {
   test_title("Test free_request()");
 
   request_t *request = new_request();
   free_request(&request);
 
-  printf("%p\n", request);
-
   expect_null(request);
-
-  return 0;
 }
 
-int test_free_response() {
+void test_free_response() {
   test_title("Test free_response");
 
   response_t *response = new_response();
   free_response(&response);
 
   expect_null(response);
-
-  return 0;
 }
 
-int test_update_response_content_length() {
+void test_update_response_content_length() {
   test_title("Test update_response_content_length()");
 
   response_t *response = new_response();
@@ -58,11 +48,9 @@ int test_update_response_content_length() {
   expect_equal(response->content_length, 2, "17");
 
   free_response(&response);
-
-  return 0;
 }
 
-int test_generate_response_status() {
+void test_generate_response_status() {
   test_title("Test generate_response_status");
 
   response_t *response = new_response();
@@ -75,51 +63,44 @@ int test_generate_response_status() {
   expect_equal(response->server, strlen(SERVER_SIGNATURE), SERVER_SIGNATURE);
 
   free_response(&response);
-
-  return 0;
 }
 
-int test_add_response_string_header() {
-    test_title("Test add_response_string_header()");
+void test_add_response_string_header() {
+  test_title("Test add_response_string_header()");
 
-    string *raw_string = _new_string();
-    string *value = _new_string();
+  string *raw_string = _new_string();
+  string *value = _new_string();
 
-    str_cat(value, "Test value", 10);
+  str_cat(value, "Test value", 10);
 
-    add_response_string_header(raw_string, "Test-Header: ", value);
+  add_response_string_header(raw_string, "Test-Header: ", value);
 
-    expect_equal(raw_string, 25, "Test-Header: Test value\r\n");
+  expect_equal(raw_string, 25, "Test-Header: Test value\r\n");
 
-    free_str(raw_string);
-    free_str(value);
-
-    return 0;
+  free_str(raw_string);
+  free_str(value);
 }
 
-int test_generate_response_status_line() {
-    test_title("Test generate_response_status_line()");
+void test_generate_response_status_line() {
+  test_title("Test generate_response_status_line()");
 
-    string *raw_string = _new_string();
-    string *version = _new_string();
-    string *status_code = _new_string();
-    string *status_message = _new_string();
+  string *raw_string = _new_string();
+  string *version = _new_string();
+  string *status_code = _new_string();
+  string *status_message = _new_string();
 
-    str_cat(version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
-    str_cat(status_code, "200", 3);
-    str_cat(status_message, STATUS_MESSAGE_OK, strlen(STATUS_MESSAGE_OK));
+  str_cat(version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
+  str_cat(status_code, "200", 3);
+  str_cat(status_message, STATUS_MESSAGE_OK, strlen(STATUS_MESSAGE_OK));
 
-    generate_response_status_line(raw_string, version, status_code, status_message);
+  generate_response_status_line(raw_string, version, status_code, status_message);
 
-    expect_equal(raw_string, 17, "HTTP/1.1 200 OK\r\n");
+  expect_equal(raw_string, 17, "HTTP/1.1 200 OK\r\n");
 
-    free_str(raw_string);
-    free_str(version);
-    free_str(status_code);
-    free_str(status_message);
-
-    return 0;
-
+  free_str(raw_string);
+  free_str(version);
+  free_str(status_code);
+  free_str(status_message);
 }
 
 void run_http_models_test() {
