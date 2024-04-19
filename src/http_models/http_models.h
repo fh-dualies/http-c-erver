@@ -45,7 +45,7 @@ response_t *new_response();
  *
  * @param request Request object to be freed
  */
-void free_request(request_t *request);
+void free_request(request_t **request);
 
 /**
  * @brief Free the memory allocated for a response object
@@ -55,7 +55,7 @@ void free_request(request_t *request);
  *
  * @param response Response object to be freed
  */
-void free_response(response_t *response);
+void free_response(response_t **response);
 
 /**
  * @brief Update the content length of a response object

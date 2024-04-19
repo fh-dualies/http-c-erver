@@ -46,7 +46,7 @@ request_t *parse_request_string(string *raw_request) {
     }
 
     if (current_segment == NULL) {
-      free_request(request);
+      free_request(&request);
       return NULL;
     }
 
