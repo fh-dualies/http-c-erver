@@ -48,10 +48,6 @@ void test_is_valid_request() {
 
   expect_true(is_valid_request(request));
 
-  str_set(request->version, "HTTP/2", 6);
-
-  expect_false(is_valid_request(request));
-
   free_request(&request);
 }
 
@@ -153,6 +149,10 @@ void test_get_http_status_message() {
   expect_equal(status_message, strlen(STATUS_MESSAGE_NOT_IMPLEMENTED),
                STATUS_MESSAGE_NOT_IMPLEMENTED);
 
+  str_set(status_message, get_http_status_message(HTTP_VERSION_NOT_SUPPORTED),
+          strlen(STATUS_MESSAGE_VERSION_NOT_SUPPORTED));
+  expect_equal(status_message, strlen(STATUS_MESSAGE_VERSION_NOT_SUPPORTED),
+               STATUS_MESSAGE_VERSION_NOT_SUPPORTED);
   str_set(status_message, get_http_status_message(666), strlen(STATUS_MESSAGE_UNKNOWN));
   expect_equal(status_message, strlen(STATUS_MESSAGE_UNKNOWN), STATUS_MESSAGE_UNKNOWN);
 

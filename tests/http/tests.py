@@ -58,7 +58,7 @@ cannon += Beam(
 cannon += Beam(
     description='HTTP-Version with lowercase letters',
     request='GET /debug http/1.1\r\nHost: {host}:{port}\r\n\r\n',
-    response=['HTTP/1.1 400']
+    response=['HTTP/1.1 505']
 )
 cannon += Beam(
     description='HTTP-Version 1.0',

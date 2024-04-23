@@ -45,12 +45,6 @@ bool is_valid_request(request_t *request) {
     return false;
   }
 
-  // check if http version is 1.0 or 1.1
-  if (strcmp(request->version->str, HTTP_VERSION_1_0) != 0 &&
-      strcmp(request->version->str, HTTP_VERSION_1_1) != 0) {
-    return false;
-  }
-
   return true;
 }
 
@@ -204,6 +198,8 @@ const char *get_http_status_message(int status_code) {
     return STATUS_MESSAGE_INTERNAL_SERVER_ERROR;
   case HTTP_NOT_IMPLEMENTED:
     return STATUS_MESSAGE_NOT_IMPLEMENTED;
+  case HTTP_VERSION_NOT_SUPPORTED:
+    return STATUS_MESSAGE_VERSION_NOT_SUPPORTED;
   default:
     return STATUS_MESSAGE_UNKNOWN;
   }
@@ -232,6 +228,13 @@ string *http_server(string *raw_request) {
   if (!is_valid_request(decoded_request)) {
     free_request(&decoded_request);
     return error_response(HTTP_BAD_REQUEST);
+  }
+
+  // check if version is supported
+  if (strcmp(decoded_request->version->str, HTTP_VERSION_1_0) != 0 &&
+    strcmp(decoded_request->version->str, HTTP_VERSION_1_1) != 0) {
+      free_request(&decoded_request);
+      return error_response(HTTP_VERSION_NOT_SUPPORTED);
   }
 
   // check if method is implemented
