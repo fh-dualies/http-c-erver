@@ -1,6 +1,6 @@
 #include "http_server_test.h"
-#include "../../lib/testing/test-lib.h"
-#include "../../src/http_server/http_server.h"
+#include "../../../lib/testing/test-lib.h"
+#include "../../../src/http_server/http_server.h"
 
 void run_cleanup_test() {
   request_t *request = new_request();
