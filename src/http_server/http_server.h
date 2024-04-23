@@ -34,6 +34,7 @@
 #define HTTP_NOT_FOUND 404
 #define HTTP_INTERNAL_SERVER_ERROR 500
 #define HTTP_NOT_IMPLEMENTED 501
+#define HTTP_VERSION_NOT_SUPPORTED 505
 
 // HTTP Status Messages
 #define STATUS_MESSAGE_OK "OK"
@@ -43,6 +44,7 @@
 #define STATUS_MESSAGE_INTERNAL_SERVER_ERROR "Internal Server Error"
 #define STATUS_MESSAGE_NOT_IMPLEMENTED "Not Implemented"
 #define STATUS_MESSAGE_UNKNOWN "Unknown"
+#define STATUS_MESSAGE_VERSION_NOT_SUPPORTED "HTTP Version Not Supported"
 
 // HTTP Headers
 #define CONTENT_LENGTH_HEADER "Content-Length: "
