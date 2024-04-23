@@ -1,4 +1,5 @@
 #include "http_server.h"
+#include "request_validation/request_validation.h"
 #include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -30,18 +31,6 @@ bool is_valid_path(char *path) {
 
   // check if path contains ".." (just to be sure)
   if (strstr(path, "..") != NULL) {
-    return false;
-  }
-
-  return true;
-}
-
-bool is_valid_request(request_t *request) {
-  if (request->method == NULL || request->resource == NULL || request->version == NULL) {
-    return false;
-  }
-
-  if (request->method->len == 0 || request->resource->len == 0 || request->version->len == 0) {
     return false;
   }
 
@@ -224,21 +213,20 @@ string *http_server(string *raw_request) {
   str_set(decoded_request->resource, decoded->str, decoded->len);
   free_str(decoded);
 
-  // validate request content
-  if (!is_valid_request(decoded_request)) {
+  // ensure request has all required fields
+  if (request_empty(decoded_request)) {
     free_request(&decoded_request);
     return error_response(HTTP_BAD_REQUEST);
   }
 
   // check if version is supported
-  if (strcmp(decoded_request->version->str, HTTP_VERSION_1_0) != 0 &&
-    strcmp(decoded_request->version->str, HTTP_VERSION_1_1) != 0) {
+  if (!supported_version(decoded_request->version)) {
       free_request(&decoded_request);
       return error_response(HTTP_VERSION_NOT_SUPPORTED);
   }
 
   // check if method is implemented
-  if (strcmp(decoded_request->method->str, HTTP_METHOD_GET) != 0) {
+  if (!supported_method(decoded_request->method)) {
     free_request(&decoded_request);
     return error_response(HTTP_NOT_IMPLEMENTED);
   }
