@@ -16,3 +16,6 @@
 **/CMakeCache.txt
 **/cmake_install.cmake
 **/Makefile
+
+# Python
+**/__pycache__
