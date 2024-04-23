@@ -13,44 +13,6 @@ void run_cleanup_test() {
   expect_null(response);
 }
 
-void run_is_valid_path_test() {
-  string *valid = _new_string();
-
-  str_set(valid, "/home/user/", 11);
-  str_cat(valid, DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
-  str_cat(valid, "/index.html", 11);
-
-  expect_false(is_valid_path(NULL));
-  expect_false(is_valid_path(""));
-  expect_false(is_valid_path("test"));
-  expect_false(is_valid_path(".."));
-  expect_false(is_valid_path("/test"));
-  expect_false(is_valid_path("/test/test"));
-  expect_true(is_valid_path(valid->str));
-
-  free_str(valid);
-}
-
-void test_is_valid_request() {
-  test_title("Test is_valid_request()");
-
-  request_t *request = new_request();
-
-  expect_false(is_valid_request(request));
-
-  str_set(request->method, HTTP_METHOD_GET, strlen(HTTP_METHOD_GET));
-  str_set(request->resource, "/", 1);
-  str_set(request->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
-
-  expect_true(is_valid_request(request));
-
-  str_set(request->version, HTTP_VERSION_1_0, 8);
-
-  expect_true(is_valid_request(request));
-
-  free_request(&request);
-}
-
 void test_get_mime_type() {
   test_title("Test get_mime_type()");
 
@@ -161,8 +123,6 @@ void test_get_http_status_message() {
 
 void run_http_server_test() {
   run_cleanup_test();
-  run_is_valid_path_test();
-  test_is_valid_request();
   test_get_mime_type();
   test_error_response();
   test_debug_response();

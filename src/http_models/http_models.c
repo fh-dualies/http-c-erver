@@ -11,8 +11,10 @@ request_t *new_request() {
   request->method = _new_string();
   request->resource = _new_string();
   request->version = _new_string();
+  request->host = _new_string();
 
-  if (request->method == NULL || request->resource == NULL || request->version == NULL) {
+  if (request->method == NULL || request->resource == NULL || request->version == NULL ||
+      request->host == NULL) {
     free(request);
     return NULL;
   }
@@ -53,6 +55,7 @@ void free_request(request_t **request) {
   free_str((*request)->resource);
   free_str((*request)->version);
   free_str((*request)->method);
+  free_str((*request)->host);
   free(*request);
   *request = NULL;
 }
@@ -84,7 +87,7 @@ void update_response_content_length(response_t *response) {
   free_str(content_length);
 }
 
-void generate_response_status(response_t *response, int status_code, const char *content_type) {
+void generate_response_status(response_t *response, int status_code, string *content_type) {
   if (response == NULL) {
     return;
   }
@@ -97,7 +100,7 @@ void generate_response_status(response_t *response, int status_code, const char 
       str_set(response->status_code, status_code_str->str, status_code_str->len);
   response->status_message =
       str_set(response->status_message, status_message, strlen(status_message));
-  response->content_type = str_set(response->content_type, content_type, strlen(content_type));
+  response->content_type = str_set(response->content_type, content_type->str, content_type->len);
   response->server = str_set(response->server, SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
 
   free_str(status_code_str);
