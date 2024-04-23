@@ -1,6 +1,6 @@
 #include "http-lib_test.h"
-#include "../../lib/http-lib/httplib.h"
-#include "../../lib/testing/test-lib.h"
+#include "../../../lib/http-lib/httplib.h"
+#include "../../../lib/testing/test-lib.h"
 
 void test_str_cat() {
   test_title("Test str_cat()");
