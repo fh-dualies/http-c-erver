@@ -7,6 +7,7 @@ struct request_t {
   string *method;
   string *resource;
   string *version;
+  string *host;
 } typedef request_t;
 
 struct response_t {
@@ -92,7 +93,7 @@ void add_response_string_header(string *raw_string, const char *header, string *
  * @param status_code HTTP status code
  * @param content_type Content type of the response
  */
-void generate_response_status(response_t *response, int status_code, const char *content_type);
+void generate_response_status(response_t *response, int status_code, string *content_type);
 
 /**
  * @brief Generate the status line of a raw HTTP response string

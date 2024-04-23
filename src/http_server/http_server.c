@@ -1,7 +1,6 @@
 #include "http_server.h"
 #include "request_validation/request_validation.h"
-#include <errno.h>
-#include <limits.h>
+#include "../http_router/http_router.h"
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -9,32 +8,6 @@ void cleanup(request_t **request, response_t **response, char *path) {
   free_request(request);
   free_response(response);
   free(path);
-}
-
-bool is_valid_path(char *path) {
-  if (path == NULL) {
-    return false;
-  }
-
-  if (strlen(path) == 0) {
-    return false;
-  }
-
-  if (path[0] != '/') {
-    return false;
-  }
-
-  // should contain DOCUMENT_ROOT (mainly prevents access to other directories)
-  if (strstr(path, DOCUMENT_ROOT) == NULL) {
-    return false;
-  }
-
-  // check if path contains ".." (just to be sure)
-  if (strstr(path, "..") != NULL) {
-    return false;
-  }
-
-  return true;
 }
 
 const char *get_mime_type(char *path) {
@@ -75,38 +48,6 @@ const char *get_mime_type(char *path) {
   return CONTENT_TYPE_TEXT;
 }
 
-char *convert_to_absolute_path(string *resource) {
-  if (resource == NULL) {
-    return NULL;
-  }
-
-  string *relative_path = _new_string();
-  char *absolute_path = calloc(PATH_MAX, 1);
-
-  if (absolute_path == NULL) {
-    free_str(relative_path);
-    return NULL;
-  }
-
-  // add document root to relative path
-  str_cat(relative_path, DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
-  // add resource to relative path
-  str_cat(relative_path, resource->str, resource->len);
-
-  // get real path of the resource
-  char *real_path = realpath(relative_path->str, absolute_path);
-
-  if (real_path == NULL) {
-    free_str(relative_path);
-    free(absolute_path);
-    return NULL;
-  }
-
-  free_str(relative_path);
-
-  return absolute_path;
-}
-
 string *error_response(int status_code) {
   response_t *response = new_response();
 
@@ -114,7 +55,9 @@ string *error_response(int status_code) {
     return NULL;
   }
 
-  generate_response_status(response, status_code, CONTENT_TYPE_HTML);
+  string* content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  generate_response_status(response, status_code, content_type);
+  free_str(content_type);
 
   string *status_code_str = int_to_string(status_code);
   const char *status_message = get_http_status_message(status_code);
@@ -145,7 +88,9 @@ string *debug_response(request_t *request) {
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
   }
 
-  generate_response_status(response, HTTP_OK, CONTENT_TYPE_HTML);
+  string *content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  generate_response_status(response, HTTP_OK, content_type);
+  free_str(content_type);
 
   // HTML body
   response->body = str_set(response->body, "<html><head><title>Debug</title></head><body>", 45);
@@ -231,63 +176,5 @@ string *http_server(string *raw_request) {
     return error_response(HTTP_NOT_IMPLEMENTED);
   }
 
-  // return debug response if requested
-  if (strcmp(decoded_request->resource->str, ROUTE_DEBUG) == 0) {
-    // no cleanup needed, debug_response() will free the request
-    return debug_response(decoded_request);
-  }
-
-  response_t *response = new_response();
-
-  if (response == NULL) {
-    free_request(&decoded_request);
-    return error_response(HTTP_INTERNAL_SERVER_ERROR);
-  }
-
-  // create path to resource
-  char *absolute_path = convert_to_absolute_path(decoded_request->resource);
-
-  // check if resource exists and get absolute path
-  if (absolute_path == NULL) {
-    free_request(&decoded_request);
-    free_response(&response);
-    return error_response(HTTP_NOT_FOUND);
-  }
-
-  // check if path is valid
-  if (!is_valid_path(absolute_path)) {
-    cleanup(&decoded_request, &response, absolute_path);
-    return error_response(HTTP_FORBIDDEN);
-  }
-
-  string *file_content = read_file(absolute_path);
-
-  if (file_content == NULL) {
-    int error = HTTP_NOT_FOUND;
-
-    // check if file access was denied
-    if (errno == EACCES) {
-      error = HTTP_FORBIDDEN;
-    }
-
-    cleanup(&decoded_request, &response, absolute_path);
-    return error_response(error);
-  }
-
-  // get mime type of file
-  const char *mime_type = get_mime_type(absolute_path);
-
-  // fill response object
-  generate_response_status(response, HTTP_OK, mime_type);
-
-  response->body = str_set(response->body, file_content->str, file_content->len);
-  free_str(file_content);
-
-  update_response_content_length(response);
-
-  string *encoded_response = serialize_response(response);
-
-  cleanup(&decoded_request, &response, absolute_path);
-
-  return encoded_response;
+  return route_request(decoded_request);
 }
