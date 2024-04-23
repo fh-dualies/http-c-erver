@@ -1,7 +1,7 @@
 #include "http_models_test.h"
-#include "../../lib/testing/test-lib.h"
-#include "../../src/http_models/http_models.h"
-#include "../../src/http_server/http_server.h"
+#include "../../../lib/testing/test-lib.h"
+#include "../../../src/http_models/http_models.h"
+#include "../../../src/http_server/http_server.h"
 
 void test_new_request() {
   test_title("Test new_request()");

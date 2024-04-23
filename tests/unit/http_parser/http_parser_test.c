@@ -1,7 +1,7 @@
 #include "http_parser_test.h"
-#include "../../lib/testing/test-lib.h"
-#include "../../src/http_parser/http_parser.h"
-#include "../../src/http_server/http_server.h"
+#include "../../../lib/testing/test-lib.h"
+#include "../../../src/http_parser/http_parser.h"
+#include "../../../src/http_server/http_server.h"
 
 void test_parse_request_string() {
   test_title("Test parse_request_string()");
