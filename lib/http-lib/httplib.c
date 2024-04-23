@@ -135,13 +135,13 @@ char *get_char_str(string *str) {
   return str->str;
 }
 
-string *read_file(char *path) {
+string *read_file(string *path) {
   if (path == NULL) {
     return NULL;
   }
 
   struct stat s;
-  if (stat(path, &s) != 0) {
+  if (stat(path->str, &s) != 0) {
     return NULL;
   }
 
@@ -156,7 +156,7 @@ string *read_file(char *path) {
     return file_content;*/
   }
 
-  FILE *file = fopen(path, "r");
+  FILE *file = fopen(path->str, "r");
 
   if (file == NULL) {
     return NULL;

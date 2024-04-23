@@ -117,7 +117,7 @@ char *get_char_str(string *str);
  * @param path The path to the file
  * @return The content of the file
  */
-string *read_file(char *path);
+string *read_file(string *path);
 
 /**
  * @brief Convert a size_t to a string

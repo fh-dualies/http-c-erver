@@ -17,7 +17,13 @@ add_executable(tests
         tests/unit/http_server/http_server_test.c
         tests/unit/tests.c
         src/http_server/request_validation/request_validation.c
-        src/http_server/request_validation/request_validation.h)
+        src/http_server/request_validation/request_validation.h
+        src/http_router/http_router.c
+        src/http_router/http_router.h
+        tests/unit/http_server/request_validation/request_validation_test.c
+        tests/unit/http_server/request_validation/request_validation_test.h
+        tests/unit/http_router/http_router_test.c
+        tests/unit/http_router/http_router_test.h)
 
 add_executable(server
         lib/http-lib/httplib.c
@@ -26,7 +32,9 @@ add_executable(server
         src/http_server/http_server.c
         main.c
         src/http_server/request_validation/request_validation.c
-        src/http_server/request_validation/request_validation.h)
+        src/http_server/request_validation/request_validation.h
+        src/http_router/http_router.c
+        src/http_router/http_router.h)
 
 add_executable(server_asan
         lib/http-lib/httplib.c
@@ -35,7 +43,9 @@ add_executable(server_asan
         src/http_server/http_server.c
         main.c
         src/http_server/request_validation/request_validation.c
-        src/http_server/request_validation/request_validation.h)
+        src/http_server/request_validation/request_validation.h
+        src/http_router/http_router.c
+        src/http_router/http_router.h)
 
 set_target_properties(tests PROPERTIES SUFFIX ".out")
 set_target_properties(server PROPERTIES SUFFIX ".out")

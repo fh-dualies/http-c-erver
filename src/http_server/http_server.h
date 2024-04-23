@@ -9,9 +9,6 @@
 #define SERVER_SIGNATURE "LLDM/0.1 Basic HTTP Server"
 #define DOCUMENT_ROOT "src/htdocs" // TODO: make this cleaner?
 
-// Server Routes
-#define ROUTE_DEBUG "/debug"
-
 // HTTP Constants
 #define HTTP_VERSION_1_0 "HTTP/1.0"
 #define HTTP_VERSION_1_1 "HTTP/1.1"
@@ -70,20 +67,6 @@
  */
 void cleanup(request_t **request, response_t **response, char *path);
 
-/**
- * @brief Check if a given path is valid
- *
- * A path is considered valid if:
- * - it is not NULL
- * - it is not empty
- * - it starts with a '/'
- * - it contains the DOCUMENT_ROOT (to prevent access to other directories)
- * - it does not contain ".."
- *
- * @param path Path to be checked
- * @return True if the path is valid, false otherwise
- */
-bool is_valid_path(char *path);
 
 /**
  * @brief Verify if a given request is valid
@@ -110,16 +93,6 @@ bool is_valid_request(request_t *request);
 const char *get_mime_type(char *path);
 
 /**
- * @brief Convert a relative path to an absolute path
- *
- * The absolute path is created by concatenating the DOCUMENT_ROOT and the relative path.
- *
- * @param resource Relative path to the resource
- * @return Absolute path to the resource
- */
-char *convert_to_absolute_path(string *resource);
-
-/**
  * @brief Create an error response for a given status code
  *
  * The error response is created by generating a response object with the given status code.
@@ -131,10 +104,10 @@ char *convert_to_absolute_path(string *resource);
 string *error_response(int status_code);
 
 /**
- * @brief Create a debug response for a given request
+ * @brief Create a debug_route response for a given request
  * @warning This function will free the given request object
  *
- * The debug response is created by generating a response object with the status code 200.
+ * The debug_route response is created by generating a response object with the status code 200.
  * The body of the response contains the HTTP method, resource and version of the request.
  *
  * @param request Request object to be debugged
@@ -159,7 +132,7 @@ const char *get_http_status_message(int status_code);
  *
  * The function processes a raw HTTP request and returns a raw HTTP response.
  * The function will return an error response if the request is invalid or the method is not
- * implemented. If the requested resource is "/debug", the function will return a debug response. If
+ * implemented. If the requested resource is "/debug_route", the function will return a debug_route response. If
  * the requested resource is not found, the function will return a 404 response. If the requested
  * resource is forbidden, the function will return a 403 response. If the requested resource cannot
  * be accessed, the function will return a 500 response.

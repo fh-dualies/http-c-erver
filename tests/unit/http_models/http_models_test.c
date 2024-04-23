@@ -58,7 +58,9 @@ void test_generate_response_status() {
   test_title("Test generate_response_status()");
 
   response_t *response = new_response();
-  generate_response_status(response, HTTP_OK, CONTENT_TYPE_HTML);
+  string *content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  generate_response_status(response, HTTP_OK, content_type);
+  free_str(content_type);
 
   expect_equal(response->version, strlen(HTTP_VERSION_1_1), HTTP_VERSION_1_1);
   expect_equal(response->status_code, 3, "200");
