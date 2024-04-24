@@ -68,19 +68,6 @@
 void cleanup(request_t **request, response_t **response, char *path);
 
 /**
- * @brief Verify if a given request is valid
- *
- * A request is considered valid if:
- * - method, resource and version are not NULL
- * - method, resource and version are not empty
- * - version is either HTTP/1.0 or HTTP/1.1
- *
- * @param request Request to be verified
- * @return True if the request is valid, false otherwise
- */
-bool is_valid_request(request_t *request);
-
-/**
  * @brief Get the mime type of a file
  *
  * The mime type is determined by the file extension.

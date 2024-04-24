@@ -12,9 +12,13 @@ request_t *new_request() {
   request->resource = _new_string();
   request->version = _new_string();
   request->host = _new_string();
+  request->user_agent = _new_string();
+  request->accept = _new_string();
+  request->connection = _new_string();
 
   if (request->method == NULL || request->resource == NULL || request->version == NULL ||
-      request->host == NULL) {
+      request->host == NULL || request->user_agent == NULL || request->accept == NULL ||
+      request->connection == NULL) {
     free(request);
     return NULL;
   }
@@ -56,6 +60,9 @@ void free_request(request_t **request) {
   free_str((*request)->version);
   free_str((*request)->method);
   free_str((*request)->host);
+  free_str((*request)->user_agent);
+  free_str((*request)->accept);
+  free_str((*request)->connection);
   free(*request);
   *request = NULL;
 }
