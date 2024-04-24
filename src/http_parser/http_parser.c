@@ -81,6 +81,7 @@ int parse_request_headers(string *raw_request, request_t *request) {
     str_set(header_name, request_headers[i], strlen(request_headers[i]));
     str_to_lower(header_name);
 
+    // TODO: Would it make sense to factor out the loop into a separate function? Just for readability purposes
     for (size_t j = 0; j < raw_request->len; ++j) {
       char current = raw_request->str[j];
 
@@ -97,11 +98,15 @@ int parse_request_headers(string *raw_request, request_t *request) {
 
       current_line_pos = j + 2;
 
+      // TODO: Ensure that the header starts at the beginning of the line
+      // TODO: remove strstr()
+      // Think about the case where the header is not at the beginning of the line
       if (strstr(current_line->str, header_name->str) == NULL) {
         continue;
       }
 
       // TODO: remove strlen()
+      // Think about checking for ": " instead of just moving 2 characters
       size_t header_name_end = strlen(header_name->str) + 2;
       string *header_value = _new_string();
 

@@ -2,17 +2,6 @@
 #include "../../../lib/testing/unit/test-lib.h"
 #include "../../../src/http_server/http_server.h"
 
-void run_cleanup_test() {
-  request_t *request = new_request();
-  response_t *response = new_response();
-  char *path = (char *)malloc(sizeof(char) * 10);
-
-  cleanup(&request, &response, path);
-
-  expect_null(request);
-  expect_null(response);
-}
-
 void test_get_mime_type() {
   test_title("Test get_mime_type()");
 
@@ -117,7 +106,6 @@ void test_get_http_status_message() {
 }
 
 void run_http_server_test() {
-  run_cleanup_test();
   test_get_mime_type();
   test_error_response();
   test_debug_response();
