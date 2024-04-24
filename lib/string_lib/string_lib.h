@@ -1,5 +1,5 @@
-#ifndef HTTPLIB_H
-#define HTTPLIB_H
+#ifndef STRING_LIB_H
+#define STRING_LIB_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -129,17 +129,6 @@ size_t get_length(string *str);
  * @return The value of the string
  */
 char *get_char_str(string *str);
-
-/**
- * @brief Read a file
- * @waring The return value must be freed after use
- *
- * Returns NULL if the path is NULL, if the file does not exist or if the memory allocation fails.
- *
- * @param path The path to the file
- * @return The content of the file
- */
-string *read_file(string *path);
 
 /**
  * @brief Convert a size_t to a string
