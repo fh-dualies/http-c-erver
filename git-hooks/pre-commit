@@ -1,0 +1,29 @@
+#!/bin/sh
+SCRIPTS_DIR="scripts"
+
+echo "pwd: $(pwd)"
+
+# Check if format.sh and todo.sh scripts exist
+if [ ! -f "$SCRIPTS_DIR/format.sh" ] || [ ! -f "$SCRIPTS_DIR/todo.sh" ]; then
+    echo "Error: Required scripts not found in $SCRIPTS_DIR"
+    exit 1
+fi
+
+# Execute format.sh
+echo "Running format.sh script..."
+"$SCRIPTS_DIR/format.sh"
+format_exit_code=$?
+
+# Execute todo.sh
+echo "Running todo.sh script..."
+"$SCRIPTS_DIR/todo.sh"
+todo_exit_code=$?
+
+# Check exit codes of both scripts
+if [ $format_exit_code -ne 0 ] || [ $todo_exit_code -ne 0 ]; then
+    echo "Error: One or more scripts failed. Please fix the issues before committing."
+    exit 1
+fi
+
+# If all scripts passed, continue with the commit
+exit 0
