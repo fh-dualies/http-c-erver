@@ -1,6 +1,12 @@
 ## To Do
 ### ``lib/http-lib/httplib.c``
-- [ ] (line 155) : is this safe?
+- [ ] (line 6) : Let's split this file into smaller files based on the functions (e.g. stringlib.c,
+
+- [ ] (line 10) : Let's sort the functions based on the lifecycle of the string (e.g. creation, manipulation,
+
+- [ ] (line 171) : Let's move this function to a new file filelib.c
+
+- [ ] (line 178) : is this safe?
 
 
 ### ``scripts/todo.sh``
@@ -10,59 +16,33 @@
 
 
 ### ``src/http_parser/http_parser.c``
-- [ ] (line 41) : remove strcmp()
+- [ ] (line 80) : Would it make sense to factor out the loop into a separate function? Just for readability purposes
 
-- [ ] (line 47) : remove strcmp()
+- [ ] (line 97) : Ensure that the header starts at the beginning of the line
 
-- [ ] (line 53) : remove strcmp()
-
-- [ ] (line 59) : remove strcmp()
+- [ ] (line 98) : remove strstr()
 
 - [ ] (line 104) : remove strlen()
 
-- [ ] (line 217) : fix Clang-Tidy warning
+- [ ] (line 218) : fix Clang-Tidy warning
 
 
 ### ``src/http_router/http_router.c``
-- [ ] (line 15) : remove strcmp()
+- [ ] (line 48) : is realpath() safe to use here?
 
-- [ ] (line 20) : remove strcmp()
+- [ ] (line 76) : remove strstr()
 
-- [ ] (line 50) : is realpath() safe to use here?
+- [ ] (line 82) : remove strstr()
 
-- [ ] (line 78) : remove strstr()
-
-- [ ] (line 84) : remove strstr()
-
-- [ ] (line 90) : remove strstr()
-
-- [ ] (line 140) : remove strcmp()
-
-
-### ``src/http_server/http_server.c``
-- [ ] (line 34) : remove strcmp()
-
-- [ ] (line 40) : remove strcmp()
-
-- [ ] (line 46) : remove strcmp()
-
-- [ ] (line 52) : remove strcmp()
-
-- [ ] (line 58) : remove strcmp()
-
-- [ ] (line 64) : remove strcmp()
-
-
-### ``src/http_server/request_validation/request_validation.c``
-- [ ] (line 10) : remove strcmp()
-
-- [ ] (line 15) : remove strcmp()
+- [ ] (line 88) : remove strstr()
 
 
 ### ``tests/http/tests.py``
 - [ ] (line 102) : Enable these tests once the server correctly handles the Host header
 
 - [ ] (line 113) : Add more tests for Host
+
+- [ ] (line 140) : Add more tests for miscellaneous
 
 
 ### ``tests/unit/tests.c``

@@ -3,10 +3,12 @@
 #include <ctype.h>
 #include <sys/stat.h>
 
-// TODO: Let's split this file into smaller files based on the functions (e.g. stringlib.c, filelib.c)
-// Maybe we are allowed to rename the file to stringlib.c and only include the functions related to string manipulation
+// TODO: Let's split this file into smaller files based on the functions (e.g. stringlib.c,
+// filelib.c) Maybe we are allowed to rename the file to stringlib.c and only include the functions
+// related to string manipulation
 
-// TODO: Let's sort the functions based on the lifecycle of the string (e.g. creation, manipulation, destruction)
+// TODO: Let's sort the functions based on the lifecycle of the string (e.g. creation, manipulation,
+// destruction)
 
 void *exit_err(const char *function_name, const char *reason) {
   fprintf(stderr, "Error - %s(): %s\n", function_name, reason);
@@ -73,6 +75,21 @@ string *str_set(string *dest, const char *src, size_t len) {
   return dest;
 }
 
+int str_cmp(string *str1, const char *str2) {
+  if (str1 == NULL || str2 == NULL) {
+    return -1;
+  }
+
+  size_t len2 = strlen(str2);
+
+  if (str1->len != strlen(str2)) {
+    return -1;
+  }
+
+  size_t min_len = (str1->len < len2) ? str1->len : len2;
+
+  return memcmp(str1->str, str2, min_len);
+}
 void str_to_lower(string *input) {
   if (input == NULL || input->str == NULL) {
     return;
