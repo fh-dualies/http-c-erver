@@ -52,6 +52,15 @@ string *str_cat(string *dest, const char *src, size_t len);
 string *str_set(string *dest, const char *src, size_t len);
 
 /**
+ * @brief Convert a string to lower case
+ *
+ * Returns if the input string is NULL.
+ *
+ * @param input The string to convert
+ */
+void str_to_lower(string *input);
+
+/**
  * @brief Create a new string
  * @warning This function will add a null terminator to the end of the string
  *
