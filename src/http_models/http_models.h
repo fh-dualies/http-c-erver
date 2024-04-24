@@ -8,6 +8,9 @@ struct request_t {
   string *resource;
   string *version;
   string *host;
+  string *user_agent;
+  string *accept;
+  string *connection;
 } typedef request_t;
 
 struct response_t {
