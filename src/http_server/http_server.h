@@ -6,10 +6,14 @@
 #include <stdbool.h>
 
 // Server Constants
-#define SERVER_SIGNATURE "LLDM/0.1 Basic HTTP Server"
-#define DOCUMENT_ROOT "src/htdocs" // TODO: make this cleaner?
+#define SERVER_SIGNATURE "LLDM/0.1 HTTP Server"
 
 // HTTP Constants
+/// @warning This path is relative to the project root - depending on the build
+/// system, the path may need to be adjusted. For example, running the server.out in
+/// the cli requires no change, but running the server via jetbrains IDE's
+/// requires the path to be set to "../src/htdocs"
+#define DOCUMENT_ROOT "src/htdocs"
 #define HTTP_VERSION_1_0 "HTTP/1.0"
 #define HTTP_VERSION_1_1 "HTTP/1.1"
 #define HTTP_LINE_BREAK "\r\n"
@@ -69,6 +73,7 @@ void cleanup(request_t **request, response_t **response, char *path);
 
 /**
  * @brief Get the mime type of a file
+ * @warning path should not be a struct string
  *
  * The mime type is determined by the file extension.
  * If the file extension is not known, the default mime type is text/plain.
@@ -76,7 +81,7 @@ void cleanup(request_t **request, response_t **response, char *path);
  * @param path Path to the file
  * @return Mime type of the file
  */
-const char *get_mime_type(char *path);
+const char *get_mime_type(const char *path);
 
 /**
  * @brief Create an error response for a given status code

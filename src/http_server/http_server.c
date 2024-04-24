@@ -10,37 +10,44 @@ void cleanup(request_t **request, response_t **response, char *path) {
   free(path);
 }
 
-const char *get_mime_type(char *path) {
+const char *get_mime_type(const char *path) {
   if (path == NULL) {
     return NULL;
   }
 
+  /// @node strrchr() is safe here - path is a string literal
   const char *extension = strrchr(path, '.');
 
   if (extension == NULL) {
     return CONTENT_TYPE_TEXT;
   }
 
+  // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_HTML) == 0) {
     return CONTENT_TYPE_HTML;
   }
 
+  // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_CSS) == 0) {
     return CONTENT_TYPE_CSS;
   }
 
+  // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_JS) == 0) {
     return CONTENT_TYPE_JS;
   }
 
+  // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_JPG) == 0 || strcmp(extension, EXTENSION_JPEG) == 0) {
     return CONTENT_TYPE_JPEG;
   }
 
+  // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_PNG) == 0) {
     return CONTENT_TYPE_PNG;
   }
 
+  // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_ICO) == 0) {
     return CONTENT_TYPE_ICO;
   }
@@ -55,6 +62,7 @@ string *error_response(int status_code) {
     return NULL;
   }
 
+  /// @node strlen() is safe here - status messages is a constant defined in http_server.h
   string *content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
   generate_response_status(response, status_code, content_type);
   free_str(content_type);
@@ -68,6 +76,8 @@ string *error_response(int status_code) {
   free_str(status_code_str);
 
   str_cat(response->body, "</h1><p>", 8);
+  /// @node strlen() is safe here - status_message is a constant defined in http_server.h (via
+  /// get_http_status_message())
   str_cat(response->body, status_message, strlen(status_message));
   str_cat(response->body, "</p></body></html>", 18);
 
@@ -88,6 +98,7 @@ string *debug_response(request_t *request) {
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
   }
 
+  /// @node strlen() is safe here - CONTENT_TYPE_HTML is a constant defined in http_server.h
   string *content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
   generate_response_status(response, HTTP_OK, content_type);
   free_str(content_type);

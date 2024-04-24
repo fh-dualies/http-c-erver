@@ -393,7 +393,6 @@ class Laz0rCannon(object):
                 try:
                     beam.shutdown_socket()
                 except socket.error as exc:
-                    # TODO Is this actually a warning?
                     self._print_warning("Closing socket failed: {}".format(exc))
 
             # Receive answer

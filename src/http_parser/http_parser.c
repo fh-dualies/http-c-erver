@@ -38,21 +38,25 @@ void map_header(string *header_name, string *header_value, request_t *request) {
     return;
   }
 
+  // TODO: remove strcmp()
   if (strcmp(header_name->str, REQUEST_HEADER_HOST) == 0) {
     str_set(request->host, header_value->str, header_value->len);
     return;
   }
 
+  // TODO: remove strcmp()
   if (strcmp(header_name->str, REQUEST_HEADER_USER_AGENT) == 0) {
     str_set(request->user_agent, header_value->str, header_value->len);
     return;
   }
 
+  // TODO: remove strcmp()
   if (strcmp(header_name->str, REQUEST_HEADER_ACCEPT) == 0) {
     str_set(request->accept, header_value->str, header_value->len);
     return;
   }
 
+  // TODO: remove strcmp()
   if (strcmp(header_name->str, REQUEST_HEADER_CONNECTION) == 0) {
     str_set(request->connection, header_value->str, header_value->len);
     return;
@@ -73,6 +77,7 @@ int parse_request_headers(string *raw_request, request_t *request) {
   size_t current_line_pos = 0;
 
   for (size_t i = 0; i < REQUEST_HEADER_COUNT; ++i) {
+    /// @note strlen() is safe to use here - request_headers are constants defined in http_parser.h
     str_set(header_name, request_headers[i], strlen(request_headers[i]));
     str_to_lower(header_name);
 
@@ -96,6 +101,7 @@ int parse_request_headers(string *raw_request, request_t *request) {
         continue;
       }
 
+      // TODO: remove strlen()
       size_t header_name_end = strlen(header_name->str) + 2;
       string *header_value = _new_string();
 
@@ -164,6 +170,7 @@ string *serialize_response(response_t *response) {
   add_response_string_header(encoded_response, CONTENT_LENGTH_HEADER, response->content_length);
   add_response_string_header(encoded_response, SERVER_HEADER, response->server);
 
+  /// @node strlen() is safe to use here - HTTP_LINE_BREAK is a constant defined in http_parser.h
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   // body
@@ -207,6 +214,7 @@ string *decode_url(string *str) {
 
       new_char <<= 4;
 
+      // TODO: fix Clang-Tidy warning
       if (second >= '0' && second <= '9') {
         new_char |= (char)(second - '0');
       } else if (second >= 'a' && second <= 'f') {
