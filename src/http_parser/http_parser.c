@@ -1,6 +1,118 @@
 #include "http_parser.h"
 #include "../http_server/http_server.h"
 
+int parse_request_line(string *raw_request, request_t *request) {
+  enum { METHOD, RESOURCE, VERSION } segment = METHOD;
+  size_t segment_start = 0;
+  string *segments[] = {request->method, request->resource, request->version};
+
+  for (size_t i = 0; i <= raw_request->len; i++) {
+    unsigned char current = (i < raw_request->len) ? (char)(raw_request->str[i]) : '\n';
+
+    if (segment > VERSION) {
+      break;
+    }
+
+    if (current != ' ' && current != '\n' && current != '\r') {
+      continue;
+    }
+
+    string *current_segment = segments[segment];
+
+    if (current_segment == NULL) {
+      free_request(&request);
+      return EXIT_FAILURE;
+    }
+
+    str_cat(current_segment, raw_request->str + segment_start, i - segment_start);
+
+    segment++;
+    segment_start = i + 1;
+  }
+
+  return EXIT_SUCCESS;
+}
+
+void map_header(string *header_name, string *header_value, request_t *request) {
+  if (header_name == NULL || header_value == NULL || request == NULL) {
+    return;
+  }
+
+  if (strcmp(header_name->str, REQUEST_HEADER_HOST) == 0) {
+    str_set(request->host, header_value->str, header_value->len);
+    return;
+  }
+
+  if (strcmp(header_name->str, REQUEST_HEADER_USER_AGENT) == 0) {
+    str_set(request->user_agent, header_value->str, header_value->len);
+    return;
+  }
+
+  if (strcmp(header_name->str, REQUEST_HEADER_ACCEPT) == 0) {
+    str_set(request->accept, header_value->str, header_value->len);
+    return;
+  }
+
+  if (strcmp(header_name->str, REQUEST_HEADER_CONNECTION) == 0) {
+    str_set(request->connection, header_value->str, header_value->len);
+    return;
+  }
+}
+
+int parse_request_headers(string *raw_request, request_t *request) {
+  if (raw_request == NULL || request == NULL) {
+    return EXIT_FAILURE;
+  }
+
+  const char *request_headers[REQUEST_HEADER_COUNT] = {
+      REQUEST_HEADER_HOST, REQUEST_HEADER_USER_AGENT, REQUEST_HEADER_ACCEPT,
+      REQUEST_HEADER_CONNECTION};
+
+  string *header_name = _new_string();
+  string *current_line = _new_string();
+  size_t current_line_pos = 0;
+
+  for (size_t i = 0; i < REQUEST_HEADER_COUNT; ++i) {
+    str_set(header_name, request_headers[i], strlen(request_headers[i]));
+
+    for (size_t j = 0; j < raw_request->len; ++j) {
+      char current = raw_request->str[j];
+
+      if (current != '\r' && raw_request->str[j + 1] != '\n') {
+        continue;
+      }
+
+      if (current_line_pos >= j) {
+        break;
+      }
+
+      str_set(current_line, raw_request->str + current_line_pos, j - current_line_pos);
+      current_line_pos = j + 2;
+
+      if (strstr( current_line->str, header_name->str) == NULL) {
+        continue;
+      }
+
+      size_t header_name_end = strlen(header_name->str) + 2;
+      string *header_value = _new_string();
+
+      str_set(header_value, current_line->str + header_name_end,
+              current_line->len - header_name_end);
+
+      map_header(header_name, header_value, request);
+      current_line_pos = 0;
+      free_str(header_value);
+
+      break;
+    }
+  }
+
+  free_str(header_name);
+  free_str(current_line);
+
+  return EXIT_SUCCESS;
+}
+
 request_t *parse_request_string(string *raw_request) {
   if (raw_request == NULL) {
     return NULL;
@@ -12,51 +124,18 @@ request_t *parse_request_string(string *raw_request) {
     return NULL;
   }
 
-  // parse request line
-  int segment = 0;                // 0: method, 1: resource, 2: version
-  size_t segment_start = 0;       // start index of current segment
-  string *current_segment = NULL; // current segment string
+  int result_line = parse_request_line(raw_request, request);
 
-  for (size_t i = 0; i < raw_request->len; i++) {
-    char current = raw_request->str[i];
+  if (result_line == EXIT_FAILURE) {
+    free_request(&request);
+    return NULL;
+  }
 
-    // check if we have reached the end of the request line
-    if (segment > 2) {
-      break;
-    }
+  int result_header = parse_request_headers(raw_request, request);
 
-    // skip in-segment characters
-    if (current != ' ' && current != '\n' && current != '\r') {
-      continue;
-    }
-
-    // determine current segment pointer
-    switch (segment) {
-    case 0:
-      current_segment = request->method;
-      break;
-    case 1:
-      current_segment = request->resource;
-      break;
-    case 2:
-      current_segment = request->version;
-      break;
-    default:
-      break;
-    }
-
-    if (current_segment == NULL) {
-      free_request(&request);
-      return NULL;
-    }
-
-    // copy segment to request object
-    str_cat(current_segment, raw_request->str + segment_start, i - segment_start);
-
-    // move to next segment
-    segment++;
-    segment_start = i + 1;
-    current_segment = NULL;
+  if (result_header == EXIT_FAILURE) {
+    free_request(&request);
+    return NULL;
   }
 
   return request;
