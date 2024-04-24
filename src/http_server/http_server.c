@@ -1,6 +1,6 @@
 #include "http_server.h"
-#include "request_validation/request_validation.h"
 #include "../http_router/http_router.h"
+#include "request_validation/request_validation.h"
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -55,7 +55,7 @@ string *error_response(int status_code) {
     return NULL;
   }
 
-  string* content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  string *content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
   generate_response_status(response, status_code, content_type);
   free_str(content_type);
 
@@ -104,10 +104,8 @@ string *debug_response(request_t *request) {
   response->body = str_cat(response->body, request->version->str, request->version->len);
   response->body = str_cat(response->body, "</p></body></html>", 18);
 
-  // content length
   update_response_content_length(response);
 
-  // encode response
   string *encoded_response = serialize_response(response);
 
   free_response(&response);
@@ -146,7 +144,6 @@ string *http_server(string *raw_request) {
     return error_response(HTTP_BAD_REQUEST);
   }
 
-  // decode url-encoded resource
   string *decoded = decode_url(decoded_request->resource);
 
   if (decoded == NULL) {
@@ -158,19 +155,16 @@ string *http_server(string *raw_request) {
   str_set(decoded_request->resource, decoded->str, decoded->len);
   free_str(decoded);
 
-  // ensure request has all required fields
   if (request_empty(decoded_request)) {
     free_request(&decoded_request);
     return error_response(HTTP_BAD_REQUEST);
   }
 
-  // check if version is supported
   if (!supported_version(decoded_request->version)) {
-      free_request(&decoded_request);
-      return error_response(HTTP_VERSION_NOT_SUPPORTED);
+    free_request(&decoded_request);
+    return error_response(HTTP_VERSION_NOT_SUPPORTED);
   }
 
-  // check if method is implemented
   if (!supported_method(decoded_request->method)) {
     free_request(&decoded_request);
     return error_response(HTTP_NOT_IMPLEMENTED);

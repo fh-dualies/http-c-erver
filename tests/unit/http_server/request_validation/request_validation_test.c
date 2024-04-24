@@ -1,7 +1,3 @@
-//
-// Created by dennis on 23/04/24.
-//
-
 #include "request_validation_test.h"
 #include "../../../../lib/testing/unit/test-lib.h"
 #include "../../../../src/http_models/http_models.h"
@@ -51,7 +47,6 @@ void test_supported_method() {
 
   free_str(method);
 }
-
 
 void run_request_validation_test() {
   test_request_empty();

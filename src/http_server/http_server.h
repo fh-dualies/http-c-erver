@@ -67,7 +67,6 @@
  */
 void cleanup(request_t **request, response_t **response, char *path);
 
-
 /**
  * @brief Verify if a given request is valid
  *
@@ -132,10 +131,10 @@ const char *get_http_status_message(int status_code);
  *
  * The function processes a raw HTTP request and returns a raw HTTP response.
  * The function will return an error response if the request is invalid or the method is not
- * implemented. If the requested resource is "/debug_route", the function will return a debug_route response. If
- * the requested resource is not found, the function will return a 404 response. If the requested
- * resource is forbidden, the function will return a 403 response. If the requested resource cannot
- * be accessed, the function will return a 500 response.
+ * implemented. If the requested resource is "/debug_route", the function will return a debug_route
+ * response. If the requested resource is not found, the function will return a 404 response. If the
+ * requested resource is forbidden, the function will return a 403 response. If the requested
+ * resource cannot be accessed, the function will return a 500 response.
  *
  * @param raw_request Raw HTTP request string
  * @return Encoded raw HTTP response string
