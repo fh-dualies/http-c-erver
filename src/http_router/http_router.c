@@ -1,22 +1,13 @@
-//
-// Created by dennis on 23/04/24.
-//
-
 #include "http_router.h"
 #include "../http_server/http_server.h"
-#include <limits.h>
 #include <errno.h>
-/**
- * Returns the folder for the specified host.
- * Used to determine the folder where the files are stored.
- * @param request
- * @return string* of the subfolder after document root
- */
-string* get_host_folder(request_t *request) {
+#include <limits.h>
+
+string *get_host_directory(request_t *request) {
   string *host = request->host;
 
   if (host == NULL) {
-    return cpy_str(HOST_DEFAULT_FOLDER, strlen(HOST_DEFAULT_FOLDER));
+    return cpy_str(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
   }
 
   if (strcmp(host->str, "EXTERN") == 0) {
@@ -27,11 +18,11 @@ string* get_host_folder(request_t *request) {
     return cpy_str("/intern", 7);
   }
 
-  // If host does not match any of the above, return default folder
-  return cpy_str(HOST_DEFAULT_FOLDER, strlen(HOST_DEFAULT_FOLDER));
+  // if host does not match any of the above, return default folder
+  return cpy_str(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
 }
 
-string* convert_to_absolute_path(string *resource, string *host_extension) {
+string *convert_to_absolute_path(string *resource, string *host_extension) {
   if (resource == NULL) {
     return NULL;
   }
@@ -51,7 +42,6 @@ string* convert_to_absolute_path(string *resource, string *host_extension) {
   // add resource to relative path
   str_cat(relative_path, resource->str, resource->len);
 
-  // get real path of the resource
   char *real_path = realpath(relative_path->str, absolute_path);
 
   if (real_path == NULL) {
@@ -114,6 +104,7 @@ string *serve_file(string *path) {
   }
 
   response_t *response = new_response();
+
   if (response == NULL) {
     free_str(file_content);
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
@@ -122,6 +113,7 @@ string *serve_file(string *path) {
   // TODO: improve this
   const char *mime_type_char = get_mime_type(path->str);
   string *mime_type = cpy_str(mime_type_char, strlen(mime_type_char));
+
   generate_response_status(response, HTTP_OK, mime_type);
   free_str(mime_type);
 
@@ -142,7 +134,7 @@ string *route_request(request_t *request) {
     return debug_response(request);
   }
 
-  string* host_extension = get_host_folder(request);
+  string *host_extension = get_host_directory(request);
 
   string *path = convert_to_absolute_path(request->resource, host_extension);
 
@@ -164,5 +156,6 @@ string *route_request(request_t *request) {
   free_str(path);
   free_str(host_extension);
   free_request(&request);
+
   return response;
 }
