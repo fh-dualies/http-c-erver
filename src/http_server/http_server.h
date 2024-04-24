@@ -81,7 +81,7 @@ void cleanup(request_t **request, response_t **response, char *path);
  * @param path Path to the file
  * @return Mime type of the file
  */
-const char *get_mime_type(const char *path);
+string *get_mime_type(const char *path);
 
 /**
  * @brief Create an error response for a given status code

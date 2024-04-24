@@ -120,9 +120,7 @@ string *serve_file(string *path) {
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
   }
 
-  // TODO: improve this
-  const char *mime_type_char = get_mime_type(path->str);
-  string *mime_type = cpy_str(mime_type_char, strlen(mime_type_char));
+  string *mime_type = get_mime_type(path->str);
 
   generate_response_status(response, HTTP_OK, mime_type);
   free_str(mime_type);

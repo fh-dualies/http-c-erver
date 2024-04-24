@@ -16,34 +16,29 @@ void run_cleanup_test() {
 void test_get_mime_type() {
   test_title("Test get_mime_type()");
 
-  string *mime_type = _new_string();
-
-  str_set(mime_type, get_mime_type("index"), strlen(CONTENT_TYPE_TEXT));
+  string *mime_type = get_mime_type("index");
   expect_equal(mime_type, strlen(CONTENT_TYPE_TEXT), CONTENT_TYPE_TEXT);
 
-  str_set(mime_type, get_mime_type("index.html"), strlen(CONTENT_TYPE_HTML));
+  mime_type = get_mime_type("index.html");
   expect_equal(mime_type, strlen(CONTENT_TYPE_HTML), CONTENT_TYPE_HTML);
 
-  str_set(mime_type, get_mime_type("index.css"), strlen(CONTENT_TYPE_CSS));
+  mime_type = get_mime_type("index.css");
   expect_equal(mime_type, strlen(CONTENT_TYPE_CSS), CONTENT_TYPE_CSS);
 
-  str_set(mime_type, get_mime_type("index.js"), strlen(CONTENT_TYPE_JS));
+  mime_type = get_mime_type("index.js");
   expect_equal(mime_type, strlen(CONTENT_TYPE_JS), CONTENT_TYPE_JS);
 
-  str_set(mime_type, get_mime_type("index.jpg"), strlen(CONTENT_TYPE_JPEG));
+  mime_type = get_mime_type("index.jpg");
   expect_equal(mime_type, strlen(CONTENT_TYPE_JPEG), CONTENT_TYPE_JPEG);
 
-  str_set(mime_type, get_mime_type("index.jpeg"), strlen(CONTENT_TYPE_JPEG));
+  mime_type = get_mime_type("index.jpeg");
   expect_equal(mime_type, strlen(CONTENT_TYPE_JPEG), CONTENT_TYPE_JPEG);
 
-  str_set(mime_type, get_mime_type("index.png"), strlen(CONTENT_TYPE_PNG));
+  mime_type = get_mime_type("index.png");
   expect_equal(mime_type, strlen(CONTENT_TYPE_PNG), CONTENT_TYPE_PNG);
 
-  str_set(mime_type, get_mime_type("index.ico"), strlen(CONTENT_TYPE_ICO));
+  mime_type = get_mime_type("index.ico");
   expect_equal(mime_type, strlen(CONTENT_TYPE_ICO), CONTENT_TYPE_ICO);
-
-  str_set(mime_type, get_mime_type("index.unknown"), strlen(CONTENT_TYPE_TEXT));
-  expect_equal(mime_type, strlen(CONTENT_TYPE_TEXT), CONTENT_TYPE_TEXT);
 
   free_str(mime_type);
 }

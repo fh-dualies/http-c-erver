@@ -10,49 +10,64 @@ void cleanup(request_t **request, response_t **response, char *path) {
   free(path);
 }
 
-const char *get_mime_type(const char *path) {
+string *get_mime_type(const char *path) {
   if (path == NULL) {
     return NULL;
   }
+
+  string *mime_type = _new_string();
+
+  if (mime_type == NULL) {
+    return NULL;
+  }
+
+  // default mime type: text/plain
+  str_set(mime_type, CONTENT_TYPE_TEXT, strlen(CONTENT_TYPE_TEXT));
 
   /// @node strrchr() is safe here - path is a string literal
   const char *extension = strrchr(path, '.');
 
   if (extension == NULL) {
-    return CONTENT_TYPE_TEXT;
+    return mime_type;
   }
 
   // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_HTML) == 0) {
-    return CONTENT_TYPE_HTML;
+    str_set(mime_type, CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+    return mime_type;
   }
 
   // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_CSS) == 0) {
-    return CONTENT_TYPE_CSS;
+    str_set(mime_type, CONTENT_TYPE_CSS, strlen(CONTENT_TYPE_CSS));
+    return mime_type;
   }
 
   // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_JS) == 0) {
-    return CONTENT_TYPE_JS;
+    str_set(mime_type, CONTENT_TYPE_JS, strlen(CONTENT_TYPE_JS));
+    return mime_type;
   }
 
   // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_JPG) == 0 || strcmp(extension, EXTENSION_JPEG) == 0) {
-    return CONTENT_TYPE_JPEG;
+    str_set(mime_type, CONTENT_TYPE_JPEG, strlen(CONTENT_TYPE_JPEG));
+    return mime_type;
   }
 
   // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_PNG) == 0) {
-    return CONTENT_TYPE_PNG;
+    str_set(mime_type, CONTENT_TYPE_PNG, strlen(CONTENT_TYPE_PNG));
+    return mime_type;
   }
 
   // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_ICO) == 0) {
-    return CONTENT_TYPE_ICO;
+    str_set(mime_type, CONTENT_TYPE_ICO, strlen(CONTENT_TYPE_ICO));
+    return mime_type;
   }
 
-  return CONTENT_TYPE_TEXT;
+  return mime_type;
 }
 
 string *error_response(int status_code) {
