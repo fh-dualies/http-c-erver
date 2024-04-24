@@ -7,7 +7,7 @@ from __future__ import unicode_literals
 
 import sys
 
-from lib.testing.http.pewpewlaz0rt4nk import (
+from pewpewlaz0rt4nk import (
     Beam,
     Laz0rCannon,
 )
