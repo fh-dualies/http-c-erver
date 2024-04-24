@@ -10,7 +10,7 @@ add_executable(tests
         src/http_parser/http_parser.c
         src/http_models/http_models.c
         src/http_server/http_server.c
-        lib/testing/test-lib.c
+        lib/testing/unit/test-lib.c
         tests/unit/http-lib/http-lib_test.c
         tests/unit/http_models/http_models_test.c
         tests/unit/http_parser/http_parser_test.c
