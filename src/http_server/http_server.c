@@ -3,7 +3,6 @@
 #include "request_validation/request_validation.h"
 #include <unistd.h>
 
-// TODO: Is this a library function? If so, move it to lib/....
 string *get_mime_type(const char *path) {
   if (path == NULL) {
     return NULL;
@@ -25,37 +24,34 @@ string *get_mime_type(const char *path) {
     return mime_type;
   }
 
-  // TODO: remove strcmp()
+  /// @node strlen() is safe here - extension is a string literal
+  /// @node strncmp() is safe here - extension is a string literal, CONTENT_TYPE_* are constants
+  /// defined in http_server.h
   if (strcmp(extension, EXTENSION_HTML) == 0) {
     str_set(mime_type, CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
     return mime_type;
   }
 
-  // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_CSS) == 0) {
     str_set(mime_type, CONTENT_TYPE_CSS, strlen(CONTENT_TYPE_CSS));
     return mime_type;
   }
 
-  // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_JS) == 0) {
     str_set(mime_type, CONTENT_TYPE_JS, strlen(CONTENT_TYPE_JS));
     return mime_type;
   }
 
-  // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_JPG) == 0 || strcmp(extension, EXTENSION_JPEG) == 0) {
     str_set(mime_type, CONTENT_TYPE_JPEG, strlen(CONTENT_TYPE_JPEG));
     return mime_type;
   }
 
-  // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_PNG) == 0) {
     str_set(mime_type, CONTENT_TYPE_PNG, strlen(CONTENT_TYPE_PNG));
     return mime_type;
   }
 
-  // TODO: remove strcmp()
   if (strcmp(extension, EXTENSION_ICO) == 0) {
     str_set(mime_type, CONTENT_TYPE_ICO, strlen(CONTENT_TYPE_ICO));
     return mime_type;
@@ -85,8 +81,7 @@ string *error_response(int status_code) {
   free_str(status_code_str);
 
   str_cat(response->body, "</h1><p>", 8);
-  /// @node strlen() is safe here - status_message is a constant defined in http_server.h (via
-  /// get_http_status_message())
+  /// @node strlen() is safe here - status_message is a constant defined in http_server.h
   str_cat(response->body, status_message, strlen(status_message));
   str_cat(response->body, "</p></body></html>", 18);
 

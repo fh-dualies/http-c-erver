@@ -52,6 +52,19 @@ string *str_cat(string *dest, const char *src, size_t len);
 string *str_set(string *dest, const char *src, size_t len);
 
 /**
+ * @brief Compare two strings
+ *
+ * Returns 0 if the strings are equal.
+ * Returns -1 if the first string is less than the second string.
+ * Returns 1 if the first string is greater than the second string.
+ *
+ * @param str1 The first string
+ * @param str2 The second string
+ * @return The comparison result
+ */
+int str_cmp(string *str1, const char *str2);
+
+/**
  * @brief Convert a string to lower case
  *
  * Returns if the input string is NULL.

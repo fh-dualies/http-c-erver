@@ -38,26 +38,22 @@ void map_header(string *header_name, string *header_value, request_t *request) {
     return;
   }
 
-  // TODO: remove strcmp()
-  if (strcmp(header_name->str, REQUEST_HEADER_HOST) == 0) {
+  if (str_cmp(header_name, REQUEST_HEADER_HOST) == 0) {
     str_set(request->host, header_value->str, header_value->len);
     return;
   }
 
-  // TODO: remove strcmp()
-  if (strcmp(header_name->str, REQUEST_HEADER_USER_AGENT) == 0) {
+  if (str_cmp(header_name, REQUEST_HEADER_USER_AGENT) == 0) {
     str_set(request->user_agent, header_value->str, header_value->len);
     return;
   }
 
-  // TODO: remove strcmp()
-  if (strcmp(header_name->str, REQUEST_HEADER_ACCEPT) == 0) {
+  if (str_cmp(header_name, REQUEST_HEADER_ACCEPT) == 0) {
     str_set(request->accept, header_value->str, header_value->len);
     return;
   }
 
-  // TODO: remove strcmp()
-  if (strcmp(header_name->str, REQUEST_HEADER_CONNECTION) == 0) {
+  if (str_cmp(header_name, REQUEST_HEADER_CONNECTION) == 0) {
     str_set(request->connection, header_value->str, header_value->len);
     return;
   }
@@ -81,7 +77,8 @@ int parse_request_headers(string *raw_request, request_t *request) {
     str_set(header_name, request_headers[i], strlen(request_headers[i]));
     str_to_lower(header_name);
 
-    // TODO: Would it make sense to factor out the loop into a separate function? Just for readability purposes
+    // TODO: Would it make sense to factor out the loop into a separate function? Just for
+    // readability purposes
     for (size_t j = 0; j < raw_request->len; ++j) {
       char current = raw_request->str[j];
 
