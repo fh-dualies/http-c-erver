@@ -38,13 +38,13 @@ void test_valid_path() {
   string *host_extension = cpy_str("/default", 8);
   expect_false(valid_path(path, host_extension));
 
-  str_set(path, "/home/user/src/htdocs/intern/index.html", 41);
+  str_set(path, "/home/user/src/htdocs/intern/index.html", 39);
   expect_false(valid_path(path, host_extension));
 
-  str_set(path, "home/user/src/htdocs/default/index.html", 40);
+  str_set(path, "home/user/src/htdocs/default/index.html", 39);
   expect_false(valid_path(path, host_extension));
 
-  str_set(path, "/home/user/src/htdocs/default/index.html", 42);
+  str_set(path, "/home/user/src/htdocs/default/index.html", 40);
   expect_true(valid_path(path, host_extension));
 
   free_str(path);
