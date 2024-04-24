@@ -1,7 +1,7 @@
 #ifndef HTTP_SERVER_H
 #define HTTP_SERVER_H
 
-#include "../../lib/http-lib/httplib.h"
+#include "../../lib/string_lib/string_lib.h"
 #include "../http_parser/http_parser.h"
 #include <stdbool.h>
 

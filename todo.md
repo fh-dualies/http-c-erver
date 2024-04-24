@@ -1,12 +1,10 @@
 ## To Do
-### ``lib/http-lib/httplib.c``
-- [ ] (line 6) : Let's split this file into smaller files based on the functions (e.g. stringlib.c,
+### ``lib/file_lib/file_lib.c``
+- [ ] (line 12) : is this safe?
 
-- [ ] (line 10) : Let's sort the functions based on the lifecycle of the string (e.g. creation, manipulation,
 
-- [ ] (line 171) : Let's move this function to a new file filelib.c
-
-- [ ] (line 178) : is this safe?
+### ``lib/string_lib/string_lib.c``
+- [ ] (line 5) : Let's sort the functions based on the lifecycle of the string (e.g. creation, manipulation,
 
 
 ### ``scripts/todo.sh``
@@ -16,25 +14,29 @@
 
 
 ### ``src/http_parser/http_parser.c``
-- [ ] (line 80) : Would it make sense to factor out the loop into a separate function? Just for readability purposes
+- [ ] (line 4) : check for \0
 
-- [ ] (line 97) : Ensure that the header starts at the beginning of the line
+- [ ] (line 63) : check for \0
 
-- [ ] (line 98) : remove strstr()
+- [ ] (line 82) : Would it make sense to factor out the loop into a separate function? Just for
 
-- [ ] (line 104) : remove strlen()
+- [ ] (line 100) : Ensure that the header starts at the beginning of the line
 
-- [ ] (line 218) : fix Clang-Tidy warning
+- [ ] (line 101) : remove strstr()
+
+- [ ] (line 107) : remove strlen()
+
+- [ ] (line 221) : fix Clang-Tidy warning
 
 
 ### ``src/http_router/http_router.c``
-- [ ] (line 48) : is realpath() safe to use here?
+- [ ] (line 49) : is realpath() safe to use here?
 
-- [ ] (line 76) : remove strstr()
+- [ ] (line 77) : remove strstr()
 
-- [ ] (line 82) : remove strstr()
+- [ ] (line 83) : remove strstr()
 
-- [ ] (line 88) : remove strstr()
+- [ ] (line 89) : remove strstr()
 
 
 ### ``tests/http/tests.py``
@@ -42,7 +44,9 @@
 
 - [ ] (line 113) : Add more tests for Host
 
-- [ ] (line 140) : Add more tests for miscellaneous
+- [ ] (line 122) : Check for \0 in request line & headers
+
+- [ ] (line 142) : Add more tests for miscellaneous
 
 
 ### ``tests/unit/tests.c``

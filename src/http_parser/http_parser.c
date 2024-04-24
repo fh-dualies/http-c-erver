@@ -1,6 +1,7 @@
 #include "http_parser.h"
 #include "../http_server/http_server.h"
 
+// TODO: check for \0
 int parse_request_line(string *raw_request, request_t *request) {
   enum { METHOD, RESOURCE, VERSION } segment = METHOD;
   size_t segment_start = 0;
@@ -59,6 +60,7 @@ void map_header(string *header_name, string *header_value, request_t *request) {
   }
 }
 
+// TODO: check for \0
 int parse_request_headers(string *raw_request, request_t *request) {
   if (raw_request == NULL || request == NULL) {
     return EXIT_FAILURE;

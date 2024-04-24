@@ -5,31 +5,38 @@
 void test_get_mime_type() {
   test_title("Test get_mime_type()");
 
-  string *mime_type = get_mime_type("index");
-  expect_equal(mime_type, strlen(CONTENT_TYPE_TEXT), CONTENT_TYPE_TEXT);
+  string *mime_type_text = get_mime_type("index");
+  expect_equal(mime_type_text, strlen(CONTENT_TYPE_TEXT), CONTENT_TYPE_TEXT);
 
-  mime_type = get_mime_type("index.html");
-  expect_equal(mime_type, strlen(CONTENT_TYPE_HTML), CONTENT_TYPE_HTML);
+  string *mime_type_html = get_mime_type("index.html");
+  expect_equal(mime_type_html, strlen(CONTENT_TYPE_HTML), CONTENT_TYPE_HTML);
 
-  mime_type = get_mime_type("index.css");
-  expect_equal(mime_type, strlen(CONTENT_TYPE_CSS), CONTENT_TYPE_CSS);
+  string *mime_type_css = get_mime_type("index.css");
+  expect_equal(mime_type_css, strlen(CONTENT_TYPE_CSS), CONTENT_TYPE_CSS);
 
-  mime_type = get_mime_type("index.js");
-  expect_equal(mime_type, strlen(CONTENT_TYPE_JS), CONTENT_TYPE_JS);
+  string *mime_type_js = get_mime_type("index.js");
+  expect_equal(mime_type_js, strlen(CONTENT_TYPE_JS), CONTENT_TYPE_JS);
 
-  mime_type = get_mime_type("index.jpg");
-  expect_equal(mime_type, strlen(CONTENT_TYPE_JPEG), CONTENT_TYPE_JPEG);
+  string *mime_type_jpg = get_mime_type("index.jpg");
+  expect_equal(mime_type_jpg, strlen(CONTENT_TYPE_JPEG), CONTENT_TYPE_JPEG);
 
-  mime_type = get_mime_type("index.jpeg");
-  expect_equal(mime_type, strlen(CONTENT_TYPE_JPEG), CONTENT_TYPE_JPEG);
+  string *mime_type_jpeg = get_mime_type("index.jpeg");
+  expect_equal(mime_type_jpeg, strlen(CONTENT_TYPE_JPEG), CONTENT_TYPE_JPEG);
 
-  mime_type = get_mime_type("index.png");
-  expect_equal(mime_type, strlen(CONTENT_TYPE_PNG), CONTENT_TYPE_PNG);
+  string *mime_type_png = get_mime_type("index.png");
+  expect_equal(mime_type_png, strlen(CONTENT_TYPE_PNG), CONTENT_TYPE_PNG);
 
-  mime_type = get_mime_type("index.ico");
-  expect_equal(mime_type, strlen(CONTENT_TYPE_ICO), CONTENT_TYPE_ICO);
+  string *mime_type_ico = get_mime_type("index.ico");
+  expect_equal(mime_type_ico, strlen(CONTENT_TYPE_ICO), CONTENT_TYPE_ICO);
 
-  free_str(mime_type);
+  free_str(mime_type_text);
+  free_str(mime_type_html);
+  free_str(mime_type_css);
+  free_str(mime_type_js);
+  free_str(mime_type_jpg);
+  free_str(mime_type_jpeg);
+  free_str(mime_type_png);
+  free_str(mime_type_ico);
 }
 
 void test_error_response() {
