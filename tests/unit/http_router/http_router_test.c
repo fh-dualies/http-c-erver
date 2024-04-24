@@ -3,7 +3,7 @@
 //
 
 #include "http_router_test.h"
-#include "../../../lib/testing/test-lib.h"
+#include "../../../lib/testing/unit/test-lib.h"
 #include "../../../src/http_router/http_router.h"
 
 void test_get_host_folder() {

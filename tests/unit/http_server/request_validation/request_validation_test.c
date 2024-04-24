@@ -3,7 +3,7 @@
 //
 
 #include "request_validation_test.h"
-#include "../../../../lib/testing/test-lib.h"
+#include "../../../../lib/testing/unit/test-lib.h"
 #include "../../../../src/http_models/http_models.h"
 #include "../../../../src/http_server/request_validation/request_validation.h"
 

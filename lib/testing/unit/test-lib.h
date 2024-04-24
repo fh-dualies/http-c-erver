@@ -1,7 +1,7 @@
 #ifndef PSE_2024_TEST_LIB_H
 #define PSE_2024_TEST_LIB_H
 
-#include "../http-lib/httplib.h"
+#include "../../http-lib/httplib.h"
 
 /**
  * @brief Expect two strings to be equal
