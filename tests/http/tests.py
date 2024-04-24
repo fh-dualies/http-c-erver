@@ -119,6 +119,8 @@ cannon += Beam(
 # - Host with nothing after column (e.g like Host:\r\n)
 # - Host with nothing after column and missing ": " (e.g like Host\r\n)
 
+# TODO: Check for \0 in request line & headers
+
 #
 # Miscellaneous
 #

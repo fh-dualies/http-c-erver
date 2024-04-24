@@ -1,7 +1,7 @@
 #ifndef HTTP_MODELS_H
 #define HTTP_MODELS_H
 
-#include "../../lib/http-lib/httplib.h"
+#include "../../lib/string_lib/string_lib.h"
 
 struct request_t {
   string *method;

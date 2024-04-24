@@ -1,11 +1,6 @@
-#include "httplib.h"
+#include "string_lib.h"
 #include <assert.h>
 #include <ctype.h>
-#include <sys/stat.h>
-
-// TODO: Let's split this file into smaller files based on the functions (e.g. stringlib.c,
-// filelib.c) Maybe we are allowed to rename the file to stringlib.c and only include the functions
-// related to string manipulation
 
 // TODO: Let's sort the functions based on the lifecycle of the string (e.g. creation, manipulation,
 // destruction)
@@ -90,6 +85,7 @@ int str_cmp(string *str1, const char *str2) {
 
   return memcmp(str1->str, str2, min_len);
 }
+
 void str_to_lower(string *input) {
   if (input == NULL || input->str == NULL) {
     return;
@@ -166,57 +162,6 @@ char *get_char_str(string *str) {
   assert(str != NULL);
 
   return str->str;
-}
-
-// TODO: Let's move this function to a new file filelib.c
-string *read_file(string *path) {
-  if (path == NULL) {
-    return NULL;
-  }
-
-  struct stat s;
-  // TODO: is this safe?
-  if (stat(path->str, &s) != 0) {
-    return NULL;
-  }
-
-  if (s.st_mode & S_IFDIR) {
-    return NULL;
-
-    // We could add index.html to the path here to serve a default file
-    /*string *new_path = cpy_str(path, strlen(path));
-    str_cat(new_path, "/index.html", 11);
-    string* file_content = read_file(new_path->str);
-    free_str(new_path);
-    return file_content;*/
-  }
-
-  FILE *file = fopen(path->str, "r");
-
-  if (file == NULL) {
-    return NULL;
-  }
-
-  // get file length
-  fseek(file, 0, SEEK_END);
-  long length = ftell(file);
-  fseek(file, 0, SEEK_SET);
-
-  string *content = _new_string();
-  free(content->str);
-  content->str = calloc(length + 1, 1);
-
-  if (content->str == NULL) {
-    return NULL;
-  }
-
-  // read file content
-  fread(content->str, 1, length, file);
-  content->len = length;
-
-  fclose(file);
-
-  return content;
 }
 
 string *int_to_string(int num) {

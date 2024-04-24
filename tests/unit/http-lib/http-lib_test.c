@@ -1,5 +1,5 @@
 #include "http-lib_test.h"
-#include "../../../lib/http-lib/httplib.h"
+#include "../../../lib/string_lib/string_lib.h"
 #include "../../../lib/testing/unit/test-lib.h"
 
 void test_str_cat() {

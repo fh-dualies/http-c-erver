@@ -6,7 +6,8 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build)
 
 add_executable(tests
-        lib/http-lib/httplib.c
+        lib/string_lib/string_lib.c
+        lib/file_lib/file_lib.c
         src/http_parser/http_parser.c
         src/http_models/http_models.c
         src/http_server/http_server.c
@@ -26,7 +27,8 @@ add_executable(tests
         tests/unit/http_router/http_router_test.h)
 
 add_executable(server
-        lib/http-lib/httplib.c
+        lib/string_lib/string_lib.c
+        lib/file_lib/file_lib.c
         src/http_models/http_models.c
         src/http_parser/http_parser.c
         src/http_server/http_server.c
@@ -37,7 +39,8 @@ add_executable(server
         src/http_router/http_router.h)
 
 add_executable(server_asan
-        lib/http-lib/httplib.c
+        lib/string_lib/string_lib.c
+        lib/file_lib/file_lib.c
         src/http_models/http_models.c
         src/http_parser/http_parser.c
         src/http_server/http_server.c

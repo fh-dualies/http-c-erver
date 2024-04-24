@@ -1,4 +1,5 @@
 #include "http_router.h"
+#include "../../lib/file_lib/file_lib.h"
 #include "../http_server/http_server.h"
 #include <errno.h>
 #include <limits.h>
