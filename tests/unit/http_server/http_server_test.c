@@ -1,5 +1,5 @@
 #include "http_server_test.h"
-#include "../../../lib/testing/test-lib.h"
+#include "../../../lib/testing/unit/test-lib.h"
 #include "../../../src/http_server/http_server.h"
 
 void run_cleanup_test() {
