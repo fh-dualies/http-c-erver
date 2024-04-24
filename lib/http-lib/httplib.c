@@ -3,6 +3,11 @@
 #include <ctype.h>
 #include <sys/stat.h>
 
+// TODO: Let's split this file into smaller files based on the functions (e.g. stringlib.c, filelib.c)
+// Maybe we are allowed to rename the file to stringlib.c and only include the functions related to string manipulation
+
+// TODO: Let's sort the functions based on the lifecycle of the string (e.g. creation, manipulation, destruction)
+
 void *exit_err(const char *function_name, const char *reason) {
   fprintf(stderr, "Error - %s(): %s\n", function_name, reason);
   exit(EXIT_FAILURE);
@@ -146,6 +151,7 @@ char *get_char_str(string *str) {
   return str->str;
 }
 
+// TODO: Let's move this function to a new file filelib.c
 string *read_file(string *path) {
   if (path == NULL) {
     return NULL;

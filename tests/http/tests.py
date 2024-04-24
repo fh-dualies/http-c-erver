@@ -111,6 +111,13 @@ cannon += Beam(
 #    response=['HTTP/1.1 400']
 # )
 # TODO: Add more tests for Host
+# - Host with uppercase letters
+# - Host with special characters
+# - Host with missing replaced space and column (e.g like Host--example.com)
+# - Host with missing space after column (e.g like Host:example.com)
+# - Host with missing space after column and missing ": " (e.g like Hostexample.com)
+# - Host with nothing after column (e.g like Host:\r\n)
+# - Host with nothing after column and missing ": " (e.g like Host\r\n)
 
 #
 # Miscellaneous
@@ -130,6 +137,10 @@ cannon += Beam(
     request="GET /favicon.ico HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
     response=["HTTP/1.1 200"],
 )
+# TODO: Add more tests for miscellaneous
+# - Request with \r instead of \r\n
+# - Request with \n instead of \r\n
+
 
 # Pew pew!
 successful = cannon.pewpew()

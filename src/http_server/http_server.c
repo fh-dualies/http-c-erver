@@ -1,15 +1,9 @@
 #include "http_server.h"
 #include "../http_router/http_router.h"
 #include "request_validation/request_validation.h"
-#include <stdlib.h>
 #include <unistd.h>
 
-void cleanup(request_t **request, response_t **response, char *path) {
-  free_request(request);
-  free_response(response);
-  free(path);
-}
-
+// TODO: Is this a library function? If so, move it to lib/....
 string *get_mime_type(const char *path) {
   if (path == NULL) {
     return NULL;

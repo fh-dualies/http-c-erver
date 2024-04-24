@@ -62,16 +62,6 @@
 #define EXTENSION_ICO ".ico"
 
 /**
- * @brief Clean up memory allocated to exit the http server
- * @warning This function does not check if the given pointers are NULL
- *
- * @param request request object to be freed
- * @param response response object to be freed
- * @param path path to be freed
- */
-void cleanup(request_t **request, response_t **response, char *path);
-
-/**
  * @brief Get the mime type of a file
  * @warning path should not be a struct string
  *
