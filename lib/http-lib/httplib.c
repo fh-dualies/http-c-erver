@@ -1,5 +1,6 @@
 #include "httplib.h"
 #include <assert.h>
+#include <ctype.h>
 #include <sys/stat.h>
 
 void *exit_err(const char *function_name, const char *reason) {
@@ -65,6 +66,16 @@ string *str_set(string *dest, const char *src, size_t len) {
   dest->len = len;
 
   return dest;
+}
+
+void str_to_lower(string *input) {
+  if (input == NULL || input->str == NULL) {
+    return;
+  }
+
+  for (size_t i = 0; i < input->len; i++) {
+    input->str[i] = (char)tolower(input->str[i]);
+  }
 }
 
 string *_new_string() {
