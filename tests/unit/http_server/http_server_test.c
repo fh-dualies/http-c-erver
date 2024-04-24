@@ -54,9 +54,9 @@ void test_error_response() {
   string *response = error_response(404);
 
   expect_equal(
-      response, 194,
+      response, 188,
       "HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\nContent-Length: 87\r\nServer: LLDM/0.1 "
-      "Basic HTTP Server\r\n\r\n<html><head><title>Error</title></head><body><h1>404</h1><p>Not "
+      "HTTP Server\r\n\r\n<html><head><title>Error</title></head><body><h1>404</h1><p>Not "
       "Found</p></body></html>\r\n");
 
   free_str(response);
@@ -73,8 +73,8 @@ void test_debug_response() {
   string *response = debug_response(request);
 
   expect_equal(
-      response, 226,
-      "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 125\r\nServer: LLDM/0.1 Basic "
+      response, 220,
+      "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 125\r\nServer: LLDM/0.1 "
       "HTTP Server\r\n\r\n<html><head><title>Debug</title></head><body><p>HTTP-Methode: "
       "GET<br>Ressource: /<br>HTTP-Version: HTTP/1.1</p></body></html>\r\n");
 

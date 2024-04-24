@@ -7,13 +7,17 @@ string *get_host_directory(request_t *request) {
   string *host = request->host;
 
   if (host == NULL) {
+    /// @node strlen() is safe to use here - ROUTE_DEFAULT_HOST is a constant defined in
+    /// http_router.h
     return cpy_str(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
   }
 
+  // TODO: remove strcmp()
   if (strcmp(host->str, "EXTERN") == 0) {
     return cpy_str("/extern", 7);
   }
 
+  // TODO: remove strcmp()
   if (strcmp(host->str, "INTERN") == 0) {
     return cpy_str("/intern", 7);
   }
@@ -35,6 +39,7 @@ string *convert_to_absolute_path(string *resource, string *host_extension) {
     return NULL;
   }
 
+  /// @node strlen() is safe to use here - DOCUMENT_ROOT is a constant defined in http_router.h
   // add document root to relative path
   str_cat(relative_path, DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
   // add host extension to relative path
@@ -42,6 +47,7 @@ string *convert_to_absolute_path(string *resource, string *host_extension) {
   // add resource to relative path
   str_cat(relative_path, resource->str, resource->len);
 
+  // TODO: is realpath() safe to use here?
   char *real_path = realpath(relative_path->str, absolute_path);
 
   if (real_path == NULL) {
@@ -52,6 +58,7 @@ string *convert_to_absolute_path(string *resource, string *host_extension) {
 
   free_str(relative_path);
 
+  /// @node strlen() is safe to use here - absolute_path is a default char array
   return cpy_str(absolute_path, strlen(absolute_path));
 }
 
@@ -68,16 +75,19 @@ bool valid_path(string *path, string *host_extension) {
     return false;
   }
 
+  // TODO: remove strstr()
   // should contain DOCUMENT_ROOT (mainly prevents access to other directories)
   if (strstr(path->str, DOCUMENT_ROOT) == NULL) {
     return false;
   }
 
+  // TODO: remove strstr()
   // should contain host extension
   if (strstr(path->str, host_extension->str) == NULL) {
     return false;
   }
 
+  // TODO: remove strstr()
   if (strstr(path->str, "..") != NULL) {
     return false;
   }
@@ -129,6 +139,7 @@ string *serve_file(string *path) {
 }
 
 string *route_request(request_t *request) {
+  // TODO: remove strcmp()
   if (strcmp(request->resource->str, ROUTE_DEBUG) == 0) {
     // no cleanup needed, debug_response() will free the request
     return debug_response(request);

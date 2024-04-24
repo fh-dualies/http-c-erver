@@ -6,7 +6,16 @@
 #include "http_server/http_server_test.h"
 #include "http_server/request_validation/request_validation_test.h"
 
+/**
+ * @brief Run all tests
+ *
+ * Currently we are only running happy cases for all implemented functions
+ */
 int main() {
+    // TODO: check for missing test
+
+
+
   run_httplib_test();
   run_http_models_test();
   run_http_parser_test();

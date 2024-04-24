@@ -32,9 +32,9 @@ void test_serialize_response() {
 
   string *serialized = serialize_response(response);
 
-  expect_equal(serialized, 121,
+  expect_equal(serialized, 115,
                "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: 21\r\nServer: "
-               "LLDM/0.1 Basic HTTP Server\r\n\r\n<h1>Hello World!</h1>");
+               "LLDM/0.1 HTTP Server\r\n\r\n<h1>Hello World!</h1>");
 
   free_response(&response);
   free_str(serialized);

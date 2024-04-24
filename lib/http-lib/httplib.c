@@ -152,6 +152,7 @@ string *read_file(string *path) {
   }
 
   struct stat s;
+  // TODO: is this safe?
   if (stat(path->str, &s) != 0) {
     return NULL;
   }
