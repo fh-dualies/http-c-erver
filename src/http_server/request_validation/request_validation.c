@@ -7,11 +7,7 @@ bool request_empty(request_t *request) {
 }
 
 bool supported_version(string *version) {
-  // TODO: remove strcmp()
-  return strcmp(version->str, HTTP_VERSION_1_0) == 0 || strcmp(version->str, HTTP_VERSION_1_1) == 0;
+  return str_cmp(version, HTTP_VERSION_1_0) == 0 || str_cmp(version, HTTP_VERSION_1_1) == 0;
 }
 
-bool supported_method(string *method) {
-  // TODO: remove strcmp()
-  return strcmp(method->str, HTTP_METHOD_GET) == 0;
-}
+bool supported_method(string *method) { return str_cmp(method, HTTP_METHOD_GET) == 0; }

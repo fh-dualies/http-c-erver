@@ -12,13 +12,11 @@ string *get_host_directory(request_t *request) {
     return cpy_str(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
   }
 
-  // TODO: remove strcmp()
-  if (strcmp(host->str, "EXTERN") == 0) {
+  if (str_cmp(host, "EXTERN") == 0) {
     return cpy_str("/extern", 7);
   }
 
-  // TODO: remove strcmp()
-  if (strcmp(host->str, "INTERN") == 0) {
+  if (str_cmp(host, "INTERN") == 0) {
     return cpy_str("/intern", 7);
   }
 
@@ -137,8 +135,7 @@ string *serve_file(string *path) {
 }
 
 string *route_request(request_t *request) {
-  // TODO: remove strcmp()
-  if (strcmp(request->resource->str, ROUTE_DEBUG) == 0) {
+  if (str_cmp(request->resource, ROUTE_DEBUG) == 0) {
     // no cleanup needed, debug_response() will free the request
     return debug_response(request);
   }
