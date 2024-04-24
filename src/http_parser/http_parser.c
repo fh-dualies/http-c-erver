@@ -74,6 +74,7 @@ int parse_request_headers(string *raw_request, request_t *request) {
 
   for (size_t i = 0; i < REQUEST_HEADER_COUNT; ++i) {
     str_set(header_name, request_headers[i], strlen(request_headers[i]));
+    str_to_lower(header_name);
 
     for (size_t j = 0; j < raw_request->len; ++j) {
       char current = raw_request->str[j];
@@ -87,9 +88,11 @@ int parse_request_headers(string *raw_request, request_t *request) {
       }
 
       str_set(current_line, raw_request->str + current_line_pos, j - current_line_pos);
+      str_to_lower(current_line);
+
       current_line_pos = j + 2;
 
-      if (strstr( current_line->str, header_name->str) == NULL) {
+      if (strstr(current_line->str, header_name->str) == NULL) {
         continue;
       }
 
