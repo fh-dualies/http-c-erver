@@ -36,23 +36,21 @@
 
 - [ ] (line 90) : remove strstr()
 
-- [ ] (line 123) : improve this
-
-- [ ] (line 142) : remove strcmp()
+- [ ] (line 140) : remove strcmp()
 
 
 ### ``src/http_server/http_server.c``
-- [ ] (line 25) : remove strcmp()
-
-- [ ] (line 30) : remove strcmp()
-
-- [ ] (line 35) : remove strcmp()
+- [ ] (line 34) : remove strcmp()
 
 - [ ] (line 40) : remove strcmp()
 
-- [ ] (line 45) : remove strcmp()
+- [ ] (line 46) : remove strcmp()
 
-- [ ] (line 50) : remove strcmp()
+- [ ] (line 52) : remove strcmp()
+
+- [ ] (line 58) : remove strcmp()
+
+- [ ] (line 64) : remove strcmp()
 
 
 ### ``src/http_server/request_validation/request_validation.c``
