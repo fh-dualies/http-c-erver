@@ -3,10 +3,6 @@
 - [ ] (line 12) : is this safe?
 
 
-### ``lib/string_lib/string_lib.c``
-- [ ] (line 5) : Let's sort the functions based on the lifecycle of the string (e.g. creation, manipulation,
-
-
 ### ``scripts/todo.sh``
 - [ ] (line 2) "
 
