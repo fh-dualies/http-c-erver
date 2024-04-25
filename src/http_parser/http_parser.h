@@ -5,11 +5,12 @@
 
 #define HEX_CHARSET "0123456789ABCDEF"
 
+/// @warning has to be in lowercase!
 #define REQUEST_HEADER_COUNT 4
-#define REQUEST_HEADER_HOST "Host"
-#define REQUEST_HEADER_USER_AGENT "User-Agent"
-#define REQUEST_HEADER_ACCEPT "Accept"
-#define REQUEST_HEADER_CONNECTION "Connection"
+#define REQUEST_HEADER_HOST "host"
+#define REQUEST_HEADER_USER_AGENT "user-agent"
+#define REQUEST_HEADER_ACCEPT "accept"
+#define REQUEST_HEADER_CONNECTION "connection"
 
 /**
  * @brief Parse the request line of a raw HTTP request string

@@ -1,7 +1,6 @@
 #include "http_parser.h"
 #include "../http_server/http_server.h"
 
-// TODO: check for \0
 int parse_request_line(string *raw_request, request_t *request) {
   enum { METHOD, RESOURCE, VERSION } segment = METHOD;
   size_t segment_start = 0;
@@ -10,7 +9,7 @@ int parse_request_line(string *raw_request, request_t *request) {
   for (size_t i = 0; i <= get_length(raw_request); i++) {
     unsigned char current = (i < get_length(raw_request)) ? (char)(raw_request->str[i]) : '\n';
 
-    if (segment > VERSION) {
+    if (segment > VERSION || current == '\0') {
       break;
     }
 
@@ -60,7 +59,6 @@ void map_header(string *header_name, string *header_value, request_t *request) {
   }
 }
 
-// TODO: check for \0
 int parse_request_headers(string *raw_request, request_t *request) {
   if (raw_request == NULL || request == NULL) {
     return EXIT_FAILURE;
@@ -81,6 +79,10 @@ int parse_request_headers(string *raw_request, request_t *request) {
 
     for (size_t j = 0; j < get_length(raw_request); ++j) {
       char current = raw_request->str[j];
+
+      if (current == '\0') {
+        return EXIT_FAILURE;
+      }
 
       if (current != '\r' && raw_request->str[j + 1] != '\n') {
         continue;
@@ -111,6 +113,7 @@ int parse_request_headers(string *raw_request, request_t *request) {
               get_length(current_line) - header_name_end);
 
       map_header(header_name, header_value, request);
+
       current_line_pos = 0;
       free_str(header_value);
 

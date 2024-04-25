@@ -130,6 +130,8 @@ void print_str(string *str);
 /**
  * @brief Get the length of a string
  *
+ * Exits with code 1 if the string is NULL.
+ *
  * @param str The string
  * @return The length of the string
  */
@@ -137,6 +139,9 @@ size_t get_length(string *str);
 
 /**
  * @brief Get the value of a string
+ *
+ * Exits with code 1 if the string is NULL.
+ * Exits with code 1 if the string does not have a null terminator.
  *
  * @param str The string
  * @return The value of the string
