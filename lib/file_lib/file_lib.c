@@ -9,23 +9,16 @@ string *read_file(string *path) {
   }
 
   struct stat s;
-  // TODO: is this safe?
-  if (stat(path->str, &s) != 0) {
+
+  if (stat(get_char_str(path), &s) != 0) {
     return NULL;
   }
 
   if (s.st_mode & S_IFDIR) {
     return NULL;
-
-    // We could add index.html to the path here to serve a default file
-    /*string *new_path = cpy_str(path, strlen(path));
-    str_cat(new_path, "/index.html", 11);
-    string* file_content = read_file(new_path->str);
-    free_str(new_path);
-    return file_content;*/
   }
 
-  FILE *file = fopen(path->str, "r");
+  FILE *file = fopen(get_char_str(path), "r");
 
   if (file == NULL) {
     return NULL;
@@ -45,7 +38,7 @@ string *read_file(string *path) {
   }
 
   // read file content
-  fread(content->str, 1, length, file);
+  fread(get_char_str(content), 1, length, file);
   content->len = length;
 
   fclose(file);

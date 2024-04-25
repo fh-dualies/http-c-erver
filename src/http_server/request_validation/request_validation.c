@@ -3,7 +3,8 @@
 
 bool request_empty(request_t *request) {
   return request->method == NULL || request->resource == NULL || request->version == NULL ||
-         request->method->len == 0 || request->resource->len == 0 || request->version->len == 0;
+         get_length(request->method) == 0 || get_length(request->resource) == 0 ||
+         get_length(request->version) == 0;
 }
 
 bool supported_version(string *version) {

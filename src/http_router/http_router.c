@@ -10,19 +10,19 @@ string *get_host_directory(request_t *request) {
   if (host == NULL) {
     /// @node strlen() is safe to use here - ROUTE_DEFAULT_HOST is a constant defined in
     /// http_router.h
-    return cpy_str(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
+    return str_cpy(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
   }
 
   if (str_cmp(host, "EXTERN") == 0) {
-    return cpy_str("/extern", 7);
+    return str_cpy("/extern", 7);
   }
 
   if (str_cmp(host, "INTERN") == 0) {
-    return cpy_str("/intern", 7);
+    return str_cpy("/intern", 7);
   }
 
   // if host does not match any of the above, return default folder
-  return cpy_str(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
+  return str_cpy(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
 }
 
 string *convert_to_absolute_path(string *resource, string *host_extension) {
@@ -42,12 +42,11 @@ string *convert_to_absolute_path(string *resource, string *host_extension) {
   // add document root to relative path
   str_cat(relative_path, DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
   // add host extension to relative path
-  str_cat(relative_path, host_extension->str, host_extension->len);
+  str_cat(relative_path, get_char_str(host_extension), get_length(host_extension));
   // add resource to relative path
-  str_cat(relative_path, resource->str, resource->len);
+  str_cat(relative_path, get_char_str(resource), get_length(resource));
 
-  // TODO: is realpath() safe to use here?
-  char *real_path = realpath(relative_path->str, absolute_path);
+  char *real_path = realpath(get_char_str(relative_path), absolute_path);
 
   if (real_path == NULL) {
     free_str(relative_path);
@@ -58,7 +57,7 @@ string *convert_to_absolute_path(string *resource, string *host_extension) {
   free_str(relative_path);
 
   /// @node strlen() is safe to use here - absolute_path is a default char array
-  return cpy_str(absolute_path, strlen(absolute_path));
+  return str_cpy(absolute_path, strlen(absolute_path));
 }
 
 bool valid_path(string *path, string *host_extension) {
@@ -66,7 +65,7 @@ bool valid_path(string *path, string *host_extension) {
     return false;
   }
 
-  if (path->len == 0) {
+  if (get_length(path) == 0) {
     return false;
   }
 
@@ -119,12 +118,12 @@ string *serve_file(string *path) {
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
   }
 
-  string *mime_type = get_mime_type(path->str);
+  string *mime_type = get_mime_type(get_char_str(path));
 
   generate_response_status(response, HTTP_OK, mime_type);
   free_str(mime_type);
 
-  response->body = str_set(response->body, file_content->str, file_content->len);
+  response->body = str_set(response->body, get_char_str(file_content), get_length(file_content));
   free_str(file_content);
 
   update_response_content_length(response);

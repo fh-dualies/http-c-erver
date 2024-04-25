@@ -58,7 +58,7 @@ void test_generate_response_status() {
   test_title("Test generate_response_status()");
 
   response_t *response = new_response();
-  string *content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  string *content_type = str_cpy(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
   generate_response_status(response, HTTP_OK, content_type);
   free_str(content_type);
 

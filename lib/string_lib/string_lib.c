@@ -86,19 +86,19 @@ string *str_cat(string *dest, const char *src, size_t len) {
   return dest;
 }
 
-string *cpy_str(const char *src, size_t len) {
+string *str_cpy(const char *src, size_t len) {
   assert(src != NULL);
 
   string *dest = calloc(1, sizeof(string));
 
   if (dest == NULL) {
-    return exit_err("cpy_str", "Memory allocation of dest failed.");
+    return exit_err("str_cpy", "Memory allocation of dest failed.");
   }
 
   dest->str = calloc(1, len + 1);
 
   if (dest->str == NULL) {
-    return exit_err("cpy_str", "Memory allocation of dest->str failed.");
+    return exit_err("str_cpy", "Memory allocation of dest->str failed.");
   }
 
   memcpy(dest->str, src, len);
@@ -164,20 +164,29 @@ string *size_t_to_string(size_t num) {
   return str;
 }
 
-void print_string(string *str) {
+void print_str(string *str) {
   for (int i = 0; i < str->len; i++) {
     putchar(str->str[i]);
   }
 }
 
 size_t get_length(string *str) {
-  assert(str != NULL);
+  if (str == NULL) {
+    exit_err("get_length", "str is NULL.");
+    return -1;
+  }
 
   return str->len;
 }
 
 char *get_char_str(string *str) {
-  assert(str != NULL);
+  if (str == NULL) {
+    return exit_err("get_char_str", "str is NULL.");
+  }
+
+  if (str->str[str->len] != '\0') {
+    return exit_err("get_char_str", "str does not have null terminator.");
+  }
 
   return str->str;
 }
