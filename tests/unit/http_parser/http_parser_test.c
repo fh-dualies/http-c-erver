@@ -6,7 +6,7 @@
 void test_parse_request_string() {
   test_title("Test parse_request_string()");
 
-  string *raw_request = str_cpy("GET / HTTP/1.1\nHost: localhost:8080\n\n", 36);
+  string *raw_request = str_cpy("GET / HTTP/1.1\r\nHost: localhost:8080\r\n", 34);
 
   request_t *request = parse_request_string(raw_request);
 
