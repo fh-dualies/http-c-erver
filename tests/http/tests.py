@@ -29,22 +29,115 @@ if len(sys.argv) == 3:
 cannon = Laz0rCannon(host=host, port=port)
 
 #
+# Request line
+#
+cannon += Beam(
+    description="Request line with multiple spaces",
+    request="GET  /debug HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+cannon += Beam(
+    description="Request line with misplaced line break",
+    request="GET \n/debug HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+cannon += Beam(
+    description="Request line with misplaced escape character",
+    request="GET \r/debug HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+cannon += Beam(
+    description="Request line with null terminator",
+    request="GET \0/debug HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+cannon += Beam(
+    description="Request line with invalid end sequence (missing \r)",
+    request="GET /debug HTTP/1.1\nHost: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+cannon += Beam(
+    description="Request line with invalid end sequence (missing \n)",
+    request="GET /debug HTTP/1.1\rHost: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+cannon += Beam(
+    description="Request line with null terminator (switch \r and \n",
+    request="GET \0/debug HTTP/1.1\n\rHost: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+cannon += Beam(
+    description="Request line with more than 3 parts",
+    request="GET /debug HTTP/1.1 Test\r\nHost: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+cannon += Beam(
+    description="Request line with less than 3 parts",
+    request="GET /debug\r\nHost: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+cannon += Beam(
+    description="Request line leading space",
+    request=" GET /debug HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+cannon += Beam(
+    description="Request line trailing space",
+    request="GET /debug HTTP/1.1 \r\nHost: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+
+#
+# Headers
+#
+cannon += Beam(
+    description="Header with null terminator",
+    request="GET /debug HTTP/1.1\r\nHo\0st: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request", "Content-Type: text/html"],
+)
+cannon += Beam(
+    description="Header with misplaced line break",
+    request="GET /debug HTTP/1.1\r\nHos\nt: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request", "Content-Type: text/html"],
+)
+cannon += Beam(
+    description="Header with misplaced escape character",
+    request="GET /debug HTTP/1.1\r\nHo\rst: {host}:{port}\r\n\r\n",
+    response=["HTTP/1.1 400 Bad Request", "Content-Type: text/html"],
+)
+cannon += Beam(
+    description="Header with invalid end sequence (missing \r)",
+    request="GET /debug HTTP/1.1\r\nHost: {host}:{port}\n\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+cannon += Beam(
+    description="Header with invalid end sequence (missing \n)",
+    request="GET /debug HTTP/1.1\r\nHost: {host}:{port}\r\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+cannon += Beam(
+    description="Header with null terminator (switch \r and \n)",
+    request="GET /debug HTTP/1.1\r\nHost: {host}:{port}\n\r\r\n",
+    response=["HTTP/1.1 400 Bad Request"],
+)
+
+#
 # Methods
 #
 cannon += Beam(
     description="No HTTP method specified",
     request=" /debug HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 400"],
+    response=["HTTP/1.1 400 Bad Request"],
 )
 cannon += Beam(
     description="HTTP method with lowercase letters",
     request="get /debug HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 501"],
+    response=["HTTP/1.1 501 Not Implemented"],
 )
 cannon += Beam(
     description="Not implemented HTTP method",
     request="POST /debug HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 501"],
+    response=["HTTP/1.1 501 Not Implemented"],
 )
 
 #
@@ -53,96 +146,81 @@ cannon += Beam(
 cannon += Beam(
     description="No HTTP-Version specified",
     request="GET /debug\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 400"],
+    response=["HTTP/1.1 400 Bad Request"],
 )
 cannon += Beam(
     description="HTTP-Version with lowercase letters",
     request="GET /debug http/1.1\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 505"],
+    response=["HTTP/1.1 505 HTTP Version Not Supported"],
 )
 cannon += Beam(
     description="HTTP-Version 1.0",
     request="GET /debug HTTP/1.0\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 200"],
+    response=["HTTP/1.1 200 OK"],
 )
 cannon += Beam(
     description="HTTP-Version 1.1",
     request="GET /debug HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 200"],
+    response=["HTTP/1.1 200 OK"],
 )
 cannon += Beam(
     description="HTTP-Version 2.0",
     request="GET /debug HTTP/2.0\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 505"],
+    response=["HTTP/1.1 505 HTTP Version Not Supported"],
 )
 
 #
-# Ressources
+# Resources
 #
 cannon += Beam(
     description="No ressource specified",
     request="GET  HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 400"],
+    response=["HTTP/1.1 400 Bad Request"],
 )
 cannon += Beam(
     description="Unicode ressource",
     request="GET /debugß*#+ HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 404"],
+    response=["HTTP/1.1 404 Not Found"],
 )
 cannon += Beam(
     description="ressource outside of document root",
     request="GET /../../debug HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 404"],
+    response=["HTTP/1.1 404 Not Found"],
 )
 
 #
 # Host
 #
-
-# TODO: Enable these tests once the server correctly handles the Host header
-# cannon += Beam(
-#    description='No Host specified',
-#    request='GET /debug HTTP/1.1\r\n\r\n',
-#    response=['HTTP/1.1 400']
-# )
-# cannon += Beam(
-#    description='Host with lowercase letters',
-#    request='GET /debug HTTP/1.1\r\nhost: {host}:{port}\r\n\r\n',
-#    response=['HTTP/1.1 400']
-# )
-# TODO: Add more tests for Host
-# - Host with uppercase letters
-# - Host with special characters
-# - Host with missing replaced space and column (e.g like Host--example.com)
-# - Host with missing space after column (e.g like Host:example.com)
-# - Host with missing space after column and missing ": " (e.g like Hostexample.com)
-# - Host with nothing after column (e.g like Host:\r\n)
-# - Host with nothing after column and missing ": " (e.g like Host\r\n)
-
-# TODO: Check for \0 in request line & headers
-
-#
-# Miscellaneous
-#
 cannon += Beam(
-    description="Request with multiple spaces",
-    request="GET /debug  HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 400"],
+    description='No Host specified',
+    request='GET /debug HTTP/1.1\r\n\r\n',
+    response=['HTTP/1.1 200 OK']
 )
 cannon += Beam(
-    description="Request with unicode characters",
-    request="GET /debug HTTP/1.1\r\nHostß*#+: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 200"],
+   description='Host with lowercase letters',
+   request='GET /debug HTTP/1.1\r\nhost: {host}:{port}\r\n\r\n',
+   response=['HTTP/1.1 200 OK']
 )
 cannon += Beam(
-    description="[OPTIONAL] favicon.ico (depends on htdocs folder)",
-    request="GET /favicon.ico HTTP/1.1\r\nHost: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 200"],
+    description='Host with uppercase letters',
+    request='GET /debug HTTP/1.1\r\nHOST: {host}:{port}\r\n\r\n',
+    response=['HTTP/1.1 200 OK']
 )
-# TODO: Add more tests for miscellaneous
-# - Request with \r instead of \r\n
-# - Request with \n instead of \r\n
-
+cannon += Beam(
+    description='Host with invalid format',
+    request='GET /debug HTTP/1.1\r\nHOST example.com\r\n\r\n',
+    response=['HTTP/1.1 200 OK']
+)
+cannon += Beam(
+    description='Host with invalid format',
+    request='GET /debug HTTP/1.1\r\nHOST:example.com\r\n\r\n',
+    response=['HTTP/1.1 200 OK']
+)
+cannon += Beam(
+    description='Host with no value',
+    request='GET /debug HTTP/1.1\r\nHOST:\r\n\r\n',
+    response=['HTTP/1.1 200 OK']
+)
 
 # Pew pew!
 successful = cannon.pewpew()
