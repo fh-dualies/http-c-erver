@@ -97,16 +97,13 @@ int parse_request_headers(string *raw_request, request_t *request) {
 
       current_line_pos = j + 2;
 
-      // TODO: Ensure that the header starts at the beginning of the line
-      // TODO: remove strstr()
-      // Think about the case where the header is not at the beginning of the line
-      if (strstr(get_char_str(current_line), get_char_str(header_name)) == NULL) {
+      char *header_start = strstr(get_char_str(current_line), get_char_str(header_name));
+
+      if (header_start == NULL || header_start != get_char_str(current_line)) {
         continue;
       }
 
-      // TODO: remove strlen()
-      // Think about checking for ": " instead of just moving 2 characters
-      size_t header_name_end = strlen(get_char_str(header_name)) + 2;
+      size_t header_name_end = header_name->len;
       string *header_value = _new_string();
 
       str_set(header_value, get_char_str(current_line) + header_name_end,

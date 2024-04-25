@@ -6,13 +6,7 @@
 
 
 ### ``src/http_parser/http_parser.c``
-- [ ] (line 100) : Ensure that the header starts at the beginning of the line
-
-- [ ] (line 101) : remove strstr()
-
-- [ ] (line 107) : remove strlen()
-
-- [ ] (line 222) : fix Clang-Tidy warning
+- [ ] (line 219) : fix Clang-Tidy warning
 
 
 ### ``src/http_router/http_router.c``
