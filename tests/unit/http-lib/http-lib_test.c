@@ -5,9 +5,9 @@
 void test_str_cat() {
   test_title("Test str_cat()");
 
-  string *str1 = cpy_str("Hello, ", 7);
-  string *str2 = cpy_str("world!", 6);
-  string *str_empty = cpy_str("", 0);
+  string *str1 = str_cpy("Hello, ", 7);
+  string *str2 = str_cpy("world!", 6);
+  string *str_empty = str_cpy("", 0);
 
   str_cat(str1, get_char_str(str2), get_length(str2));
   str_cat(str2, get_char_str(str_empty), get_length(str_empty));
@@ -47,9 +47,9 @@ void test_new_string() {
 }
 
 void test_cpy_str() {
-  test_title("Test cpy_str()");
+  test_title("Test str_cpy()");
 
-  string *string = cpy_str("Hello, world!", 13);
+  string *string = str_cpy("Hello, world!", 13);
   expect_equal(string, 13, "Hello, world!");
 
   free_str(string);
@@ -58,7 +58,7 @@ void test_cpy_str() {
 void test_get_length() {
   test_title("Test get_length()");
 
-  string *str = cpy_str("Hello, world!", 13);
+  string *str = str_cpy("Hello, world!", 13);
   string *len = size_t_to_string(get_length(str));
 
   expect_equal(len, 2, "13");
@@ -70,7 +70,7 @@ void test_get_length() {
 void test_get_char_str() {
   test_title("Test get_char_str()");
 
-  string *str = cpy_str("Hello, world!", 13);
+  string *str = str_cpy("Hello, world!", 13);
   string *str2 = _new_string();
 
   str_set(str2, get_char_str(str), get_length(str));

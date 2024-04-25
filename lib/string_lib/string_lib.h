@@ -74,7 +74,7 @@ string *str_cat(string *dest, const char *src, size_t len);
  * @param len The length of the source string
  * @return The copied string
  */
-string *cpy_str(const char *src, size_t len);
+string *str_cpy(const char *src, size_t len);
 
 /**
  * @brief Compare two strings
@@ -125,7 +125,7 @@ string *int_to_string(int num);
  *
  * @param str The string to print
  */
-void print_string(string *str);
+void print_str(string *str);
 
 /**
  * @brief Get the length of a string

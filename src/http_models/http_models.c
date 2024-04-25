@@ -88,9 +88,9 @@ void update_response_content_length(response_t *response) {
     return;
   }
 
-  string *content_length = size_t_to_string(response->body->len);
+  string *content_length = size_t_to_string(get_length(response->body));
   response->content_length =
-      str_set(response->content_length, content_length->str, content_length->len);
+      str_set(response->content_length, get_char_str(content_length), get_length(content_length));
   free_str(content_length);
 }
 
@@ -104,10 +104,11 @@ void generate_response_status(response_t *response, int status_code, string *con
 
   response->version = str_set(response->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
   response->status_code =
-      str_set(response->status_code, status_code_str->str, status_code_str->len);
+      str_set(response->status_code, get_char_str(status_code_str), get_length(status_code_str));
   response->status_message =
       str_set(response->status_message, status_message, strlen(status_message));
-  response->content_type = str_set(response->content_type, content_type->str, content_type->len);
+  response->content_type =
+      str_set(response->content_type, get_char_str(content_type), get_length(content_type));
   response->server = str_set(response->server, SERVER_SIGNATURE, strlen(SERVER_SIGNATURE));
 
   free_str(status_code_str);
@@ -119,18 +120,18 @@ void add_response_string_header(string *raw_string, const char *header, string *
   }
 
   str_cat(raw_string, header, strlen(header));
-  str_cat(raw_string, value->str, value->len);
+  str_cat(raw_string, get_char_str(value), get_length(value));
   str_cat(raw_string, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 }
 
 void generate_response_status_line(string *raw_string, string *version, string *status_code,
                                    string *status_message) {
-  str_cat(raw_string, version->str, version->len);
+  str_cat(raw_string, get_char_str(version), get_length(version));
   str_cat(raw_string, " ", 1);
-  str_cat(raw_string, status_code->str, status_code->len);
+  str_cat(raw_string, get_char_str(status_code), get_length(status_code));
 
   str_cat(raw_string, " ", 1);
-  str_cat(raw_string, status_message->str, status_message->len);
+  str_cat(raw_string, get_char_str(status_message), get_length(status_message));
 
   str_cat(raw_string, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 }

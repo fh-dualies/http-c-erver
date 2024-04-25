@@ -24,7 +24,7 @@ void test_request_empty() {
 void test_supported_version() {
   test_title("Test supported_version()");
 
-  string *version = cpy_str("HTTP/1.0", 8);
+  string *version = str_cpy("HTTP/1.0", 8);
   expect_true(supported_version(version));
 
   str_set(version, "HTTP/1.1", 8);
@@ -39,7 +39,7 @@ void test_supported_version() {
 void test_supported_method() {
   test_title("Test supported_method()");
 
-  string *method = cpy_str("GET", 3);
+  string *method = str_cpy("GET", 3);
   expect_true(supported_method(method));
 
   str_set(method, "POST", 4);

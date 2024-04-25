@@ -131,7 +131,7 @@ static void main_loop_stdin() {
       error("ERROR reading from socket");
     }
   }
-  string *request = cpy_str(buffer, length);
+  string *request = str_cpy(buffer, length);
   string *response = process(request);
 
   size_t response_len = get_length(response);
@@ -194,7 +194,7 @@ static void main_loop() {
       }
       error("ERROR reading from socket");
     }
-    string *request = cpy_str(buffer, length);
+    string *request = str_cpy(buffer, length);
     string *response = process(request);
 
     /*

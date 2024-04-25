@@ -6,7 +6,7 @@
 void test_parse_request_string() {
   test_title("Test parse_request_string()");
 
-  string *raw_request = cpy_str("GET / HTTP/1.1\nHost: localhost:8080\n\n", 36);
+  string *raw_request = str_cpy("GET / HTTP/1.1\nHost: localhost:8080\n\n", 36);
 
   request_t *request = parse_request_string(raw_request);
 
@@ -43,7 +43,7 @@ void test_serialize_response() {
 void test_decode_url() {
   test_title("Test decode_url()");
 
-  string *str = cpy_str("Hello+World%21", 14);
+  string *str = str_cpy("Hello+World%21", 14);
 
   string *decoded = decode_url(str);
 
@@ -56,7 +56,7 @@ void test_decode_url() {
 void test_encode_url() {
   test_title("Test url_encode()");
 
-  string *str = cpy_str("Hello World!", 12);
+  string *str = str_cpy("Hello World!", 12);
 
   string *encoded = encode_url(str);
 
