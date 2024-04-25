@@ -18,6 +18,7 @@
 #define HTTP_VERSION_1_1 "HTTP/1.1"
 #define HTTP_LINE_BREAK "\r\n"
 #define HTTP_METHOD_GET "GET"
+#define HTTP_MAX_REQUEST_SIZE 8192
 
 // HTTP Content Types
 #define CONTENT_TYPE_HTML "text/html"

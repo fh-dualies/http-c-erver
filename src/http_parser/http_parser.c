@@ -2,6 +2,14 @@
 #include "../http_server/http_server.h"
 
 int parse_request_line(string *raw_request, request_t *request) {
+  if (raw_request == NULL || request == NULL) {
+    return EXIT_FAILURE;
+  }
+
+  if (get_length(raw_request) > HTTP_MAX_REQUEST_SIZE) {
+    return EXIT_FAILURE;
+  }
+
   enum { METHOD, RESOURCE, VERSION } segment = METHOD;
   size_t segment_start = 0;
   string *segments[] = {request->method, request->resource, request->version};
@@ -9,18 +17,33 @@ int parse_request_line(string *raw_request, request_t *request) {
   for (size_t i = 0; i <= get_length(raw_request); i++) {
     unsigned char current = (i < get_length(raw_request)) ? (char)(raw_request->str[i]) : '\n';
 
-    if (segment > VERSION || current == '\0') {
+    if (segment > VERSION) {
+      // check if the end of line is valid
+      if (current == '\n') {
+        break;
+      }
+
+      // properly more than 3 segments
+      return EXIT_FAILURE;
+    }
+
+    // check for invalid characters between segments
+    if (current == '\0' || current == '\n') {
       break;
     }
 
-    if (current != ' ' && current != '\n' && current != '\r') {
+    if (current != ' ' && current != '\r') {
       continue;
+    }
+
+    // check if the end of the line is valid
+    if (current == '\r' && raw_request->str[i + 1] != '\n') {
+      return EXIT_FAILURE;
     }
 
     string *current_segment = segments[segment];
 
     if (current_segment == NULL) {
-      free_request(&request);
       return EXIT_FAILURE;
     }
 
@@ -59,6 +82,7 @@ void map_header(string *header_name, string *header_value, request_t *request) {
   }
 }
 
+// TODO: refactor this parse_request_headers()
 int parse_request_headers(string *raw_request, request_t *request) {
   if (raw_request == NULL || request == NULL) {
     return EXIT_FAILURE;
@@ -80,12 +104,18 @@ int parse_request_headers(string *raw_request, request_t *request) {
     for (size_t j = 0; j < get_length(raw_request); ++j) {
       char current = raw_request->str[j];
 
-      if (current == '\0') {
+      // check for invalid characters between segments
+      if (current == '\0' || current == '\n' && raw_request->str[j - 1] != '\r') {
         return EXIT_FAILURE;
       }
 
-      if (current != '\r' && raw_request->str[j + 1] != '\n') {
+      if (current != '\r') {
         continue;
+      }
+
+      // check if the end of the line is valid
+      if (raw_request->str[j + 1] != '\n') {
+        return EXIT_FAILURE;
       }
 
       if (current_line_pos >= j) {
