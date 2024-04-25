@@ -7,8 +7,8 @@ int parse_request_line(string *raw_request, request_t *request) {
   size_t segment_start = 0;
   string *segments[] = {request->method, request->resource, request->version};
 
-  for (size_t i = 0; i <= raw_request->len; i++) {
-    unsigned char current = (i < raw_request->len) ? (char)(raw_request->str[i]) : '\n';
+  for (size_t i = 0; i <= get_length(raw_request); i++) {
+    unsigned char current = (i < get_length(raw_request)) ? (char)(raw_request->str[i]) : '\n';
 
     if (segment > VERSION) {
       break;
@@ -40,22 +40,22 @@ void map_header(string *header_name, string *header_value, request_t *request) {
   }
 
   if (str_cmp(header_name, REQUEST_HEADER_HOST) == 0) {
-    str_set(request->host, header_value->str, header_value->len);
+    str_set(request->host, get_char_str(header_value), get_length(header_value));
     return;
   }
 
   if (str_cmp(header_name, REQUEST_HEADER_USER_AGENT) == 0) {
-    str_set(request->user_agent, header_value->str, header_value->len);
+    str_set(request->user_agent, get_char_str(header_value), get_length(header_value));
     return;
   }
 
   if (str_cmp(header_name, REQUEST_HEADER_ACCEPT) == 0) {
-    str_set(request->accept, header_value->str, header_value->len);
+    str_set(request->accept, get_char_str(header_value), get_length(header_value));
     return;
   }
 
   if (str_cmp(header_name, REQUEST_HEADER_CONNECTION) == 0) {
-    str_set(request->connection, header_value->str, header_value->len);
+    str_set(request->connection, get_char_str(header_value), get_length(header_value));
     return;
   }
 }
@@ -79,9 +79,7 @@ int parse_request_headers(string *raw_request, request_t *request) {
     str_set(header_name, request_headers[i], strlen(request_headers[i]));
     str_to_lower(header_name);
 
-    // TODO: Would it make sense to factor out the loop into a separate function? Just for
-    // readability purposes
-    for (size_t j = 0; j < raw_request->len; ++j) {
+    for (size_t j = 0; j < get_length(raw_request); ++j) {
       char current = raw_request->str[j];
 
       if (current != '\r' && raw_request->str[j + 1] != '\n') {
@@ -100,17 +98,17 @@ int parse_request_headers(string *raw_request, request_t *request) {
       // TODO: Ensure that the header starts at the beginning of the line
       // TODO: remove strstr()
       // Think about the case where the header is not at the beginning of the line
-      if (strstr(current_line->str, header_name->str) == NULL) {
+      if (strstr(get_char_str(current_line), get_char_str(header_name)) == NULL) {
         continue;
       }
 
       // TODO: remove strlen()
       // Think about checking for ": " instead of just moving 2 characters
-      size_t header_name_end = strlen(header_name->str) + 2;
+      size_t header_name_end = strlen(get_char_str(header_name)) + 2;
       string *header_value = _new_string();
 
-      str_set(header_value, current_line->str + header_name_end,
-              current_line->len - header_name_end);
+      str_set(header_value, get_char_str(current_line) + header_name_end,
+              get_length(current_line) - header_name_end);
 
       map_header(header_name, header_value, request);
       current_line_pos = 0;
@@ -178,7 +176,7 @@ string *serialize_response(response_t *response) {
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   // body
-  str_cat(encoded_response, response->body->str, response->body->len);
+  str_cat(encoded_response, response->body->str, get_length(response->body));
 
   return encoded_response;
 }
@@ -194,7 +192,7 @@ string *decode_url(string *str) {
     return NULL;
   }
 
-  for (int i = 0; i < str->len; i++) {
+  for (int i = 0; i < get_length(str); i++) {
     char current = str->str[i];
 
     // plus signs should be decoded as spaces
@@ -203,7 +201,7 @@ string *decode_url(string *str) {
       continue;
     }
 
-    if (current == '%' && i + 1 < str->len) {
+    if (current == '%' && i + 1 < get_length(str)) {
       char new_char = '\0';
       char first = str->str[i + 1];
       char second = str->str[i + 2];
@@ -253,7 +251,7 @@ string *encode_url(string *str) {
 
   const char *hex = HEX_CHARSET;
 
-  for (int i = 0; i < str->len; i++) {
+  for (int i = 0; i < get_length(str); i++) {
     char current = str->str[i];
 
     // normal characters should be copied

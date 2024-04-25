@@ -15,7 +15,7 @@ void reset_color() { printf("\033[0m"); }
 void expect_equal(string *str, size_t expected_len, const char *expected_str) {
   assertions++;
 
-  string *expected = cpy_str(expected_str, expected_len);
+  string *expected = str_cpy(expected_str, expected_len);
 
   // Check if the lengths are equal
   if (str->len != expected->len) {
@@ -34,9 +34,9 @@ void expect_equal(string *str, size_t expected_len, const char *expected_str) {
     if (str->str[i] != expected->str[i]) {
       error_color();
       printf("Expected:");
-      print_string(expected);
+      print_str(expected);
       printf("\nGot:");
-      print_string(str);
+      print_str(str);
       reset_color();
 
       free_str(expected);
@@ -48,9 +48,9 @@ void expect_equal(string *str, size_t expected_len, const char *expected_str) {
 
   // Print success message
   success_color();
-  print_string(str);
+  print_str(str);
   printf(" == ");
-  print_string(expected);
+  print_str(expected);
   printf("\n");
   reset_color();
 

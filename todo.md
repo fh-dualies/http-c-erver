@@ -1,8 +1,4 @@
 ## To Do
-### ``lib/file_lib/file_lib.c``
-- [ ] (line 12) : is this safe?
-
-
 ### ``scripts/todo.sh``
 - [ ] (line 2) "
 
@@ -14,25 +10,21 @@
 
 - [ ] (line 63) : check for \0
 
-- [ ] (line 82) : Would it make sense to factor out the loop into a separate function? Just for
+- [ ] (line 98) : Ensure that the header starts at the beginning of the line
 
-- [ ] (line 100) : Ensure that the header starts at the beginning of the line
+- [ ] (line 99) : remove strstr()
 
-- [ ] (line 101) : remove strstr()
+- [ ] (line 105) : remove strlen()
 
-- [ ] (line 107) : remove strlen()
-
-- [ ] (line 221) : fix Clang-Tidy warning
+- [ ] (line 219) : fix Clang-Tidy warning
 
 
 ### ``src/http_router/http_router.c``
-- [ ] (line 49) : is realpath() safe to use here?
+- [ ] (line 76) : remove strstr()
 
-- [ ] (line 77) : remove strstr()
+- [ ] (line 82) : remove strstr()
 
-- [ ] (line 83) : remove strstr()
-
-- [ ] (line 89) : remove strstr()
+- [ ] (line 88) : remove strstr()
 
 
 ### ``tests/http/tests.py``

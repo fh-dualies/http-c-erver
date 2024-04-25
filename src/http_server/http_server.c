@@ -68,7 +68,7 @@ string *error_response(int status_code) {
   }
 
   /// @node strlen() is safe here - status messages is a constant defined in http_server.h
-  string *content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  string *content_type = str_cpy(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
   generate_response_status(response, status_code, content_type);
   free_str(content_type);
 
@@ -76,7 +76,7 @@ string *error_response(int status_code) {
   const char *status_message = get_http_status_message(status_code);
 
   response->body = str_set(response->body, "<html><head><title>Error</title></head><body><h1>", 49);
-  str_cat(response->body, status_code_str->str, status_code_str->len);
+  str_cat(response->body, get_char_str(status_code_str), get_length(status_code_str));
 
   free_str(status_code_str);
 
@@ -103,20 +103,23 @@ string *debug_response(request_t *request) {
   }
 
   /// @node strlen() is safe here - CONTENT_TYPE_HTML is a constant defined in http_server.h
-  string *content_type = cpy_str(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
+  string *content_type = str_cpy(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
   generate_response_status(response, HTTP_OK, content_type);
   free_str(content_type);
 
   // HTML body
   response->body = str_set(response->body, "<html><head><title>Debug</title></head><body>", 45);
   response->body = str_cat(response->body, "<p>HTTP-Methode: ", 17);
-  response->body = str_cat(response->body, request->method->str, request->method->len);
+  response->body =
+      str_cat(response->body, get_char_str(request->method), get_length(request->method));
 
   response->body = str_cat(response->body, "<br>Ressource: ", 15);
-  response->body = str_cat(response->body, request->resource->str, request->resource->len);
+  response->body =
+      str_cat(response->body, get_char_str(request->resource), get_length(request->resource));
 
   response->body = str_cat(response->body, "<br>HTTP-Version: ", 18);
-  response->body = str_cat(response->body, request->version->str, request->version->len);
+  response->body =
+      str_cat(response->body, get_char_str(request->version), get_length(request->version));
   response->body = str_cat(response->body, "</p></body></html>", 18);
 
   update_response_content_length(response);
@@ -167,7 +170,7 @@ string *http_server(string *raw_request) {
   }
 
   // free old resource and set new decoded resource
-  str_set(decoded_request->resource, decoded->str, decoded->len);
+  str_set(decoded_request->resource, get_char_str(decoded), get_length(decoded));
   free_str(decoded);
 
   if (request_empty(decoded_request)) {

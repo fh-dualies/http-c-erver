@@ -34,8 +34,8 @@ void test_valid_path() {
 
   expect_false(valid_path(NULL, NULL));
 
-  string *path = cpy_str("/home/user/src/htdocs/index.html", 32);
-  string *host_extension = cpy_str("/default", 8);
+  string *path = str_cpy("/home/user/src/htdocs/index.html", 32);
+  string *host_extension = str_cpy("/default", 8);
   expect_false(valid_path(path, host_extension));
 
   str_set(path, "/home/user/src/htdocs/intern/index.html", 39);
