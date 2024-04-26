@@ -98,7 +98,7 @@ int str_cmp(string *str1, const char *str2);
  * @param pattern string to search
  * @return The search result
  */
-char* str_str(string *string1, string *pattern);
+char *str_str(string *string1, string *pattern);
 
 /**
  * @brief Convert a string to lower case

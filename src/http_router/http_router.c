@@ -1,5 +1,6 @@
 #include "http_router.h"
 #include "../../lib/file_lib/file_lib.h"
+#include "../../main.h"
 #include "../http_server/http_server.h"
 #include <errno.h>
 #include <limits.h>
@@ -13,12 +14,12 @@ string *get_host_directory(request_t *request) {
     return str_cpy(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
   }
 
-  if (str_cmp(host, "EXTERN") == 0) {
-    return str_cpy("/extern", 7);
+  if (str_cmp(host, HOST_EXTERN) == 0) {
+    return str_cpy(ROUTE_EXTERN_HOST, strlen(ROUTE_EXTERN_HOST));
   }
 
-  if (str_cmp(host, "INTERN") == 0) {
-    return str_cpy("/intern", 7);
+  if (str_cmp(host, HOST_INTERN) == 0) {
+    return str_cpy(ROUTE_INTERN_HOST, strlen(ROUTE_INTERN_HOST));
   }
 
   // if host does not match any of the above, return default folder

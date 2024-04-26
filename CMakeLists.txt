@@ -32,11 +32,11 @@ add_executable(server
         src/http_models/http_models.c
         src/http_parser/http_parser.c
         src/http_server/http_server.c
-        main.c
         src/http_server/request_validation/request_validation.c
         src/http_server/request_validation/request_validation.h
         src/http_router/http_router.c
-        src/http_router/http_router.h)
+        src/http_router/http_router.h
+        main.c)
 
 add_executable(server_asan
         lib/string_lib/string_lib.c
@@ -44,11 +44,11 @@ add_executable(server_asan
         src/http_models/http_models.c
         src/http_parser/http_parser.c
         src/http_server/http_server.c
-        main.c
         src/http_server/request_validation/request_validation.c
         src/http_server/request_validation/request_validation.h
         src/http_router/http_router.c
-        src/http_router/http_router.h)
+        src/http_router/http_router.h
+        main.c)
 
 set_target_properties(tests PROPERTIES SUFFIX ".out")
 set_target_properties(server PROPERTIES SUFFIX ".out")

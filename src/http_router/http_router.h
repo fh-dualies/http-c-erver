@@ -4,9 +4,6 @@
 #include "../http_models/http_models.h"
 #include <stdbool.h>
 
-#define ROUTE_DEBUG "/debug"
-#define ROUTE_DEFAULT_HOST "/default"
-
 /**
  * @brief Returns the folder for the specified host
  *

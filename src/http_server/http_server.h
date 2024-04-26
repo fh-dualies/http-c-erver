@@ -5,20 +5,11 @@
 #include "../http_parser/http_parser.h"
 #include <stdbool.h>
 
-// Server Constants
-#define SERVER_SIGNATURE "LLDM/0.1 HTTP Server"
-
 // HTTP Constants
-/// @warning This path is relative to the project root - depending on the build
-/// system, the path may need to be adjusted. For example, running the server.out in
-/// the cli requires no change, but running the server via jetbrains IDE's
-/// requires the path to be set to "../src/htdocs"
-#define DOCUMENT_ROOT "src/htdocs"
 #define HTTP_VERSION_1_0 "HTTP/1.0"
 #define HTTP_VERSION_1_1 "HTTP/1.1"
 #define HTTP_LINE_BREAK "\r\n"
 #define HTTP_METHOD_GET "GET"
-#define HTTP_MAX_REQUEST_SIZE 8192
 
 // HTTP Content Types
 #define CONTENT_TYPE_HTML "text/html"
@@ -45,8 +36,8 @@
 #define STATUS_MESSAGE_NOT_FOUND "Not Found"
 #define STATUS_MESSAGE_INTERNAL_SERVER_ERROR "Internal Server Error"
 #define STATUS_MESSAGE_NOT_IMPLEMENTED "Not Implemented"
-#define STATUS_MESSAGE_UNKNOWN "Unknown"
 #define STATUS_MESSAGE_VERSION_NOT_SUPPORTED "HTTP Version Not Supported"
+#define STATUS_MESSAGE_UNKNOWN "Unknown"
 
 // HTTP Headers
 #define CONTENT_LENGTH_HEADER "Content-Length: "
