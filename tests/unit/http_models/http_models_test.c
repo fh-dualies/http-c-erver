@@ -1,5 +1,6 @@
 #include "http_models_test.h"
 #include "../../../lib/testing/unit/test-lib.h"
+#include "../../../main.h"
 #include "../../../src/http_models/http_models.h"
 #include "../../../src/http_server/http_server.h"
 

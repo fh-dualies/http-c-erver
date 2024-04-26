@@ -1,4 +1,5 @@
 #include "http_parser.h"
+#include "../../main.h"
 #include "../http_server/http_server.h"
 
 int parse_request_line(string *raw_request, request_t *request) {

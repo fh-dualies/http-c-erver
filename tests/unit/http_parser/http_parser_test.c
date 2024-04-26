@@ -1,5 +1,6 @@
 #include "http_parser_test.h"
 #include "../../../lib/testing/unit/test-lib.h"
+#include "../../../main.h"
 #include "../../../src/http_parser/http_parser.h"
 #include "../../../src/http_server/http_server.h"
 
