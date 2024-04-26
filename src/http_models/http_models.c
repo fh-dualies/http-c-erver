@@ -1,4 +1,5 @@
 #include "http_models.h"
+#include "../../main.h"
 #include "../http_server/http_server.h"
 
 request_t *new_request() {
@@ -102,7 +103,8 @@ void generate_response_status(response_t *response, int status_code, string *con
   string *status_code_str = int_to_string(status_code);
   const char *status_message = get_http_status_message(status_code);
 
-  response->version = str_set(response->version, HTTP_VERSION_1_1, strlen(HTTP_VERSION_1_1));
+  response->version =
+      str_set(response->version, HTTP_DEFAULT_VERSION, strlen(HTTP_DEFAULT_VERSION));
   response->status_code =
       str_set(response->status_code, get_char_str(status_code_str), get_length(status_code_str));
   response->status_message =

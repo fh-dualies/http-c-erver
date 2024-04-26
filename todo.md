@@ -6,17 +6,17 @@
 
 
 ### ``src/http_parser/http_parser.c``
-- [ ] (line 85) : refactor this parse_request_headers()
+- [ ] (line 86) : refactor this parse_request_headers()
 
-- [ ] (line 249) : fix Clang-Tidy warning
+- [ ] (line 250) : fix Clang-Tidy warning
 
 
 ### ``src/http_router/http_router.c``
-- [ ] (line 76) : remove strstr()
+- [ ] (line 77) : remove strstr()
 
-- [ ] (line 82) : remove strstr()
+- [ ] (line 83) : remove strstr()
 
-- [ ] (line 88) : remove strstr()
+- [ ] (line 89) : remove strstr()
 
 
 ### ``tests/unit/tests.c``
