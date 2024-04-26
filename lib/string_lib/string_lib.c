@@ -120,6 +120,27 @@ int str_cmp(string *str1, const char *str2) {
   return memcmp(str1->str, str2, str1->len);
 }
 
+char* str_str(string *string1, string *pattern){
+    if(string1 == NULL || pattern == NULL){
+        return NULL;
+    }
+
+    if(pattern->len > string1->len){
+        return NULL;
+    }
+
+    while ( *(string1->str)) {
+        if (*(string1->str) == *(pattern->str)){
+            if(str_cmp(string1, pattern->str) == 0){
+                return string1->str;
+            }
+        }
+        string1->str++;
+    }
+    return NULL;
+}
+
+
 void str_to_lower(string *input) {
   if (input == NULL || input->str == NULL) {
     return;
