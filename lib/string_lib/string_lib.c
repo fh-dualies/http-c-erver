@@ -39,6 +39,7 @@ string *str_set(string *dest, const char *src, size_t len) {
 
   free(dest->str);
 
+  // we need to allocate one more byte for the null terminator
   dest->str = calloc(len + 1, 1);
 
   if (dest->str == NULL) {
@@ -56,19 +57,17 @@ string *str_set(string *dest, const char *src, size_t len) {
 }
 
 string *str_cat(string *dest, const char *src, size_t len) {
-  // check if dest is NULL
   if (dest == NULL) {
     return NULL;
   }
 
-  // check if src is NULL or len is 0
   if (src == NULL || len <= 0) {
     return dest;
   }
 
-  // length after concatenation
   size_t new_len = dest->len + len;
 
+  // we need to allocate one more byte for the null terminator
   void *temp = realloc(dest->str, new_len + 1);
 
   if (temp == NULL) {
@@ -77,7 +76,6 @@ string *str_cat(string *dest, const char *src, size_t len) {
 
   dest->str = temp;
 
-  // copy src to dest
   memcpy(dest->str + dest->len, src, len);
 
   dest->str[new_len] = '\0';
@@ -95,6 +93,7 @@ string *str_cpy(const char *src, size_t len) {
     return exit_err("str_cpy", "Memory allocation of dest failed.");
   }
 
+  // we need to allocate one more byte for the null terminator
   dest->str = calloc(1, len + 1);
 
   if (dest->str == NULL) {
@@ -129,6 +128,9 @@ char *str_str(string *string1, string *pattern) {
     return NULL;
   }
 
+  // TODO: We should not change the pointer of the original string
+  //       We should use a temporary pointer to iterate over the string
+  //       Otherwise we will lose the original pointer
   while (*(string1->str)) {
     if (*(string1->str) == *(pattern->str)) {
       if (str_cmp(string1, pattern->str) == 0) {
