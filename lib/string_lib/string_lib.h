@@ -20,7 +20,8 @@ void *exit_err(const char *function_name, const char *reason);
 
 /**
  * @brief Create a new string
- * @warning This function will add a null terminator to the end of the string that is not included in the length
+ * @warning This function will add a null terminator to the end of the string that is not included
+ * in the length
  *
  * Exits with code 1 if the memory allocation of the string struct fails or if the memory allocation
  * of the string fails.
@@ -33,7 +34,8 @@ string *_new_string();
  * @brief Set a string to another string by freeing the destination string and allocating memory for
  * the source string
  * @warning The destination will be reallocated
- * @warning This function will add a null terminator to the end of the string that is not included in the length
+ * @warning This function will add a null terminator to the end of the string that is not included
+ * in the length
  *
  * Returns NULL if the destination string is NULL.
  * Returns the destination string if the source string is NULL or len is 0.

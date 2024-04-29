@@ -61,7 +61,7 @@ void test_str_str() {
   string *haystack = str_cpy("Hello, world!", 13);
   string *needle = str_cpy("world", 5);
 
-  char* found = str_str(haystack, needle);
+  char *found = str_str(haystack, needle);
   expect_not_null(found);
   expect_true(found == get_char_str(haystack) + 7);
 

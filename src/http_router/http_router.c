@@ -74,26 +74,34 @@ bool valid_path(string *path, string *host_extension) {
     return false;
   }
 
-  // TODO: remove strstr()
-  string *tempDC = str_set(_new_string(), DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
-  // should contain DOCUMENT_ROOT (mainly prevents access to other directories)
-  if (str_str(path, tempDC) == NULL) {
+  string *temp = _new_string();
+
+  if (temp == NULL) {
     return false;
   }
-    free_str(tempDC);
 
-  // TODO: remove strstr()
+  str_set(temp, DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
+
+  // should contain DOCUMENT_ROOT (mainly prevents access to other directories)
+  if (str_str(path, temp) == NULL) {
+    free_str(temp);
+    return false;
+  }
+
   // should contain host extension
   if (str_str(path, host_extension) == NULL) {
+    free_str(temp);
     return false;
   }
 
-  // TODO: remove strstr()
-  string *tempDOT = str_set(_new_string(), "..", 2);
-  if (str_str(path, tempDOT) != NULL) {
+  str_set(temp, "..", 2);
+
+  if (str_str(path, temp) != NULL) {
+    free_str(temp);
     return false;
   }
-    free_str(tempDOT);
+
+  free_str(temp);
 
   return true;
 }
