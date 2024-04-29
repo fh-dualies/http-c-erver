@@ -203,7 +203,7 @@ string *serialize_response(response_t *response) {
   add_response_string_header(encoded_response, CONTENT_LENGTH_HEADER, response->content_length);
   add_response_string_header(encoded_response, SERVER_HEADER, response->server);
 
-  /// @node strlen() is safe to use here - HTTP_LINE_BREAK is a constant defined in http_parser.h
+  /// @note strlen() is safe to use here - HTTP_LINE_BREAK is a constant defined in http_parser.h
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   // body
