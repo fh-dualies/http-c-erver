@@ -119,19 +119,24 @@ int str_cmp(string *str1, const char *str2) {
   return memcmp(str1->str, str2, str1->len);
 }
 
-char* str_str(string *string1, const char *pattern) {
-  if (string1 == NULL || pattern == NULL || string1->len == 0) {
+char *str_str(string *string1, string *pattern) {
+  if (string1 == NULL || pattern == NULL) {
     return NULL;
   }
 
-
-  for (int i = 0; i < string1->len-1; ++i) {
-       if(string1->str[i] == '\0'){
-           return NULL;
-       }
+  if (pattern->len > string1->len) {
+    return NULL;
   }
 
-  return strstr(string1->str, pattern);
+  for (size_t i = 0; i < string1->len - pattern->len; i++) {
+    if (string1->str[i] == pattern->str[0]) {
+      if (memcmp(string1->str + i, pattern->str, pattern->len) == 0) {
+        return string1->str + i;
+      }
+    }
+  }
+
+  return NULL;
 }
 
 void str_to_lower(string *input) {
