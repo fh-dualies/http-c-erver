@@ -107,6 +107,8 @@ int parse_request_headers(string *raw_request, request_t *request) {
 
       // check for invalid characters between segments
       if (current == '\0' || current == '\n' && raw_request->str[j - 1] != '\r') {
+        free_str(header_name);
+        free_str(current_line);
         return EXIT_FAILURE;
       }
 
@@ -116,6 +118,8 @@ int parse_request_headers(string *raw_request, request_t *request) {
 
       // check if the end of the line is valid
       if (raw_request->str[j + 1] != '\n') {
+        free_str(header_name);
+        free_str(current_line);
         return EXIT_FAILURE;
       }
 
