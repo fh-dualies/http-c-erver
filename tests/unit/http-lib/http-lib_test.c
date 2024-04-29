@@ -55,6 +55,20 @@ void test_cpy_str() {
   free_str(string);
 }
 
+void test_str_str() {
+  test_title("Test str_str()");
+
+  string *haystack = str_cpy("Hello, world!", 13);
+  string *needle = str_cpy("world", 5);
+
+  char* found = str_str(haystack, needle);
+  expect_not_null(found);
+  expect_true(found == get_char_str(haystack) + 7);
+
+  free_str(haystack);
+  free_str(needle);
+}
+
 void test_get_length() {
   test_title("Test get_length()");
 
@@ -104,6 +118,7 @@ void run_httplib_test() {
   test_str_set();
   test_new_string();
   test_cpy_str();
+  test_str_str();
   test_get_length();
   test_get_char_str();
   test_int_to_string();

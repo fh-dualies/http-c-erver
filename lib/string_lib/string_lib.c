@@ -128,17 +128,14 @@ char *str_str(string *string1, string *pattern) {
     return NULL;
   }
 
-  // TODO: We should not change the pointer of the original string
-  //       We should use a temporary pointer to iterate over the string
-  //       Otherwise we will lose the original pointer
-  while (*(string1->str)) {
-    if (*(string1->str) == *(pattern->str)) {
-      if (str_cmp(string1, pattern->str) == 0) {
-        return string1->str;
+  for (size_t i = 0; i < string1->len - pattern->len; i++) {
+    if (string1->str[i] == pattern->str[0]) {
+      if (memcmp(string1->str + i, pattern->str, pattern->len) == 0) {
+        return string1->str + i;
       }
     }
-    string1->str++;
   }
+
   return NULL;
 }
 
