@@ -14,6 +14,8 @@ string *read_file(string *path) {
     return NULL;
   }
 
+  // check if the path is a directory
+  // if we don't do this, we will get a error when trying to open the file
   if (s.st_mode & S_IFDIR) {
     return NULL;
   }

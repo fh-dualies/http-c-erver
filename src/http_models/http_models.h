@@ -25,6 +25,7 @@ struct response_t {
 
 /**
  * @brief Create a new request object
+ * @warning This function will allocate memory for the request object and all its fields
  *
  * Returns NULL if memory allocation fails
  *
@@ -34,6 +35,7 @@ request_t *new_request();
 
 /**
  * @brief Create a new response object
+ * @warning This function will allocate memory for the response object and all its fields
  *
  * Returns NULL if memory allocation fails
  *
