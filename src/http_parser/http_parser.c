@@ -1,3 +1,4 @@
+#include <limits.h>
 #include "http_parser.h"
 #include "../../main.h"
 #include "../http_server/http_server.h"
@@ -237,21 +238,20 @@ string *decode_url(string *str) {
     }
 
     if (current == '%' && i + 1 < get_length(str)) {
-      char new_char = '\0';
+      int new_char = '\0';
       char first = str->str[i + 1];
       char second = str->str[i + 2];
 
       if (first >= '0' && first <= '9') {
-        new_char = (char)(first - '0');
+        new_char = first - '0';
       } else if (first >= 'a' && first <= 'f') {
-        new_char = (char)(first - 'a' + 10);
+        new_char = first - 'a' + 10;
       } else if (first >= 'A' && first <= 'F') {
-        new_char = (char)(first - 'A' + 10);
+        new_char = first - 'A' + 10;
       }
 
       new_char <<= 4;
 
-      // TODO: fix Clang-Tidy warning
       if (second >= '0' && second <= '9') {
         new_char |= (char)(second - '0');
       } else if (second >= 'a' && second <= 'f') {
@@ -260,7 +260,12 @@ string *decode_url(string *str) {
         new_char |= (char)(second - 'A' + 10);
       }
 
-      str_cat(decoded, &new_char, 1);
+      // We need to check if the new character is within the valid range of a char
+      if (new_char > CHAR_MAX) {
+        continue;
+      }
+
+      str_cat(decoded, (const char *) &new_char, 1);
       i += 2;
 
       continue;

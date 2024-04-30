@@ -19,7 +19,7 @@
  * the cli requires no change, but running the server via jetbrains IDE's
  * requires the path to be set to "../src/htdocs"
  */
-#define DOCUMENT_ROOT "src/htdocs"
+#define DOCUMENT_ROOT "/home/dennis/OneDrive/Uni/2-Semester/PSE/pse-2024/src/htdocs"
 
 /**
  * Maximum size of a request.
