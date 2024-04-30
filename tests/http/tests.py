@@ -222,10 +222,54 @@ cannon += Beam(
     response=['HTTP/1.1 200 OK']
 )
 cannon += Beam(
-    description='Host intern',
+    description='Host intern - CAPS',
     request='GET /index.html HTTP/1.1\r\nHOST: INTERN\r\n\r\n',
-    response=['HTTP/1.1 401']
+    response=['HTTP/1.1 401 Authentication required']
 )
+cannon += Beam(
+    description='Host intern - lower',
+    request='GET /index.html HTTP/1.1\r\nhost: intern\r\n\r\n',
+    response=['HTTP/1.1 401 Authentication required']
+)
+cannon += Beam(
+    description='Host intern - mixed',
+    request='GET /index.html HTTP/1.1\r\nhost: InTeRn\r\n\r\n',
+    response=['HTTP/1.1 401 Authentication required']
+)
+cannon += Beam(
+    description='Host intern - invalid',
+    request='GET /index.html HTTP/1.1\r\nhost: intern.com\r\n\r\n',
+    response=['HTTP/1.1 401 Authentication required']
+)
+cannon += Beam(
+    description='Host intern - with port',
+    request='GET /index.html HTTP/1.1\r\nhost: intern:23232\r\n\r\n',
+    response=['HTTP/1.1 401 Authentication required']
+)
+cannon += Beam(
+    description='Host extern',
+    request='GET /index.html HTTP/1.1\r\nhost: extern\r\n\r\n',
+    response=['HTTP/1.1 200 OK']
+)
+cannon += Beam(
+    description='Host extern - invalid (requires pse-BeispielWebsite to be served)',
+    request='GET /index.html HTTP/1.1\r\nhost: extern.com\r\n\r\n',
+    response=[
+        'HTTP/1.1 200 OK',
+        'Content-Type: text/html', # the order of the headers is not guaranteed
+        'Content-Length: 5689', # if another site is served this will be different
+    ]
+)
+cannon += Beam(
+    description='Host extern - with port (requires pse-BeispielWebsite to be served)',
+    request='GET /index.html HTTP/1.1\r\nhost: extern:23232\r\n\r\n',
+    response=[
+        'HTTP/1.1 200 OK',
+        'Content-Type: text/html', # the order of the headers is not guaranteed
+        'Content-Length: 169', # if another site is served this will be different
+    ]
+)
+
 
 # Pew pew!
 successful = cannon.pewpew()
