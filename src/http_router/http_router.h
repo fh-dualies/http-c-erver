@@ -5,23 +5,6 @@
 #include <stdbool.h>
 
 /**
- * @brief Returns the folder for the specified host
- *
- * The folder is determined by the host field in the request.
- * If the host is NULL or does not match any of the predefined hosts,
- * the default folder is returned.
- *
- * Routes: (HOST: route)
- * - EXTERN: /extern
- * - INTERN: /intern
- * - DEFAULT: /default
- *
- * @param request the request object
- * @return string* of the subdirectory after document root
- */
-string *get_host_directory(request_t *request);
-
-/**
  * @brief Converts a relative path to an absolute path
  *
  * The absolute path is determined by the document root, host extension and resource.
