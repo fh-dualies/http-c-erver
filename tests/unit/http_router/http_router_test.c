@@ -24,6 +24,4 @@ void test_valid_path() {
   free_str(host_extension);
 }
 
-void run_http_router_test() {
-  test_valid_path();
-}
+void run_http_router_test() { test_valid_path(); }

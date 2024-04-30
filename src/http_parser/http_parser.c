@@ -1,7 +1,7 @@
-#include <limits.h>
 #include "http_parser.h"
 #include "../../main.h"
 #include "../http_server/http_server.h"
+#include <limits.h>
 
 int parse_request_line(string *raw_request, request_t *request) {
   if (raw_request == NULL || request == NULL) {
@@ -265,7 +265,7 @@ string *decode_url(string *str) {
         continue;
       }
 
-      str_cat(decoded, (const char *) &new_char, 1);
+      str_cat(decoded, (const char *)&new_char, 1);
       i += 2;
 
       continue;
