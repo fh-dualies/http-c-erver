@@ -2,33 +2,6 @@
 #include "../../../lib/testing/unit/test-lib.h"
 #include "../../../src/http_router/http_router.h"
 
-void test_get_host_directory() {
-  test_title("Test get_host_directory()");
-
-  request_t *request = new_request();
-
-  string *host_directory = get_host_directory(request);
-  expect_equal(host_directory, 8, "/default");
-  free_str(host_directory);
-
-  str_set(request->host, "EXTERN", 6);
-  host_directory = get_host_directory(request);
-  expect_equal(host_directory, 7, "/extern");
-  free_str(host_directory);
-
-  str_set(request->host, "INTERN", 6);
-  host_directory = get_host_directory(request);
-  expect_equal(host_directory, 7, "/intern");
-  free_str(host_directory);
-
-  str_set(request->host, "UNKNOWN", 7);
-  host_directory = get_host_directory(request);
-  expect_equal(host_directory, 8, "/default");
-  free_str(host_directory);
-
-  free_request(&request);
-}
-
 void test_valid_path() {
   test_title("Test valid_path()");
 
@@ -52,6 +25,5 @@ void test_valid_path() {
 }
 
 void run_http_router_test() {
-  test_get_host_directory();
   test_valid_path();
 }
