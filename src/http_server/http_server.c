@@ -140,6 +140,8 @@ const char *get_http_status_message(int status_code) {
     return STATUS_MESSAGE_OK;
   case HTTP_BAD_REQUEST:
     return STATUS_MESSAGE_BAD_REQUEST;
+  case HTTP_UNAUTHORIZED:
+    return STATUS_MESSAGE_UNAUTHORIZED;
   case HTTP_FORBIDDEN:
     return STATUS_MESSAGE_FORBIDDEN;
   case HTTP_NOT_FOUND:

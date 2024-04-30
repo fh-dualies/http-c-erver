@@ -44,7 +44,7 @@
 /**
  * Host definitions.
  */
-#define HOST_INTERN "INTERN"
-#define HOST_EXTERN "EXTERN"
+#define HOST_INTERN "intern"
+#define HOST_EXTERN "extern"
 
 #endif

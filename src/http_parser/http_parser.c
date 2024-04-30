@@ -132,7 +132,7 @@ int parse_request_headers(string *raw_request, request_t *request) {
 
       current_line_pos = j + 2;
 
-      char *header_start = strstr(get_char_str(current_line), get_char_str(header_name));
+      char *header_start = str_str(current_line, header_name);
 
       if (header_start == NULL || header_start != get_char_str(current_line)) {
         continue;
