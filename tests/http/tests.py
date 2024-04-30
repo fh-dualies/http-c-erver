@@ -193,33 +193,38 @@ cannon += Beam(
 #
 cannon += Beam(
     description='No Host specified',
-    request='GET /debug HTTP/1.1\r\n\r\n',
+    request='GET /index.html HTTP/1.1\r\n\r\n',
     response=['HTTP/1.1 200 OK']
 )
 cannon += Beam(
    description='Host with lowercase letters',
-   request='GET /debug HTTP/1.1\r\nhost: {host}:{port}\r\n\r\n',
+   request='GET /index.html HTTP/1.1\r\nhost: {host}:{port}\r\n\r\n',
    response=['HTTP/1.1 200 OK']
 )
 cannon += Beam(
     description='Host with uppercase letters',
-    request='GET /debug HTTP/1.1\r\nHOST: {host}:{port}\r\n\r\n',
+    request='GET /index.html HTTP/1.1\r\nHOST: {host}:{port}\r\n\r\n',
     response=['HTTP/1.1 200 OK']
 )
 cannon += Beam(
     description='Host with invalid format',
-    request='GET /debug HTTP/1.1\r\nHOST example.com\r\n\r\n',
+    request='GET /index.html HTTP/1.1\r\nHOST example.com\r\n\r\n',
     response=['HTTP/1.1 200 OK']
 )
 cannon += Beam(
     description='Host with invalid format',
-    request='GET /debug HTTP/1.1\r\nHOST:example.com\r\n\r\n',
+    request='GET /index.html HTTP/1.1\r\nHOST:example.com\r\n\r\n',
     response=['HTTP/1.1 200 OK']
 )
 cannon += Beam(
     description='Host with no value',
-    request='GET /debug HTTP/1.1\r\nHOST:\r\n\r\n',
+    request='GET /index.html HTTP/1.1\r\nHOST:\r\n\r\n',
     response=['HTTP/1.1 200 OK']
+)
+cannon += Beam(
+    description='Host intern',
+    request='GET /index.html HTTP/1.1\r\nHOST: INTERN\r\n\r\n',
+    response=['HTTP/1.1 401']
 )
 
 # Pew pew!
