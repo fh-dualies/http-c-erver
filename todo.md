@@ -6,9 +6,7 @@
 
 
 ### ``src/http_parser/http_parser.c``
-- [ ] (line 86) : refactor this parse_request_headers()
-
-- [ ] (line 254) : fix Clang-Tidy warning
+- [ ] (line 87) : refactor this parse_request_headers()
 
 
 ### ``tests/unit/tests.c``
