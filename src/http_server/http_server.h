@@ -23,6 +23,7 @@
 // HTTP Status Codes
 #define HTTP_OK 200
 #define HTTP_BAD_REQUEST 400
+#define HTTP_UNAUTHORIZED 401
 #define HTTP_FORBIDDEN 403
 #define HTTP_NOT_FOUND 404
 #define HTTP_INTERNAL_SERVER_ERROR 500
@@ -32,6 +33,7 @@
 // HTTP Status Messages
 #define STATUS_MESSAGE_OK "OK"
 #define STATUS_MESSAGE_BAD_REQUEST "Bad Request"
+#define STATUS_MESSAGE_UNAUTHORIZED "Authentication required"
 #define STATUS_MESSAGE_FORBIDDEN "Forbidden"
 #define STATUS_MESSAGE_NOT_FOUND "Not Found"
 #define STATUS_MESSAGE_INTERNAL_SERVER_ERROR "Internal Server Error"

@@ -5,27 +5,6 @@
 #include <errno.h>
 #include <limits.h>
 
-string *get_host_directory(request_t *request) {
-  string *host = request->host;
-
-  if (host == NULL) {
-    /// @node strlen() is safe to use here - ROUTE_DEFAULT_HOST is a constant defined in
-    /// http_router.h
-    return str_cpy(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
-  }
-
-  if (str_cmp(host, HOST_EXTERN) == 0) {
-    return str_cpy(ROUTE_EXTERN_HOST, strlen(ROUTE_EXTERN_HOST));
-  }
-
-  if (str_cmp(host, HOST_INTERN) == 0) {
-    return str_cpy(ROUTE_INTERN_HOST, strlen(ROUTE_INTERN_HOST));
-  }
-
-  // if host does not match any of the above, return default folder
-  return str_cpy(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
-}
-
 string *convert_to_absolute_path(string *resource, string *host_extension) {
   if (resource == NULL) {
     return NULL;
@@ -58,7 +37,9 @@ string *convert_to_absolute_path(string *resource, string *host_extension) {
   free_str(relative_path);
 
   /// @node strlen() is safe to use here - absolute_path is a default char array
-  return str_cpy(absolute_path, strlen(absolute_path));
+  string *absolute = str_cpy(absolute_path, strlen(absolute_path));
+  free(absolute_path);
+  return absolute;
 }
 
 bool valid_path(string *path, string *host_extension) {
@@ -153,27 +134,59 @@ string *route_request(request_t *request) {
     return debug_response(request);
   }
 
-  string *host_extension = get_host_directory(request);
+  string *host = request->host;
+  string *path_extension = NULL;
 
-  string *path = convert_to_absolute_path(request->resource, host_extension);
+  if (host == NULL) {
+    /// @node strlen() is safe to use here - ROUTE_DEFAULT_HOST is a constant defined in
+    /// http_router.h
+    path_extension = str_cpy(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
+  } else {
+    // Split host header on ':'
+    string *new_host = _new_string();
+    for (int i = 0; i < get_length(host); i++) {
+      if (host->str[i] == ':') {
+        break;
+      }
+      str_cat(new_host, &host->str[i], 1);
+    }
+    str_set(host, new_host->str, new_host->len);
+    free_str(new_host);
+  }
+
+  if (str_cmp(host, HOST_EXTERN) == 0) {
+    path_extension = str_cpy(ROUTE_EXTERN_HOST, strlen(ROUTE_EXTERN_HOST));
+  }
+
+  if (str_cmp(host, HOST_INTERN) == 0) {
+    free_request(&request);
+    free_str(path_extension);
+    return error_response(HTTP_UNAUTHORIZED);
+  }
+
+  if (path_extension == NULL) {
+    path_extension = str_cpy(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
+  }
+
+  string *path = convert_to_absolute_path(request->resource, path_extension);
 
   if (path == NULL) {
     free_request(&request);
-    free_str(host_extension);
+    free_str(path_extension);
     return error_response(HTTP_NOT_FOUND);
   }
 
-  if (!valid_path(path, host_extension)) {
+  if (!valid_path(path, path_extension)) {
     free_request(&request);
     free_str(path);
-    free_str(host_extension);
+    free_str(path_extension);
     return error_response(HTTP_FORBIDDEN);
   }
 
   string *response = serve_file(path);
 
   free_str(path);
-  free_str(host_extension);
+  free_str(path_extension);
   free_request(&request);
 
   return response;
