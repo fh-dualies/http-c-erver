@@ -18,7 +18,6 @@ string *convert_to_absolute_path(string *resource, string *host_extension) {
     return NULL;
   }
 
-  /// @node strlen() is safe to use here - DOCUMENT_ROOT is a constant defined in http_router.h
   // add document root to relative path
   str_cat(relative_path, DOCUMENT_ROOT, strlen(DOCUMENT_ROOT));
   // add host extension to relative path
@@ -65,12 +64,6 @@ bool valid_path(string *path, string *host_extension) {
 
   // should contain DOCUMENT_ROOT (mainly prevents access to other directories)
   if (str_str(path, temp) == NULL) {
-    free_str(temp);
-    return false;
-  }
-
-  // should contain host extension
-  if (str_str(path, host_extension) == NULL) {
     free_str(temp);
     return false;
   }
@@ -138,19 +131,20 @@ string *route_request(request_t *request) {
   string *path_extension = NULL;
 
   if (host == NULL) {
-    /// @node strlen() is safe to use here - ROUTE_DEFAULT_HOST is a constant defined in
-    /// http_router.h
     path_extension = str_cpy(ROUTE_DEFAULT_HOST, strlen(ROUTE_DEFAULT_HOST));
   } else {
     // Split host header on ':'
     string *new_host = _new_string();
+
     for (int i = 0; i < get_length(host); i++) {
       if (host->str[i] == ':') {
         break;
       }
+
       str_cat(new_host, &host->str[i], 1);
     }
-    str_set(host, new_host->str, new_host->len);
+
+    str_set(host, get_char_str(new_host), get_length(new_host));
     free_str(new_host);
   }
 

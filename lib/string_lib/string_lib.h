@@ -112,6 +112,15 @@ char *str_str(string *string1, string *pattern);
 void str_to_lower(string *input);
 
 /**
+ * @brief Removes all spaces from a string
+ *
+ * Returns if the input string is NULL.
+ *
+ * @param input The string to convert
+ */
+void str_cut_spaces(string *input);
+
+/**
  * @brief Convert a size_t to a string
  * @waring The return value must be freed after use
  *
