@@ -208,6 +208,20 @@ string *serialize_response(response_t *response) {
   add_response_string_header(encoded_response, CONTENT_LENGTH_HEADER, response->content_length);
   add_response_string_header(encoded_response, SERVER_HEADER, response->server);
 
+  if (str_cmp(response->status_message, STATUS_MESSAGE_UNAUTHORIZED) == 0) {
+    string *auth_header = _new_string();
+
+    if (auth_header == NULL) {
+      free_str(encoded_response);
+      return NULL;
+    }
+
+    str_set(auth_header, WWW_AUTHENTICATE_REALM, strlen(WWW_AUTHENTICATE_REALM));
+
+    add_response_string_header(encoded_response, WWW_AUTHENTICATE_HEADER, auth_header);
+    free_str(auth_header);
+  }
+
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   // body
