@@ -44,7 +44,10 @@
 // HTTP Headers
 #define CONTENT_LENGTH_HEADER "Content-Length: "
 #define CONTENT_TYPE_HEADER "Content-Type: "
+#define WWW_AUTHENTICATE_HEADER "WWW-Authenticate: "
 #define SERVER_HEADER "Server: "
+
+#define WWW_AUTHENTICATE_REALM "Basic realm=\"Secure Area\""
 
 // File extensions
 #define EXTENSION_HTML ".html"
