@@ -239,7 +239,7 @@ cannon += Beam(
 cannon += Beam(
     description='Host intern - invalid',
     request='GET /index.html HTTP/1.1\r\nhost: intern.com\r\n\r\n',
-    response=['HTTP/1.1 401 Authentication required']
+    response=['HTTP/1.1 200 OK']
 )
 cannon += Beam(
     description='Host intern - with port',

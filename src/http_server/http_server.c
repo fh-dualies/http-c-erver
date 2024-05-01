@@ -187,5 +187,12 @@ string *http_server(string *raw_request) {
     return error_response(HTTP_NOT_IMPLEMENTED);
   }
 
-  return route_request(decoded_request);
+  string *response = route_request(decoded_request);
+
+  if (response == NULL) {
+    free_request(&decoded_request);
+    return error_response(HTTP_INTERNAL_SERVER_ERROR);
+  }
+
+  return response;
 }
