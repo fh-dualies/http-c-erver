@@ -25,7 +25,7 @@ int parse_request_line(string *raw_request, request_t *request) {
         break;
       }
 
-      // properly more than 3 segments
+      // more than 3 segments
       return EXIT_FAILURE;
     }
 
@@ -99,7 +99,6 @@ int parse_request_headers(string *raw_request, request_t *request) {
   size_t current_line_pos = 0;
 
   for (size_t i = 0; i < REQUEST_HEADER_COUNT; ++i) {
-    /// @note strlen() is safe to use here - request_headers are constants defined in http_parser.h
     str_set(header_name, request_headers[i], strlen(request_headers[i]));
     str_to_lower(header_name);
 
@@ -130,6 +129,7 @@ int parse_request_headers(string *raw_request, request_t *request) {
 
       str_set(current_line, raw_request->str + current_line_pos, j - current_line_pos);
       str_to_lower(current_line);
+      str_cut_spaces(current_line);
 
       current_line_pos = j + 2;
 
@@ -139,7 +139,7 @@ int parse_request_headers(string *raw_request, request_t *request) {
         continue;
       }
 
-      size_t header_name_end = header_name->len;
+      size_t header_name_end = get_length(header_name);
       string *header_value = _new_string();
 
       str_set(header_value, get_char_str(current_line) + header_name_end,
@@ -208,7 +208,6 @@ string *serialize_response(response_t *response) {
   add_response_string_header(encoded_response, CONTENT_LENGTH_HEADER, response->content_length);
   add_response_string_header(encoded_response, SERVER_HEADER, response->server);
 
-  /// @note strlen() is safe to use here - HTTP_LINE_BREAK is a constant defined in http_parser.h
   str_cat(encoded_response, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
 
   // body
