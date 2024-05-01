@@ -149,6 +149,27 @@ void str_to_lower(string *input) {
   }
 }
 
+void str_cut_spaces(string *input) {
+  if (input == NULL || input->str == NULL) {
+    return;
+  }
+
+  size_t i = 0;
+  size_t j = 0;
+
+  while (input->str[i] != '\0') {
+    if (!isspace(input->str[i])) {
+      input->str[j] = input->str[i];
+      j++;
+    }
+
+    i++;
+  }
+
+  input->str[j] = '\0';
+  input->len = j;
+}
+
 string *int_to_string(int num) {
   string *str = _new_string();
   int max_length = snprintf(NULL, 0, "%d", num);

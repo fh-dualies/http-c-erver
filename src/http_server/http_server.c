@@ -24,7 +24,6 @@ string *get_mime_type(const char *path) {
     return mime_type;
   }
 
-  /// @node strlen() is safe here - extension is a string literal
   /// @node strncmp() is safe here - extension is a string literal, CONTENT_TYPE_* are constants
   /// defined in http_server.h
   if (strcmp(extension, EXTENSION_HTML) == 0) {
@@ -67,7 +66,6 @@ string *error_response(int status_code) {
     return NULL;
   }
 
-  /// @node strlen() is safe here - status messages is a constant defined in http_server.h
   string *content_type = str_cpy(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
   generate_response_status(response, status_code, content_type);
   free_str(content_type);
@@ -102,7 +100,6 @@ string *debug_response(request_t *request) {
     return error_response(HTTP_INTERNAL_SERVER_ERROR);
   }
 
-  /// @node strlen() is safe here - CONTENT_TYPE_HTML is a constant defined in http_server.h
   string *content_type = str_cpy(CONTENT_TYPE_HTML, strlen(CONTENT_TYPE_HTML));
   generate_response_status(response, HTTP_OK, content_type);
   free_str(content_type);
