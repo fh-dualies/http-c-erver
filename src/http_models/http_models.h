@@ -82,7 +82,7 @@ void update_response_content_length(response_t *response);
  * Returns if one of the raw strings is NULL
  *
  * @param raw_string Raw HTTP response string
- * @param header Header to be added
+ * @param header Header to be added (should be a string constant - null terminated)
  * @param value Value of the header
  */
 void add_response_string_header(string *raw_string, const char *header, string *value);
