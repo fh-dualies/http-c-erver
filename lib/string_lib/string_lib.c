@@ -1,9 +1,16 @@
 #include "string_lib.h"
 #include <assert.h>
 #include <ctype.h>
+#include <errno.h>
 
 void *exit_err(const char *function_name, const char *reason) {
-  fprintf(stderr, "Error - %s(): %s\n", function_name, reason);
+  fprintf(stderr, "Error - %s(): %s", function_name, reason);
+
+  if (errno) {
+    fprintf(stderr, ", errno: %s", strerror(errno));
+  }
+
+  fprintf(stderr, "\n");
   exit(EXIT_FAILURE);
 }
 

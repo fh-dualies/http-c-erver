@@ -6,6 +6,21 @@
 #define HTTP_C_SERVER_H
 
 /**
+ * The port the server will listen on.
+ */
+#define SERVER_PORT 31337
+
+/**
+ * The maximum size of server data buffer.
+ */
+#define SERVER_BUFFER_SIZE 1024 * 1024
+
+/**
+ * The maximum number of connections the server will accept.
+ */
+#define SERVER_MAX_CONNECTIONS 5
+
+/**
  * The server signature.
  * This will be sent as the Server header in the response.
  * Feel free to change this to your own server signature.
