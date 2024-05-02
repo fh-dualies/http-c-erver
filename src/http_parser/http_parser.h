@@ -44,6 +44,17 @@ int parse_request_line(string *raw_request, request_t *request);
 void map_header(string *header_name, string *header_value, request_t *request);
 
 /**
+ * @brief Split the raw request string into the head and the body
+ * Split the raw request at \r\n\r\n and return the head.
+ *
+ * Returns NULL if the raw_request is NULL.
+ *
+ * @param raw_request Raw HTTP request string
+ * @return New string with the head
+ */
+string *get_request_head(string *raw_request);
+
+/**
  * @brief Parse the request line of a raw HTTP request string
  *
  * Returns EXIT_FAILURE if the raw_request or request is NULL, if memory allocation fails or if the

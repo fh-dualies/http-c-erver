@@ -128,10 +128,42 @@ char *str_str(string *string1, string *pattern) {
     return NULL;
   }
 
-  for (size_t i = 0; i < string1->len - pattern->len; i++) {
+  for (size_t i = 0; i <= string1->len - pattern->len; i++) {
     if (string1->str[i] == pattern->str[0]) {
-      if (memcmp(string1->str + i, pattern->str, pattern->len) == 0) {
-        return string1->str + i;
+      for (size_t j = 0; j < pattern->len; j++) {
+        if (string1->str[i + j] != pattern->str[j]) {
+          break;
+        }
+
+        if (j == pattern->len - 1) {
+          return string1->str + i;
+        }
+      }
+    }
+  }
+
+  return NULL;
+}
+
+char *str_str_ignore_case(string *string1, string *pattern) {
+  if (string1 == NULL || pattern == NULL) {
+    return NULL;
+  }
+
+  if (pattern->len > string1->len) {
+    return NULL;
+  }
+
+  for (size_t i = 0; i <= string1->len - pattern->len; i++) {
+    if (tolower(string1->str[i]) == tolower(pattern->str[0])) {
+      for (size_t j = 0; j < pattern->len; j++) {
+        if (tolower(string1->str[i + j]) != tolower(pattern->str[j])) {
+          break;
+        }
+
+        if (j == pattern->len - 1) {
+          return string1->str + i;
+        }
       }
     }
   }

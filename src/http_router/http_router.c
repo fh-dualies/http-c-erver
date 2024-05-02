@@ -148,6 +148,8 @@ string *route_request(request_t *request) {
     free_str(new_host);
   }
 
+  str_to_lower(host);
+
   if (str_cmp(host, HOST_EXTERN) == 0) {
     path_extension = str_cpy(ROUTE_EXTERN_HOST, strlen(ROUTE_EXTERN_HOST));
   }

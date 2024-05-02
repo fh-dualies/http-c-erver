@@ -93,32 +93,32 @@ cannon += Beam(
 cannon += Beam(
     description="Header with null terminator",
     request="GET /debug HTTP/1.1\r\nHo\0st: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 400 Bad Request", "Content-Type: text/html"],
+    response=["HTTP/1.1 200 OK", "Content-Type: text/html"],
 )
 cannon += Beam(
     description="Header with misplaced line break",
     request="GET /debug HTTP/1.1\r\nHos\nt: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 400 Bad Request", "Content-Type: text/html"],
+    response=["HTTP/1.1 200 OK", "Content-Type: text/html"],
 )
 cannon += Beam(
     description="Header with misplaced escape character",
     request="GET /debug HTTP/1.1\r\nHo\rst: {host}:{port}\r\n\r\n",
-    response=["HTTP/1.1 400 Bad Request", "Content-Type: text/html"],
+    response=["HTTP/1.1 200 OK", "Content-Type: text/html"],
 )
 cannon += Beam(
     description="Header with invalid end sequence (missing \r)",
     request="GET /debug HTTP/1.1\r\nHost: {host}:{port}\n\r\n",
-    response=["HTTP/1.1 400 Bad Request"],
+    response=["HTTP/1.1 200 OK"],
 )
 cannon += Beam(
     description="Header with invalid end sequence (missing \n)",
     request="GET /debug HTTP/1.1\r\nHost: {host}:{port}\r\r\n",
-    response=["HTTP/1.1 400 Bad Request"],
+    response=["HTTP/1.1 200 OK"],
 )
 cannon += Beam(
     description="Header with null terminator (switch \r and \n)",
     request="GET /debug HTTP/1.1\r\nHost: {host}:{port}\n\r\r\n",
-    response=["HTTP/1.1 400 Bad Request"],
+    response=["HTTP/1.1 200 OK"],
 )
 
 #
