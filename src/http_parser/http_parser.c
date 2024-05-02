@@ -89,8 +89,9 @@ string *get_request_head(string *raw_request) {
     return NULL;
   }
 
-  string* double_line_break = str_cpy(HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
+  string *double_line_break = str_cpy(HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
   double_line_break = str_cat(double_line_break, HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
+
   char *end_of_head = str_str(raw_request, double_line_break);
   free_str(double_line_break);
 
@@ -100,6 +101,7 @@ string *get_request_head(string *raw_request) {
 
   // we add 2 because we want to keep one \r\n at the end of the head
   size_t head_len = end_of_head + 2 - get_char_str(raw_request);
+
   return str_cpy(get_char_str(raw_request), head_len);
 }
 
@@ -109,28 +111,34 @@ string *find_request_header(string *raw_request, string *header_name) {
   }
   // this is the position of the header in the raw request
   char *header_occurrence = str_str_ignore_case(raw_request, header_name);
+
   if (header_occurrence == NULL) {
     return NULL;
   }
   // this is the start of the header value
   char *header_value_start = header_occurrence + get_length(header_name);
+
   while (*header_value_start == ' ') {
     header_value_start++;
+
     if (header_value_start >= get_char_str(raw_request) + get_length(raw_request)) {
       return NULL;
     }
   }
 
-  size_t after_header_len = get_char_str(raw_request) + get_length(raw_request) - header_value_start;
+  size_t after_header_len =
+      get_char_str(raw_request) + get_length(raw_request) - header_value_start;
+
   if (after_header_len <= 0) {
     return NULL;
   }
   // this is the string containing the rest of the request after the header
-  string* after_header = str_cpy(header_value_start, after_header_len);
+  string *after_header = str_cpy(header_value_start, after_header_len);
 
   // search for the end of the line
   string *line_break = str_cpy(HTTP_LINE_BREAK, strlen(HTTP_LINE_BREAK));
   char *header_end = str_str(after_header, line_break);
+
   if (header_end == NULL) {
     free_str(line_break);
     free_str(after_header);
@@ -145,13 +153,18 @@ string *find_request_header(string *raw_request, string *header_name) {
   free_str(after_header);
 
   // header_value should not contain "\r", "\n" or "\0"
-  string * r = str_cpy("\r", 1);
-  string * n = str_cpy("\n", 1);
-  string * zero = str_cpy("\0", 1);
-  int contains_invalid_chars = str_str(header_value, r) != NULL || str_str(header_value, n) != NULL || str_str(header_value, zero) != NULL;
+  string *r = str_cpy("\r", 1);
+  string *n = str_cpy("\n", 1);
+  string *zero = str_cpy("\0", 1);
+
+  int contains_invalid_chars = str_str(header_value, r) != NULL ||
+                               str_str(header_value, n) != NULL ||
+                               str_str(header_value, zero) != NULL;
+
   free_str(r);
   free_str(n);
   free_str(zero);
+
   if (contains_invalid_chars) {
     free_str(header_value);
     return NULL;
@@ -168,6 +181,7 @@ int parse_request_headers(string *raw_request, request_t *request) {
   }
 
   string *request_raw_head = get_request_head(raw_request);
+
   if (request_raw_head == NULL) {
     return EXIT_FAILURE;
   }
@@ -182,10 +196,12 @@ int parse_request_headers(string *raw_request, request_t *request) {
     str_set(header_name, request_headers[i], strlen(request_headers[i]));
     str_to_lower(header_name);
 
-    string* header_value = find_request_header(request_raw_head, header_name);
+    string *header_value = find_request_header(request_raw_head, header_name);
+
     if (header_value == NULL) {
       continue;
     }
+
     map_header(header_name, header_value, request);
     free_str(header_value);
   }
