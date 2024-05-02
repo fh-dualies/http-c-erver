@@ -157,6 +157,8 @@ string *find_request_header(string *raw_request, string *header_name) {
     return NULL;
   }
 
+  str_cut_spaces(header_value);
+
   return header_value;
 }
 
