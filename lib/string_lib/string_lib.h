@@ -98,9 +98,20 @@ int str_cmp(string *str1, const char *str2);
  * Returns NULL if pattern is not in the string
  * @param string1 string in which is searched
  * @param pattern string to search
- * @return The search result
+ * @return the pointer to the first appearance of the pattern
  */
 char *str_str(string *string1, string *pattern);
+
+/**
+ * @brief finds 1st appearance of the pattern in a string
+ *
+ * Returns char* to the 1st appearance of the pattern
+ * Returns NULL if pattern is not in the string
+ * @param string1 string in which is searched
+ * @param pattern string to search
+ * @return the pointer to the first appearance of the pattern
+ */
+char *str_str_ignore_case(string *string1, string *pattern);
 
 /**
  * @brief Convert a string to lower case
