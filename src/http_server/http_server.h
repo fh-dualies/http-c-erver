@@ -65,7 +65,7 @@
  * The mime type is determined by the file extension.
  * If the file extension is not known, the default mime type is text/plain.
  *
- * @param path Path to the file
+ * @param path Path to the file (constant string - null terminated)
  * @return Mime type of the file
  */
 string *get_mime_type(const char *path);

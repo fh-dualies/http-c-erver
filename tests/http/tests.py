@@ -247,6 +247,16 @@ cannon += Beam(
     response=['HTTP/1.1 401 Authentication required']
 )
 cannon += Beam(
+    description='Host intern - with whitespaces outside',
+    request='GET /index.html HTTP/1.1\r\nhost:    intern:23232   \r\n\r\n',
+    response=['HTTP/1.1 401 Authentication required']
+)
+cannon += Beam(
+    description='Host intern - with whitespaces inside',
+    request='GET /index.html HTTP/1.1\r\nhost:  i nte  rn:  23 23  2  \r\n\r\n',
+    response=['HTTP/1.1 401 Authentication required']
+)
+cannon += Beam(
     description='Host extern',
     request='GET /index.html HTTP/1.1\r\nhost: extern\r\n\r\n',
     response=['HTTP/1.1 200 OK']
