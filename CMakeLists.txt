@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16.3)
-project(pse_2024 C)
+project(http-c-erver C)
 
 set(CMAKE_C_STANDARD 11)
 

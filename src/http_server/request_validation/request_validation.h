@@ -1,5 +1,5 @@
-#ifndef PSE_2024_REQUEST_VALIDATION_H
-#define PSE_2024_REQUEST_VALIDATION_H
+#ifndef REQUEST_VALIDATION_H
+#define REQUEST_VALIDATION_H
 
 #include "../../http_models/http_models.h"
 #include <stdbool.h>

@@ -1,5 +1,5 @@
-#ifndef PSE_2024_HTTP_ROUTER_H
-#define PSE_2024_HTTP_ROUTER_H
+#ifndef HTTP_ROUTER_H
+#define HTTP_ROUTER_H
 
 #include "../http_models/http_models.h"
 #include <stdbool.h>

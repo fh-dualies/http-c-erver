@@ -1,5 +1,5 @@
-#ifndef PSE_2024_TEST_LIB_H
-#define PSE_2024_TEST_LIB_H
+#ifndef HTTP_C_SERVER_TEST_LIB_H
+#define HTTP_C_SERVER_TEST_LIB_H
 
 #include "../../string_lib/string_lib.h"
 

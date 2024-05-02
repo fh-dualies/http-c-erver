@@ -2,8 +2,8 @@
  * @note General Server Configuration.
  * This section contains general server configuration options.
  */
-#ifndef PSE_H
-#define PSE_H
+#ifndef HTTP_C_SERVER_H
+#define HTTP_C_SERVER_H
 
 /**
  * The server signature.

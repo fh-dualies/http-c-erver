@@ -1,17 +1,17 @@
-<h3>Projekt Systementwicklung</h3>
-<p>Sommersemester 2024 - FH Münster</p>
+<h3>http-c-server</h3>
+<p>Projekt Systementwicklung (Sommersemester 2024) - FH Münster</p>
 
 ---
 
 ## Overview
 
-- [Members](https://git.fh-muenster.de/pse2024/PG5_1/pse-2024#members)
-- [About this repository](https://git.fh-muenster.de/pse2024/PG5_1/pse-2024#about-this-repository)
-- [Installation](https://git.fh-muenster.de/pse2024/PG5_1/pse-2024#installation)
-- [Configuration](https://git.fh-muenster.de/pse2024/PG5_1/pse-2024#configuration)
-- [Run Project](https://git.fh-muenster.de/pse2024/PG5_1/pse-2024#run-project)
-- [Conventions](https://git.fh-muenster.de/pse2024/PG5_1/pse-2024#conventions)
-- [How to test](https://git.fh-muenster.de/pse2024/PG5_1/pse-2024#how-to-test)
+- [Members](https://github.com/fh-dualies/http-c-erver#members)
+- [About this repository](https://github.com/fh-dualies/http-c-erver#about-this-repository)
+- [Installation](https://github.com/fh-dualies/http-c-erver#installation)
+- [Configuration](https://github.com/fh-dualies/http-c-erver#configuration)
+- [Run Project](https://github.com/fh-dualies/http-c-erver#run-project)
+- [Conventions](https://github.com/fh-dualies/http-c-erver#conventions)
+- [How to test](https://github.com/fh-dualies/http-c-erver#how-to-test)
 
 ## Members
 
@@ -53,13 +53,13 @@ This repository's contents is divided across following primary sections:
 Clone the repository
 
 ```sh
-$ git clone https://git.fh-muenster.de/pse2024/PG5_1/pse-2024.git
+$ git clone https://github.com/fh-dualies/http-c-erver.git
 ```
 
-Switch to "pse-2024" folder
+Switch to "http-c-erver" folder
 
 ```sh
-$ cd pse-2024
+$ cd http-c-erver
 ```
 
 Init using [cmake](https://cmake.org/)
@@ -68,7 +68,7 @@ Init using [cmake](https://cmake.org/)
 $ cmake .
 ```
 
-Compile pse-2024
+Compile http-c-erver
 
 ```sh
 $ make
